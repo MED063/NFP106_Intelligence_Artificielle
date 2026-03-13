@@ -436,7 +436,7 @@ def dfs_initialiser(depart):
       (clé "file" pour la pile, pour compatibilité UI)
     """
     return {
-        "file": [depart],          # pile LIFO (liste Python)
+        "file": [depart],
         "visite": {depart},
         "parent": {depart: None},
         "dist": {depart: 0},
