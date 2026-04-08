@@ -282,16 +282,16 @@ def cout_case(couts, pos):
     return couts.get(pos, 1)
 
 def heuristique_manhattan(a, b):
-        """
+    """
     Heuristique Manhattan (L1) pour une grille 4-connexe.
 
     Propriété:
-        Admissible si le coût minimal d'un pas est 1 (ici c’est le cas),
+        Admissible si le coût minimal d’un pas est 1 (ici c’est le cas),
         donc A* reste optimal.
 
     Args:
         a (tuple[int,int]): position (r, c) de départ.
-        b (tuple[int,int]): position (r, c) d'arrivée.
+        b (tuple[int,int]): position (r, c) d’arrivée.
 
     Returns:
         int: distance Manhattan |dr| + |dc|.
@@ -396,7 +396,8 @@ def astar_faire_une_etape(grille, etat, arrivee, couts):
         return
 
     # 5) Relaxer les voisins
-    for voisin in voisins_4(grille, courant):
+    for vr, vc, _ in voisins_4(grille, *courant):
+        voisin = (vr, vc)
         if voisin in closed:
             continue
         g_tentative = g[courant] + cout_case(couts, voisin)
