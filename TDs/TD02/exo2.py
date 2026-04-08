@@ -408,7 +408,8 @@ def astar_faire_une_etape(grille, etat, arrivee, couts):
         return
 
     # 6) Relaxation des voisins
-    for nxt in voisins_4(grille, courant):
+    for nr, nc, _ in voisins_4(grille, *courant):
+        nxt = (nr, nc)
         if nxt in visite:
             continue
         new_g = g[courant] + cout_case(couts, nxt)
