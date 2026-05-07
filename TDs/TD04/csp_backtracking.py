@@ -1,13 +1,10 @@
 """
-CSP - Backtracking (NFP106 TD04)
-Exemple du cours : variables A, B, C, D avec domaine [1,2,3]
-Contraintes : toutes les paires reliées doivent être différentes (≠)
-Graphe :  A-B, A-D, A-C, B-C, B-D, C-D
+CSP Backtracking 
 """
 
 
 def est_coherent(variable, valeur, affectation, contraintes):
-    """Vérifie que la valeur ne viole aucune contrainte avec les variables déjà assignées."""
+    """Verif que la valeur ne viole aucune contrainte avec les vars deja assignees."""
     for (x, y) in contraintes:
         if x == variable and y in affectation:
             if affectation[y] == valeur:
@@ -26,7 +23,7 @@ def backtracking(variables, domaines, contraintes, affectation=None):
     if len(affectation) == len(variables):
         return affectation
 
-    # Choisir la prochaine variable non assignée (ordre fixé)
+    # Choisir la prochaine variable non assignée 
     variable = next(v for v in variables if v not in affectation)
 
     for valeur in domaines[variable]:
