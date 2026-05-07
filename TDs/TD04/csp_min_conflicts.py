@@ -1,23 +1,7 @@
 """
-CSP - Backtracking avec heuristique Min-Conflicts (LCV) (NFP106 TD04)
-
-Principe :
-  Au lieu de parcourir le domaine dans l'ordre fixe, on trie les valeurs
-  par nombre de conflits croissant avec les voisins DEJA assignes.
-  La valeur qui cree le moins de violations est essayee en premier,
-  ce qui reduit l'exploration de l'arbre de recherche.
-
-Difference avec l'algorithme Min-Conflicts pur :
-  - Min-Conflicts pur : part d'une affectation complete et repare
-    iterativement les variables en conflit (heuristique locale).
-  - Ici : backtracking + tri LCV (Least Constraining Value), qui partage
-    l'idee centrale de minimiser les conflits a chaque etape.
+CSP - Backtracking avec heuristique Min-Conflicts
 """
 
-
-# ---------------------------------------------------------------------------
-# Fonctions communes
-# ---------------------------------------------------------------------------
 
 def est_coherent(variable, valeur, affectation, contraintes):
     """Verifie que la valeur ne viole aucune contrainte avec les vars deja assignees."""
@@ -44,23 +28,9 @@ def compter_conflits(variable, valeur, affectation, contraintes):
                 conflits += 1
     return conflits
 
-
-# ---------------------------------------------------------------------------
-# Backtracking + heuristique Min-Conflicts sur le choix de valeur (LCV)
-# ---------------------------------------------------------------------------
-
 def backtracking_min_conflicts(variables, domaines, contraintes, affectation=None):
     """Backtracking ou les valeurs sont essayees par ordre croissant
     de conflits (heuristique Min-Conflicts / LCV).
-
-    Args:
-        variables   : liste ordonnee des variables (ex. ["A","B","C","D"])
-        domaines    : dict {variable: [valeurs possibles]}
-        contraintes : liste de paires (x, y) signifiant x != y
-        affectation : dict {variable: valeur} en cours de construction
-
-    Returns:
-        dict solution ou None si aucune solution n'existe.
     """
     if affectation is None:
         affectation = {}
@@ -72,9 +42,8 @@ def backtracking_min_conflicts(variables, domaines, contraintes, affectation=Non
     # Selectionner la prochaine variable non affectee (ordre fixe)
     variable = next(v for v in variables if v not in affectation)
 
-    # --- Heuristique Min-Conflicts (LCV) ---
-    # Trier les valeurs par nombre de conflits croissant :
-    # on essaie d'abord la valeur qui gene le moins les voisins deja assignes.
+    # --- Min-Conflicts (LCV) ---
+    #  valeur qui gene le moins les voisins deja assignes.
     valeurs_triees = sorted(
         domaines[variable],
         key=lambda v: compter_conflits(variable, v, affectation, contraintes)
@@ -97,10 +66,6 @@ def backtracking_min_conflicts(variables, domaines, contraintes, affectation=Non
 
     return None  # Aucune valeur possible => echec, on remonte
 
-
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     # --- Exemple du cours : graphe K4 avec 4 couleurs ---
