@@ -47,7 +47,7 @@ def backtracking(variables, domaines, contraintes, affectation=None):
 
 
 if __name__ == "__main__":
-    # --- Exemple du cours (pages 5-23) ---
+    # 
     variables   = ["A", "B", "C", "D"]
     domaines    = {v: [1, 2, 3] for v in variables}
     contraintes = [("A", "B"), ("A", "D"), ("A", "C"), ("B", "C"), ("B", "D"), ("C", "D")]
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     else:
         print("Aucune solution.")
 
-    # --- Exemple sans solution (page 24) ---
+    
     print("\n=== Exemple sans solution ===")
     variables2   = ["A", "B", "C"]
     domaines2    = {v: [1, 2] for v in variables2}
