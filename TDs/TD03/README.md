@@ -26,14 +26,6 @@ Les valeurs entre parenthèses sont les heuristiques `h` (distance estimée au b
 
 À chaque étape, l'algorithme choisit le voisin avec la **plus petite heuristique `h`**, à condition qu'il améliore la position courante. Il s'arrête dès qu'aucun voisin n'améliore la situation.
 
-```
-état ← départ
-tant que état ≠ but :
-    candidats ← voisins non visités
-    si candidats vide ou min(h(candidats)) ≥ h(état) → ÉCHEC
-    état ← voisin avec h minimal
-SUCCÈS
-```
 
 ### Avantages
 
@@ -55,14 +47,6 @@ SUCCÈS
 | Pas de backtracking | Aucun retour en arrière possible — un mauvais choix est fatal. |
 | Sensible à l'heuristique | Une heuristique mal calibrée mène directement à l'échec. |
 
-### Exemple d'exécution sur le graphe du cours
-
-```
-A(9) → B(7) → E(5) → G(4)  — BLOQUÉ
-```
-
-`G` n'a qu'un seul voisin `E` déjà visité, donc l'algorithme s'arrête sans atteindre `J`.
-
 ---
 
 ## 2. Recuit Simulé
@@ -71,24 +55,7 @@ A(9) → B(7) → E(5) → G(4)  — BLOQUÉ
 
 Inspiré du refroidissement des métaux : à **haute température**, l'algorithme accepte des dégradations pour explorer ; à **basse température**, il se comporte comme un Hill Climbing et exploite.
 
-```
-état ← départ, T ← T_init
-tant que T > T_min et état ≠ but :
-    voisin ← voisin aléatoire
-    ΔE = h(voisin) − h(état)
-    si ΔE < 0 → accepter (amélioration)
-    sinon     → accepter avec P = exp(−ΔE / T)
-    T ← T × alpha
-```
 
-### Paramètres implémentés (`exo2_recuit_simule.py`)
-
-| Paramètre | Valeur | Rôle |
-|---|---|---|
-| `T_init` | 8.0 | Température de départ |
-| `T_min` | 0.05 | Seuil d'arrêt |
-| `alpha` | 0.99 | Vitesse de refroidissement |
-| `iter_par_T` | 3 | Itérations par palier |
 
 ### Avantages
 
@@ -124,7 +91,7 @@ tant que T > T_min et état ≠ but :
 | Facilité d'impl. | Très simple | Modérée |
 | Usage typique | Espaces convexes, temps réel | Optimisation combinatoire |
 
-**Verdict pour ce TD :** le recuit simulé est supérieur sur le labyrinthe car l'espace est non convexe (la distance Manhattan ne reflète pas la distance réelle derrière les murs) et comporte des optima locaux. Le Hill Climbing s'y bloque systématiquement.
+**Verdict  :** le recuit simulé est supérieur quand l'espace est non convexe (la distance Manhattan ne reflète pas la distance réelle derrière les murs) et comporte des optima locaux. Le Hill Climbing s'y bloque systématiquement.
 
 ---
 
@@ -134,33 +101,8 @@ tant que T > T_min et état ≠ but :
 
 La **Recherche Tabou** (Glover, 1986) ajoute une **liste de mémoire à court terme** qui interdit de revisiter les états récemment explorés. Elle accepte des dégradations de façon **déterministe** — sans aléatoire.
 
-### Algorithme
 
-```
-état ← départ
-tabou ← file bornée (taille max_tabou)
-meilleur ← départ
 
-tant que état ≠ but :
-    candidats ← voisins NON dans tabou
-               OU voisins qui améliorent meilleur (critère d'aspiration)
-    si candidats vide → BLOQUÉ
-    état ← meilleur candidat selon h (même si ΔE > 0)
-    tabou.ajouter(état)
-    si h(état) < h(meilleur) → meilleur ← état
-retourner meilleur
-```
-
-### Exemple d'exécution (`tabou.py`, max_tabou=3)
-
-```
-tabou: [A]
-  → B(7) ou C(8) ? meilleur = B — tabou: [A, B]
-  → D(6) ou E(5) ? meilleur = E — tabou: [A, B, E]
-  → G(4) ou H(5) (B est tabou) ? meilleur = G — tabou: [B, E, G]
-  → E disponible (A sorti du tabou) → tabou: [E, G, ...]
-  ...continue jusqu'à J
-```
 
 ### Avantages par rapport aux deux autres
 
@@ -185,23 +127,3 @@ tabou: [A]
 
 ---
 
-## 5. Lancer les visualisations
-
-```bash
-# Hill Climbing
-python TD03/exo1_hill_climbing.py
-
-# Recuit Simulé
-python TD03/exo2_recuit_simule.py
-
-# Recherche Tabou (console)
-python TD03/tabou.py
-```
-
-| Touche | Action |
-|---|---|
-| `E` | Lancer en mode automatique |
-| `ESPACE` | Avancer d'une étape |
-| `R` | Réinitialiser |
-| `Q` | Quitter |
-| `+` / `-` | Accélérer / ralentir (Recuit Simulé uniquement) |
