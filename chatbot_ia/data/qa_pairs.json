@@ -1,0 +1,332 @@
+[
+  {
+    "question": "Qu'est-ce que Python ?",
+    "answer": "Python est un langage de programmation interprété, de haut niveau, connu pour sa syntaxe lisible et sa polyvalence. Il est très utilisé en intelligence artificielle, data science, web et automatisation.",
+    "concepts": ["python", "programmation", "interpretation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un algorithme ?",
+    "answer": "Un algorithme est une suite finie et ordonnée d'instructions permettant de résoudre un problème ou d'accomplir une tâche. Il est caractérisé par sa complexité en temps et en espace.",
+    "concepts": ["algorithme", "complexite"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment fonctionne le BFS ?",
+    "answer": "Le BFS (Breadth-First Search) est un algorithme de parcours de graphe en largeur. Il utilise une file (queue) pour explorer les noeuds niveau par niveau, garantissant le chemin le plus court dans un graphe non pondéré.",
+    "concepts": ["bfs", "graphe", "file", "algorithme"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Comment fonctionne le DFS ?",
+    "answer": "Le DFS (Depth-First Search) est un algorithme de parcours de graphe en profondeur. Il utilise une pile ou la récursion pour explorer aussi loin que possible avant de revenir en arrière.",
+    "concepts": ["dfs", "graphe", "pile", "recursion", "algorithme"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Qu'est-ce que A* ?",
+    "answer": "A* est un algorithme de recherche de chemin heuristique. Il combine le coût réel du chemin parcouru (g) et une estimation du coût restant (h) pour trouver le chemin optimal de manière efficace.",
+    "concepts": ["a_star", "graphe", "algorithme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Quelle est la différence entre BFS et DFS ?",
+    "answer": "BFS explore le graphe niveau par niveau (en largeur) et garantit le chemin le plus court dans un graphe non pondéré. DFS explore en profondeur en suivant chaque branche jusqu'au bout. BFS utilise plus de mémoire mais trouve le chemin optimal ; DFS utilise moins de mémoire mais peut ne pas trouver le chemin le plus court.",
+    "concepts": ["bfs", "dfs", "graphe", "algorithme"],
+    "intent": "COMPARAISON"
+  },
+  {
+    "question": "Qu'est-ce qu'une structure de données ?",
+    "answer": "Une structure de données est une façon d'organiser et stocker des données en mémoire pour les manipuler efficacement. Les principales structures incluent les tableaux, listes, piles, files, arbres et graphes.",
+    "concepts": ["structure_donnees", "tableau", "liste", "pile", "file", "arbre", "graphe"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un tableau ?",
+    "answer": "Un tableau (array) est une structure de données qui stocke des éléments de même type dans des cases mémoire contiguës. L'accès à un élément est en O(1) grâce à son index.",
+    "concepts": ["tableau", "structure_donnees"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une liste chaînée ?",
+    "answer": "Une liste chaînée est une structure de données composée de noeuds, où chaque noeud contient une valeur et un pointeur vers le noeud suivant. L'insertion et la suppression sont en O(1) si on connaît la position, mais l'accès est en O(n).",
+    "concepts": ["liste", "structure_donnees"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une pile ?",
+    "answer": "Une pile (stack) est une structure de données de type LIFO (Last In, First Out). Les opérations principales sont push (empiler) et pop (dépiler). Elle est utilisée notamment dans la récursion et les algorithmes DFS.",
+    "concepts": ["pile", "structure_donnees", "dfs", "recursion"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une file ?",
+    "answer": "Une file (queue) est une structure de données de type FIFO (First In, First Out). Les éléments sont ajoutés en queue et retirés en tête. Elle est utilisée dans le BFS et les systèmes de gestion de tâches.",
+    "concepts": ["file", "structure_donnees", "bfs"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un arbre ?",
+    "answer": "Un arbre est une structure de données hiérarchique composée de noeuds. Chaque noeud a un parent (sauf la racine) et zéro ou plusieurs enfants. Les arbres binaires, AVL et les tas sont des variantes courantes.",
+    "concepts": ["arbre", "structure_donnees", "recursion"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un graphe ?",
+    "answer": "Un graphe est une structure composée de noeuds (sommets) reliés par des arêtes. Il peut être orienté ou non, pondéré ou non. Les graphes modélisent des réseaux, des cartes, des dépendances, etc.",
+    "concepts": ["graphe", "structure_donnees", "bfs", "dfs", "a_star"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que la récursion ?",
+    "answer": "La récursion est une technique de programmation où une fonction s'appelle elle-même pour résoudre un problème plus petit. Elle nécessite un cas de base pour arrêter les appels. Elle est utilisée dans le DFS, le tri fusion, les arbres, etc.",
+    "concepts": ["recursion", "fonction", "dfs", "arbre"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que la complexité algorithmique ?",
+    "answer": "La complexité algorithmique mesure les ressources (temps et mémoire) nécessaires à l'exécution d'un algorithme en fonction de la taille des données. On utilise la notation Big O : O(1), O(log n), O(n), O(n log n), O(n²), etc.",
+    "concepts": ["complexite", "algorithme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le tri ?",
+    "answer": "Le tri est une opération fondamentale qui réorganise des données selon un ordre défini. Les algorithmes de tri courants incluent le tri à bulles O(n²), le tri fusion O(n log n), le tri rapide O(n log n) en moyenne, et le tri par insertion.",
+    "concepts": ["tri", "algorithme", "complexite"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que la programmation orientée objet ?",
+    "answer": "La programmation orientée objet (POO) est un paradigme basé sur des objets qui encapsulent données et comportements. Ses quatre piliers sont : l'encapsulation, l'héritage, le polymorphisme et l'abstraction.",
+    "concepts": ["objet", "classe", "heritage", "polymorphisme", "encapsulation", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une classe ?",
+    "answer": "Une classe est un modèle (blueprint) définissant les attributs et méthodes communs à un ensemble d'objets. En Python, on la définit avec le mot-clé 'class'. Un objet est une instance d'une classe.",
+    "concepts": ["classe", "objet", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que l'héritage ?",
+    "answer": "L'héritage est un mécanisme de la POO permettant à une classe enfant de réutiliser les attributs et méthodes d'une classe parent. Cela favorise la réutilisation du code et la création de hiérarchies de classes.",
+    "concepts": ["heritage", "classe", "objet", "polymorphisme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le polymorphisme ?",
+    "answer": "Le polymorphisme permet à des objets de classes différentes de répondre à la même interface ou méthode de manière différente. Il s'exprime via la surcharge de méthodes ou l'implémentation d'interfaces.",
+    "concepts": ["polymorphisme", "heritage", "classe", "objet"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que l'encapsulation ?",
+    "answer": "L'encapsulation consiste à regrouper les données et les méthodes qui les manipulent dans une classe, tout en contrôlant leur accessibilité (public, privé, protégé). Elle protège l'intégrité des données.",
+    "concepts": ["encapsulation", "classe", "objet"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une fonction ?",
+    "answer": "Une fonction est un bloc de code réutilisable qui effectue une tâche spécifique. Elle peut recevoir des paramètres et retourner une valeur. En Python, on la définit avec le mot-clé 'def'.",
+    "concepts": ["fonction", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une variable ?",
+    "answer": "Une variable est un espace mémoire nommé qui stocke une valeur pouvant changer au cours du programme. En Python, les variables sont dynamiquement typées : le type est déterminé à l'exécution.",
+    "concepts": ["variable", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une boucle ?",
+    "answer": "Une boucle est une structure de contrôle qui répète un bloc de code tant qu'une condition est vraie (while) ou pour chaque élément d'un itérable (for). Elle permet l'itération sur des collections.",
+    "concepts": ["boucle", "iteration", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une exception ?",
+    "answer": "Une exception est une erreur survenant à l'exécution d'un programme. En Python, on les gère avec try/except/finally. Les exceptions permettent de gérer les erreurs sans crasher le programme.",
+    "concepts": ["exception", "programmation", "python"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que SQL ?",
+    "answer": "SQL (Structured Query Language) est un langage standardisé pour gérer les bases de données relationnelles. Il permet de créer, lire, mettre à jour et supprimer des données (CRUD) via des requêtes.",
+    "concepts": ["sql", "base_donnees"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une base de données ?",
+    "answer": "Une base de données est un système organisé de stockage et de gestion de données persistantes. Les bases relationnelles (MySQL, PostgreSQL) utilisent des tables et SQL. Les bases NoSQL (MongoDB) utilisent d'autres modèles.",
+    "concepts": ["base_donnees", "sql"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une API ?",
+    "answer": "Une API (Application Programming Interface) est une interface permettant à des applications de communiquer entre elles. Les API REST utilisent le protocole HTTP et les formats JSON/XML pour échanger des données.",
+    "concepts": ["api", "http", "web"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que HTTP ?",
+    "answer": "HTTP (HyperText Transfer Protocol) est le protocole de communication du web. Il définit comment les messages sont formatés et transmis. HTTPS est sa version sécurisée utilisant TLS/SSL.",
+    "concepts": ["http", "web", "reseau", "api"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le web ?",
+    "answer": "Le web (World Wide Web) est un système d'information mondial basé sur des hyperliens. Il repose sur les technologies HTML, CSS, JavaScript et le protocole HTTP pour afficher des pages dans un navigateur.",
+    "concepts": ["web", "html", "css", "javascript", "http"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que HTML ?",
+    "answer": "HTML (HyperText Markup Language) est le langage de balisage standard pour créer des pages web. Il structure le contenu d'une page en définissant les titres, paragraphes, liens, images et formulaires.",
+    "concepts": ["html", "web", "css"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que CSS ?",
+    "answer": "CSS (Cascading Style Sheets) est un langage de style qui contrôle l'apparence visuelle des pages HTML. Il permet de définir couleurs, polices, mises en page et animations sans modifier la structure HTML.",
+    "concepts": ["css", "html", "web"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que JavaScript ?",
+    "answer": "JavaScript est un langage de programmation interprété principalement utilisé pour rendre les pages web interactives. Il s'exécute dans le navigateur (côté client) et aussi côté serveur avec Node.js.",
+    "concepts": ["javascript", "web", "html", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que l'intelligence artificielle ?",
+    "answer": "L'intelligence artificielle (IA) est un domaine de l'informatique visant à créer des systèmes capables d'effectuer des tâches nécessitant normalement l'intelligence humaine : raisonnement, apprentissage, perception, NLP.",
+    "concepts": ["ia", "machine_learning", "nlp", "algorithme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le machine learning ?",
+    "answer": "Le machine learning (apprentissage automatique) est une branche de l'IA où les modèles apprennent à partir de données sans être explicitement programmés. Les techniques incluent la régression, la classification, le clustering.",
+    "concepts": ["machine_learning", "ia", "algorithme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le NLP ?",
+    "answer": "Le NLP (Natural Language Processing, ou traitement du langage naturel) est une branche de l'IA qui permet aux machines de comprendre, analyser et générer le langage humain. Il inclut la tokenisation, le stemming, la classification d'intention.",
+    "concepts": ["nlp", "ia", "machine_learning"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que Git ?",
+    "answer": "Git est un système de contrôle de version distribué permettant de suivre les modifications du code source. Il permet la collaboration en équipe, la gestion de branches, les fusions (merge) et l'historique des changements.",
+    "concepts": ["git", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un test unitaire ?",
+    "answer": "Un test unitaire est un test automatisé qui vérifie le comportement d'une unité de code (fonction, méthode, classe) de manière isolée. En Python, on utilise pytest ou unittest pour écrire et exécuter des tests.",
+    "concepts": ["test", "debug", "programmation", "python"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que le débogage ?",
+    "answer": "Le débogage (debugging) est le processus d'identification et de correction des erreurs dans un programme. On peut utiliser des outils comme pdb en Python, des points d'arrêt dans un IDE, ou des instructions print.",
+    "concepts": ["debug", "test", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un framework ?",
+    "answer": "Un framework est un cadre de travail qui fournit une structure de base et des outils pour développer des applications. Exemples : Django/Flask pour Python web, React/Vue pour JavaScript, Spring pour Java.",
+    "concepts": ["framework", "bibliotheque", "programmation", "web"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une bibliothèque ?",
+    "answer": "Une bibliothèque (library) est un ensemble de fonctions et classes préécrites réutilisables. Contrairement à un framework, c'est le développeur qui contrôle le flux. NumPy, Pandas, Requests sont des bibliothèques Python populaires.",
+    "concepts": ["bibliotheque", "framework", "python", "programmation"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Quelle est la différence entre compilation et interprétation ?",
+    "answer": "La compilation traduit le code source en code machine avant l'exécution (C, C++, Java vers bytecode). L'interprétation exécute le code ligne par ligne en temps réel (Python, JavaScript). La compilation est plus rapide à l'exécution ; l'interprétation est plus flexible et portable.",
+    "concepts": ["compilation", "interpretation", "programmation", "python", "java", "cpp"],
+    "intent": "COMPARAISON"
+  },
+  {
+    "question": "Comment utiliser un dictionnaire en Python ?",
+    "answer": "En Python, un dictionnaire se crée avec des accolades : d = {'cle': 'valeur'}. On accède aux valeurs par clé : d['cle']. Les méthodes utiles sont : d.keys(), d.values(), d.items(), d.get('cle', defaut).",
+    "concepts": ["dictionnaire", "python", "structure_donnees"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Comment créer une classe en Python ?",
+    "answer": "En Python, on crée une classe avec 'class NomClasse:'. Le constructeur est '__init__(self, ...)'. Exemple : class Animal: def __init__(self, nom): self.nom = nom. On instancie avec : a = Animal('Rex').",
+    "concepts": ["classe", "python", "objet", "programmation"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Comment gérer les exceptions en Python ?",
+    "answer": "En Python, on gère les exceptions avec try/except : try: code_risque() except ValueError as e: print(e) finally: nettoyage(). On peut lever une exception avec 'raise'. Les exceptions courantes : ValueError, TypeError, KeyError, IndexError.",
+    "concepts": ["exception", "python", "programmation"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Donne un exemple de récursion",
+    "answer": "Exemple classique : le calcul de la factorielle. def factorielle(n): if n <= 1: return 1 return n * factorielle(n - 1). Pour factorielle(5) : 5 * 4 * 3 * 2 * 1 = 120. La condition n <= 1 est le cas de base.",
+    "concepts": ["recursion", "python", "fonction"],
+    "intent": "EXEMPLE"
+  },
+  {
+    "question": "Donne un exemple de BFS",
+    "answer": "Exemple de BFS en Python : from collections import deque. def bfs(graph, start): visited = {start}; queue = deque([start]). while queue: node = queue.popleft(); for neighbor in graph[node]: if neighbor not in visited: visited.add(neighbor); queue.append(neighbor).",
+    "concepts": ["bfs", "graphe", "python", "algorithme"],
+    "intent": "EXEMPLE"
+  },
+  {
+    "question": "Quels sont les types de données en Python ?",
+    "answer": "Python propose plusieurs types de données natifs : int (entiers), float (décimaux), str (chaînes), bool (booléens), list (listes), tuple (tuples immuables), dict (dictionnaires), set (ensembles). Python est dynamiquement typé.",
+    "concepts": ["python", "variable", "programmation"],
+    "intent": "LISTE"
+  },
+  {
+    "question": "Quels sont les algorithmes de tri courants ?",
+    "answer": "Les algorithmes de tri courants sont : tri à bulles O(n²), tri par sélection O(n²), tri par insertion O(n²), tri fusion O(n log n), tri rapide O(n log n) en moyenne, tri par tas O(n log n). Python utilise Timsort (hybride merge+insertion).",
+    "concepts": ["tri", "algorithme", "complexite"],
+    "intent": "LISTE"
+  },
+  {
+    "question": "Qu'est-ce que TF-IDF ?",
+    "answer": "TF-IDF (Term Frequency - Inverse Document Frequency) est une mesure statistique évaluant l'importance d'un mot dans un document par rapport à une collection. TF mesure la fréquence du terme dans le document ; IDF pénalise les termes très courants.",
+    "concepts": ["nlp", "machine_learning", "ia"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que Naive Bayes ?",
+    "answer": "Naive Bayes est un classificateur probabiliste basé sur le théorème de Bayes avec l'hypothèse d'indépendance entre les caractéristiques. Il est simple, rapide et efficace pour la classification de texte et les filtres anti-spam.",
+    "concepts": ["machine_learning", "nlp", "ia", "algorithme"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment fonctionne la tokenisation ?",
+    "answer": "La tokenisation est le processus de découpage d'un texte en unités (tokens), généralement des mots ou sous-mots. En NLP, on sépare d'abord par espaces et ponctuations, puis on peut appliquer d'autres stratégies selon les besoins.",
+    "concepts": ["nlp", "python"],
+    "intent": "EXPLICATION"
+  },
+  {
+    "question": "Qu'est-ce que le stemming ?",
+    "answer": "Le stemming est la réduction d'un mot à sa racine (stem) en supprimant les suffixes. Par exemple : 'programmer', 'programmation', 'programmeur' → 'programm'. SnowballStemmer est un stemmer courant pour le français.",
+    "concepts": ["nlp", "python"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'un réseau ?",
+    "answer": "Un réseau informatique est un ensemble de machines (ordinateurs, serveurs) interconnectées pour partager des ressources et communiquer. Internet est le plus grand réseau mondial, basé sur les protocoles TCP/IP.",
+    "concepts": ["reseau", "http", "web"],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment utiliser Git ?",
+    "answer": "Les commandes Git essentielles : git init (initialiser), git clone (cloner), git add (indexer), git commit (valider), git push (envoyer), git pull (récupérer), git branch (branches), git merge (fusionner), git status (état).",
+    "concepts": ["git", "programmation"],
+    "intent": "EXPLICATION"
+  }
+]
