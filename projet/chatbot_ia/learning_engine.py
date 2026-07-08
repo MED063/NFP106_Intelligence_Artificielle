@@ -113,10 +113,35 @@ class LearningEngine:
         return best_class or 'QUESTION'
 
     def record_feedback(self, question: str, answer: str, score: int) -> None:
+        """Enregistre le retour utilisateur (1-5).
+        score >= 4 : renforce l'association ; score <= 2 : pénalise.
+        """
         self.feedback_log.append({'question': question, 'answer': answer, 'score': score})
 
-    def retrain(self) -> None:
-        pass
+    def retrain(self, kb=None) -> None:
+        """Re-entraîne TF-IDF sur les réponses bien notées et met à jour les poids du graphe."""
+        import re
+        positive = [e for e in self.feedback_log if e.get('score', 0) >= 4]
+        if positive:
+            positive_docs = [
+                [t for t in re.sub(r'[^\w\s]', ' ', e['answer'].lower()).split() if t]
+                for e in positive
+            ]
+            self.build_tfidf(positive_docs)
+
+        if kb is None:
+            return
+        delta_map = {1: -0.05, 2: -0.05, 4: 0.05, 5: 0.05}
+        for entry in self.feedback_log:
+            delta = delta_map.get(entry.get('score', 3), 0.0)
+            if delta == 0.0:
+                continue
+            tokens = [t for t in re.sub(r'[^\w\s]', ' ', entry.get('answer', '').lower()).split() if t]
+            concepts = [t for t in tokens if t in kb.graph]
+            for i, c1 in enumerate(concepts):
+                for c2 in concepts[i + 1:]:
+                    if c2 in kb.graph.get(c1, {}):
+                        kb.graph[c1][c2] = min(1.0, max(0.01, kb.graph[c1][c2] + delta))
 
     def save_feedback(self, filepath: str) -> None:
         with open(filepath, 'w', encoding='utf-8') as f:

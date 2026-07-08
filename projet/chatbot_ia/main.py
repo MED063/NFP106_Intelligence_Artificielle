@@ -33,6 +33,9 @@ class ChatBot:
         if documents:
             self.learner.build_tfidf(documents)
 
+    def retrain(self) -> None:
+        self.learner.retrain(self.kb)
+
     def answer(self, user_input: str) -> str:
         tokens = self.nlp.preprocess(user_input)
         intent = self.nlp.classify_intent(tokens)
