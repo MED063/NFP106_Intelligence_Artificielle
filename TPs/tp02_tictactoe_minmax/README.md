@@ -190,9 +190,6 @@ encadrés dans les fichiers sources par :
 
 ```python
 # ######## CODE IA (Claude - Anthropic) #########
-VOTRE CODE
+ CODE
 # ###############################################
 ```
-
-> Adaptez cette section (prompts réellement utilisés, vos modifications
-> personnelles) avant le rendu pour qu'elle reflète votre propre travail.
