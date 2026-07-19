@@ -100,7 +100,23 @@ de l'adversaire, équivalence MinMax/Alpha-Beta, efficacité de l'élagage, et l
 fait que l'IA ne perd jamais.
 
 
-## 6. Structure du projet
+## 6. Démonstration vidéo
+
+Une vidéo de démonstration commentée accompagne ce rendu. Elle a été **transmise
+directement par courriel** au professeur, avec le lien vers ce dépôt.
+
+Elle présente successivement :
+
+1. le lancement du jeu et le menu d'aide ;
+2. une partie **scores masqués** : l'IA joue bien, mais son raisonnement reste invisible ;
+3. la même partie **scores affichés** : on voit l'IA écarter les deux coups menant à une
+   fourchette (score −6) et sécuriser le match nul ;
+4. la comparaison **Alpha-Beta activé / désactivé** sur une position identique : 497 états
+   explorés contre 1 052, pour des scores et un coup choisi rigoureusement identiques ;
+5. l'exécution des 14 tests unitaires.
+
+
+## 7. Structure du projet
 
 ```
 tp02_tictactoe_minmax/
@@ -109,22 +125,14 @@ tp02_tictactoe_minmax/
 ├── test_algo.py       # 14 tests unitaires (pytest)
 ├── requirements.txt   # Dépendances
 ├── README.md          # Ce fichier
-├── documentation.tex  # Documentation détaillée (source LaTeX)
-├── script_video.md    # Script de la vidéo de démonstration
-└── fig_*.png          # Captures utilisées dans la documentation
-```
-
-Pour générer le PDF de la documentation :
-
-```bash
-pdflatex documentation.tex && pdflatex documentation.tex
+└── docummentation_algoMinMax_Morpion.pdf   # Documentation technique détaillée
 ```
 
 Le découpage `algo.py` / `main.py` isole l'algorithme de l'affichage : le cœur
 IA est **testable sans interface graphique**.
 
 
-## 7. Comment lire l'algorithme dans le code
+## 8. Comment lire l'algorithme dans le code
 
 Fichier `algo.py` :
 - `minimax(...)` : la fonction récursive. Nœud **MAX** quand c'est à l'IA,
@@ -137,7 +145,7 @@ Fichier `algo.py` :
 - `evaluate(...)` : score des états terminaux (`±(10 − profondeur)`).
 
 
-## 8. Limites et pistes d'amélioration
+## 9. Limites et pistes d'amélioration
 - Le morpion 3×3 est **entièrement résoluble** : depuis le plateau vide, MinMax
   pur explore **549 945** états contre **34 202** avec l’élagage (~16× moins),
   ce qui tient sans table de transposition. Pour un plateau plus grand
@@ -148,7 +156,7 @@ Fichier `algo.py` :
   IA vs IA automatique, difficulté réglable (profondeur limitée).
 
 
-## 9. Usage IA (déclaration obligatoire, §3 du sujet)
+## 10. Usage IA (déclaration obligatoire, §3 du sujet)
 
 Conformément aux règles du TP, l'usage d'outils d'IA est déclaré ici.
 
