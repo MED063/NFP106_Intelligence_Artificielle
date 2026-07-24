@@ -1,0 +1,45 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from knowledge_base import KnowledgeBase
+from search_engine import SearchEngine
+
+PAIRS = [
+    ("python", "programmation"),
+    ("java", "heritage"),
+    ("algorithme", "a_star"),
+    ("structure_donnees", "graphe"),
+    ("graphe", "bfs"),
+    ("dfs", "recursion"),
+    ("objet", "encapsulation"),
+    ("ia", "nlp"),
+    ("http", "api"),
+    ("test", "debug"),
+    ("algorithme", "arbre"),
+    ("reseau", "web"),
+]
+
+
+def main():
+    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    kb = KnowledgeBase()
+    kb.load_from_json(os.path.join(data_dir, 'knowledge_graph.json'))
+    se = SearchEngine(kb)
+
+    row = f"{'Requete':<32}{'Algo':<6}{'Longueur':<10}{'Noeuds':<8}{'Temps (ms)':<10}"
+    print(row)
+    print("-" * len(row))
+    for start, goal in PAIRS:
+        results = se.compare_algorithms(start, goal)
+        for algo, r in results.items():
+            length = len(r['path']) if r['path'] else 0
+            print(
+                f"{start + ' -> ' + goal:<32}{algo:<6}{length:<10}"
+                f"{r['nodes_explored']:<8}{r['time'] * 1000:<10.3f}"
+            )
+
+
+if __name__ == '__main__':
+    main()

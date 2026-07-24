@@ -47,6 +47,14 @@ python main.py
 pytest tests/ -v
 ```
 
+## Benchmark BFS / DFS / A*
+
+```bash
+python benchmark_search.py
+```
+
+Compare les trois algorithmes (chemin, nœuds explorés, temps) sur 12 requêtes du graphe de connaissances.
+
 ## Structure du projet
 
 ```
@@ -55,8 +63,9 @@ chatbot_ia/
 ├── ui.py                # Interface CLI
 ├── nlp_engine.py        # Tokenisation, stemming, NER, classification d'intention
 ├── knowledge_base.py    # Graphe de connaissances orienté pondéré
-├── search_engine.py     # BFS / DFS / A*
+├── search_engine.py     # BFS / DFS / A* + comparaison (nœuds explorés, temps)
 ├── learning_engine.py   # TF-IDF / similarité cosinus / Naïve Bayes / feedback
+├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
 ├── data/
 │   ├── qa_pairs.json        # 55 paires question/réponse
 │   ├── knowledge_graph.json # Graphe (50 concepts, 62 relations)
@@ -107,7 +116,9 @@ Question utilisateur
 
 ### Heuristique A*
 
-L'heuristique utilisée est `h(n) = 0` (heuristique nulle, garantissant l'admissibilité). En M2, elle sera remplacée par une similarité cosinus basée sur des embeddings denses. Avec `h = 0`, A* se comporte comme Dijkstra et garantit le chemin de coût minimal. Le coût d'une arête est `1 - poids`, ce qui favorise les relations fortement pondérées.
+L'heuristique utilisée est `h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal))` (`SearchEngine.heuristic_bigram`). Elle est admissible : la similarité de Jaccard est toujours ≤ 1, donc `h(n) ≥ 0`, et elle ne peut jamais surestimer le coût réel restant (`1 - poids`, lui aussi ≥ 0). Deux concepts orthographiquement proches partagent davantage de bigrammes, ce qui guide la recherche sans jamais la biaiser vers un chemin sous-optimal.
+
+`SearchEngine.compare_algorithms(start, goal)` instrumente les trois algorithmes (nœuds explorés via `self.nodes_explored`, temps via `time.perf_counter`) et retourne un dictionnaire comparatif. Sur les 12 requêtes du benchmark (`benchmark_search.py`), A* explore systématiquement autant ou moins de nœuds que BFS (ex. `algorithme -> arbre` : 12 nœuds pour BFS contre 7 pour A*).
 
 ### Feedback loop
 
@@ -122,12 +133,12 @@ L'heuristique utilisée est `h(n) = 0` (heuristique nulle, garantissant l'admiss
 - Base de connaissances limitée à 55 Q/R et 50 concepts
 - NLP optimisé pour le français (stemming par règles de suffixes)
 - Pas de prise en compte du contexte conversationnel multi-tour
-- Heuristique A* triviale (nulle) — à améliorer avec des embeddings en M2
+- Heuristique A* basée sur des bigrammes de caractères — proxy simple, pas de vraie sémantique
 
 ## Pistes d'amélioration (M2)
 
 - Remplacer le stemming par des embeddings denses (transformers)
-- Heuristique A* basée sur la similarité cosinus entre embeddings
+- Heuristique A* basée sur la similarité cosinus entre embeddings denses
 - Architecture distribuée pour la base de connaissances
 - Interface web Flask
 
