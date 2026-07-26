@@ -1,77 +1,330 @@
 {
   "concepts": [
-    "python", "java", "javascript", "cpp", "sql", "html", "css",
-    "algorithme", "structure_donnees", "tableau", "liste", "dictionnaire",
-    "arbre", "graphe", "pile", "file", "recursion", "iteration",
-    "complexite", "tri", "recherche", "bfs", "dfs", "a_star",
-    "programmation", "objet", "classe", "heritage", "polymorphisme",
-    "encapsulation", "fonction", "variable", "boucle", "condition",
-    "exception", "base_donnees", "api", "http", "web", "reseau",
-    "ia", "machine_learning", "nlp", "git", "test", "debug",
-    "compilation", "interpretation", "framework", "bibliotheque"
+    "diabete",
+    "hypertension",
+    "cancer",
+    "grippe",
+    "asthme",
+    "depression",
+    "obesite",
+    "cholesterol",
+    "avc",
+    "infarctus",
+    "osteoporose",
+    "allergie",
+    "alzheimer",
+    "hypothyroidie",
+    "insomnie",
+    "insuline",
+    "metformine",
+    "paracetamol",
+    "statines",
+    "antidepresseurs",
+    "vaccin",
+    "alimentation_saine",
+    "activite_physique",
+    "arret_tabac",
+    "fievre",
+    "fatigue",
+    "douleur_thoracique",
+    "coeur",
+    "cerveau",
+    "foie",
+    "poumons",
+    "thyroide",
+    "regime_mediterraneen",
+    "imc"
   ],
   "relations": [
-    {"src": "python", "dst": "programmation", "weight": 0.95},
-    {"src": "python", "dst": "interpretation", "weight": 0.90},
-    {"src": "python", "dst": "ia", "weight": 0.85},
-    {"src": "python", "dst": "machine_learning", "weight": 0.85},
-    {"src": "python", "dst": "nlp", "weight": 0.80},
-    {"src": "python", "dst": "bibliotheque", "weight": 0.75},
-    {"src": "python", "dst": "objet", "weight": 0.70},
-    {"src": "java", "dst": "programmation", "weight": 0.95},
-    {"src": "java", "dst": "compilation", "weight": 0.90},
-    {"src": "java", "dst": "objet", "weight": 0.95},
-    {"src": "java", "dst": "heritage", "weight": 0.85},
-    {"src": "java", "dst": "polymorphisme", "weight": 0.85},
-    {"src": "javascript", "dst": "web", "weight": 0.95},
-    {"src": "javascript", "dst": "html", "weight": 0.85},
-    {"src": "javascript", "dst": "css", "weight": 0.80},
-    {"src": "javascript", "dst": "interpretation", "weight": 0.85},
-    {"src": "javascript", "dst": "framework", "weight": 0.80},
-    {"src": "cpp", "dst": "programmation", "weight": 0.90},
-    {"src": "cpp", "dst": "compilation", "weight": 0.95},
-    {"src": "cpp", "dst": "objet", "weight": 0.85},
-    {"src": "sql", "dst": "base_donnees", "weight": 0.95},
-    {"src": "sql", "dst": "recherche", "weight": 0.75},
-    {"src": "html", "dst": "web", "weight": 0.95},
-    {"src": "html", "dst": "css", "weight": 0.85},
-    {"src": "algorithme", "dst": "complexite", "weight": 0.90},
-    {"src": "algorithme", "dst": "tri", "weight": 0.85},
-    {"src": "algorithme", "dst": "recherche", "weight": 0.85},
-    {"src": "algorithme", "dst": "bfs", "weight": 0.80},
-    {"src": "algorithme", "dst": "dfs", "weight": 0.80},
-    {"src": "algorithme", "dst": "a_star", "weight": 0.75},
-    {"src": "algorithme", "dst": "recursion", "weight": 0.75},
-    {"src": "structure_donnees", "dst": "tableau", "weight": 0.90},
-    {"src": "structure_donnees", "dst": "liste", "weight": 0.90},
-    {"src": "structure_donnees", "dst": "dictionnaire", "weight": 0.85},
-    {"src": "structure_donnees", "dst": "arbre", "weight": 0.85},
-    {"src": "structure_donnees", "dst": "graphe", "weight": 0.85},
-    {"src": "structure_donnees", "dst": "pile", "weight": 0.85},
-    {"src": "structure_donnees", "dst": "file", "weight": 0.85},
-    {"src": "graphe", "dst": "bfs", "weight": 0.90},
-    {"src": "graphe", "dst": "dfs", "weight": 0.90},
-    {"src": "graphe", "dst": "a_star", "weight": 0.85},
-    {"src": "bfs", "dst": "file", "weight": 0.90},
-    {"src": "dfs", "dst": "pile", "weight": 0.85},
-    {"src": "dfs", "dst": "recursion", "weight": 0.85},
-    {"src": "a_star", "dst": "graphe", "weight": 0.85},
-    {"src": "recursion", "dst": "arbre", "weight": 0.80},
-    {"src": "objet", "dst": "classe", "weight": 0.95},
-    {"src": "objet", "dst": "heritage", "weight": 0.85},
-    {"src": "objet", "dst": "polymorphisme", "weight": 0.85},
-    {"src": "objet", "dst": "encapsulation", "weight": 0.85},
-    {"src": "classe", "dst": "heritage", "weight": 0.85},
-    {"src": "ia", "dst": "machine_learning", "weight": 0.90},
-    {"src": "ia", "dst": "nlp", "weight": 0.85},
-    {"src": "ia", "dst": "algorithme", "weight": 0.80},
-    {"src": "machine_learning", "dst": "nlp", "weight": 0.80},
-    {"src": "http", "dst": "api", "weight": 0.85},
-    {"src": "http", "dst": "web", "weight": 0.90},
-    {"src": "api", "dst": "web", "weight": 0.85},
-    {"src": "reseau", "dst": "http", "weight": 0.85},
-    {"src": "git", "dst": "programmation", "weight": 0.75},
-    {"src": "test", "dst": "debug", "weight": 0.85},
-    {"src": "test", "dst": "programmation", "weight": 0.80}
+    {
+      "src": "diabete",
+      "dst": "insuline",
+      "weight": 0.9
+    },
+    {
+      "src": "diabete",
+      "dst": "metformine",
+      "weight": 0.85
+    },
+    {
+      "src": "diabete",
+      "dst": "obesite",
+      "weight": 0.8
+    },
+    {
+      "src": "diabete",
+      "dst": "hypertension",
+      "weight": 0.7
+    },
+    {
+      "src": "diabete",
+      "dst": "avc",
+      "weight": 0.6
+    },
+    {
+      "src": "diabete",
+      "dst": "infarctus",
+      "weight": 0.65
+    },
+    {
+      "src": "diabete",
+      "dst": "alimentation_saine",
+      "weight": 0.9
+    },
+    {
+      "src": "diabete",
+      "dst": "activite_physique",
+      "weight": 0.85
+    },
+    {
+      "src": "hypertension",
+      "dst": "avc",
+      "weight": 0.8
+    },
+    {
+      "src": "hypertension",
+      "dst": "infarctus",
+      "weight": 0.75
+    },
+    {
+      "src": "hypertension",
+      "dst": "statines",
+      "weight": 0.5
+    },
+    {
+      "src": "hypertension",
+      "dst": "alimentation_saine",
+      "weight": 0.8
+    },
+    {
+      "src": "hypertension",
+      "dst": "arret_tabac",
+      "weight": 0.75
+    },
+    {
+      "src": "cholesterol",
+      "dst": "statines",
+      "weight": 0.9
+    },
+    {
+      "src": "cholesterol",
+      "dst": "infarctus",
+      "weight": 0.75
+    },
+    {
+      "src": "cholesterol",
+      "dst": "avc",
+      "weight": 0.65
+    },
+    {
+      "src": "cholesterol",
+      "dst": "hypertension",
+      "weight": 0.6
+    },
+    {
+      "src": "cholesterol",
+      "dst": "alimentation_saine",
+      "weight": 0.85
+    },
+    {
+      "src": "obesite",
+      "dst": "diabete",
+      "weight": 0.8
+    },
+    {
+      "src": "obesite",
+      "dst": "hypertension",
+      "weight": 0.75
+    },
+    {
+      "src": "obesite",
+      "dst": "cholesterol",
+      "weight": 0.7
+    },
+    {
+      "src": "obesite",
+      "dst": "activite_physique",
+      "weight": 0.9
+    },
+    {
+      "src": "obesite",
+      "dst": "alimentation_saine",
+      "weight": 0.9
+    },
+    {
+      "src": "obesite",
+      "dst": "imc",
+      "weight": 1.0
+    },
+    {
+      "src": "grippe",
+      "dst": "vaccin",
+      "weight": 0.85
+    },
+    {
+      "src": "grippe",
+      "dst": "paracetamol",
+      "weight": 0.7
+    },
+    {
+      "src": "grippe",
+      "dst": "fievre",
+      "weight": 0.9
+    },
+    {
+      "src": "grippe",
+      "dst": "fatigue",
+      "weight": 0.85
+    },
+    {
+      "src": "grippe",
+      "dst": "poumons",
+      "weight": 0.7
+    },
+    {
+      "src": "asthme",
+      "dst": "poumons",
+      "weight": 0.95
+    },
+    {
+      "src": "asthme",
+      "dst": "allergie",
+      "weight": 0.7
+    },
+    {
+      "src": "depression",
+      "dst": "antidepresseurs",
+      "weight": 0.85
+    },
+    {
+      "src": "depression",
+      "dst": "fatigue",
+      "weight": 0.8
+    },
+    {
+      "src": "depression",
+      "dst": "insomnie",
+      "weight": 0.75
+    },
+    {
+      "src": "depression",
+      "dst": "activite_physique",
+      "weight": 0.7
+    },
+    {
+      "src": "avc",
+      "dst": "cerveau",
+      "weight": 1.0
+    },
+    {
+      "src": "avc",
+      "dst": "hypertension",
+      "weight": 0.85
+    },
+    {
+      "src": "infarctus",
+      "dst": "coeur",
+      "weight": 1.0
+    },
+    {
+      "src": "infarctus",
+      "dst": "douleur_thoracique",
+      "weight": 0.95
+    },
+    {
+      "src": "osteoporose",
+      "dst": "alimentation_saine",
+      "weight": 0.75
+    },
+    {
+      "src": "osteoporose",
+      "dst": "activite_physique",
+      "weight": 0.8
+    },
+    {
+      "src": "alzheimer",
+      "dst": "cerveau",
+      "weight": 1.0
+    },
+    {
+      "src": "alzheimer",
+      "dst": "activite_physique",
+      "weight": 0.6
+    },
+    {
+      "src": "hypothyroidie",
+      "dst": "thyroide",
+      "weight": 1.0
+    },
+    {
+      "src": "hypothyroidie",
+      "dst": "fatigue",
+      "weight": 0.85
+    },
+    {
+      "src": "insomnie",
+      "dst": "depression",
+      "weight": 0.7
+    },
+    {
+      "src": "insomnie",
+      "dst": "activite_physique",
+      "weight": 0.65
+    },
+    {
+      "src": "allergie",
+      "dst": "asthme",
+      "weight": 0.6
+    },
+    {
+      "src": "regime_mediterraneen",
+      "dst": "hypertension",
+      "weight": 0.75
+    },
+    {
+      "src": "regime_mediterraneen",
+      "dst": "cholesterol",
+      "weight": 0.8
+    },
+    {
+      "src": "regime_mediterraneen",
+      "dst": "diabete",
+      "weight": 0.7
+    },
+    {
+      "src": "arret_tabac",
+      "dst": "cancer",
+      "weight": 0.9
+    },
+    {
+      "src": "arret_tabac",
+      "dst": "avc",
+      "weight": 0.8
+    },
+    {
+      "src": "vaccin",
+      "dst": "grippe",
+      "weight": 0.85
+    },
+    {
+      "src": "activite_physique",
+      "dst": "depression",
+      "weight": 0.7
+    },
+    {
+      "src": "activite_physique",
+      "dst": "obesite",
+      "weight": 0.9
+    },
+    {
+      "src": "foie",
+      "dst": "alimentation_saine",
+      "weight": 0.55
+    },
+    {
+      "src": "cholesterol",
+      "dst": "foie",
+      "weight": 0.5
+    }
   ]
 }

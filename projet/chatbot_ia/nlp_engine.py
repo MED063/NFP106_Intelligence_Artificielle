@@ -52,21 +52,31 @@ class NLPEngine:
 
     def classify_intent(self, tokens: list) -> str:
         words = set(tokens)
+
+        def has_root(roots):
+            return any(token.startswith(root) for token in tokens for root in roots)
+
         if any(w in words for w in ['bonjour', 'salut', 'hello', 'bonsoir', 'coucou']):
             return 'SALUTATION'
-        if any(w in words for w in ['quitter', 'quit', 'exit', 'aurevoir', 'bye']):
+        if any(w in words for w in ['quitter', 'quit', 'exit', 'aurevoir', 'bye', 'revoir']):
             return 'QUITTER'
-        if any(w in words for w in ["qu'est", 'quoi', 'defin', 'signif', 'quest', 'def', 'kesako', 'signifie']):
-            return 'DEFINITION'
-        if any(w in words for w in ['compar', 'differenc', 'versus', 'mieux', 'avantag', 'inconvenient', 'diff']):
+        if has_root(['risque', 'facteur', 'danger', 'favorise']):
+            return 'FACTEURS_RISQUE'
+        if has_root(['cause', 'origine', 'pourquoi', 'raison']):
+            return 'CAUSES'
+        if has_root(['différence', 'differenc', 'comparer', 'versus', 'lien', 'entre']):
             return 'COMPARAISON'
-        if any(w in words for w in ['comment', 'utiliser', 'fonctionn', 'marche', 'fonctionne']):
-            return 'EXPLICATION'
-        if any(w in words for w in ['exempl', 'montr', 'illustr', 'cas', 'exemple']):
-            return 'EXEMPLE'
-        if any(w in words for w in ['lister', 'list', 'quels', 'quelles', 'donnez', 'tous']):
-            return 'LISTE'
-        return 'QUESTION'
+        if has_root(['sympt', 'signe', 'manifest', 'ressent']):
+            return 'SYMPTOMES'
+        if has_root(['trait', 'guér', 'guer', 'soign', 'médicament', 'medicament', 'thérap', 'therap', 'gér', 'ger', 'réduir', 'reduir']) or 'faire' in words:
+            return 'TRAITEMENT'
+        if has_root(['préven', 'preven', 'évite', 'evite', 'protèg', 'proteg', 'amélior', 'amelior']):
+            return 'PREVENTION'
+        if has_root(['fonction', 'mécanis', 'mecanis', 'processus', 'marche', 'affect']):
+            return 'FONCTIONNEMENT'
+        if 'qu' in words or has_root(['définition', 'definition', 'définir', 'definir', 'signifie', 'signif']):
+            return 'DEFINITION'
+        return 'DEFINITION'
 
     def extract_entities(self, tokens: list, kb) -> list:
         concepts = set(kb.graph.keys())
