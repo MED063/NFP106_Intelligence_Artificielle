@@ -36,8 +36,20 @@ def test_classify_intent_definition():
 
 def test_classify_intent_comparaison():
     nlp = NLPEngine()
-    tokens = ["compar", "bfs", "dfs"]
+    tokens = ["differenc", "diabete", "hypertension"]
     assert nlp.classify_intent(tokens) == "COMPARAISON"
+
+
+def test_classify_intent_symptomes():
+    nlp = NLPEngine()
+    tokens = ["quels", "sympt", "grippe"]
+    assert nlp.classify_intent(tokens) == "SYMPTOMES"
+
+
+def test_classify_intent_prevention():
+    nlp = NLPEngine()
+    tokens = ["comment", "preven", "diabete"]
+    assert nlp.classify_intent(tokens) == "PREVENTION"
 
 
 def test_extract_entities():
