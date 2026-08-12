@@ -95,25 +95,34 @@ class SearchEngine:
             }
         return results
 
-    def find_best_answer(self, entities: list, intent: str) -> Optional[str]:
+    def find_best_answer(self, entities: list, intent: str, top_k: int = 5) -> List[tuple]:
+        """Explore les Q/A liees aux entites via le graphe et retourne les
+        `top_k` plus pertinentes sous forme de tuples (score, reponse),
+        tries par score de graphe decroissant (chevauchement d'entites +
+        proximite dans le graphe + correspondance d'intention). Les scores
+        sont conserves pour permettre au ChatBot de ne departager par
+        similarite TF-IDF (LearningEngine.rank_answers) que les reponses
+        reellement ex-aequo — ex : IMC et obesite partagent exactement les
+        memes concepts et ne peuvent etre distinguees que par le texte de
+        la question d'origine."""
         if not entities:
-            return None
+            return []
+        entity_set = set(entities)
         candidates = []
-        for entity in entities:
-            neighbors = self.kb.get_neighbors(entity)
-            for qa in self.kb.qa_pairs:
-                score = 0.0
-                qa_concepts = set(qa.get('concepts', []))
-                if entity in qa_concepts:
-                    score += 2.0
-                for concept in qa_concepts:
-                    if concept in neighbors:
-                        score += neighbors[concept]
-                if intent == qa.get('intent', ''):
-                    score += 1.0
-                if score > 0:
-                    candidates.append((score, qa.get('answer', '')))
+        for qa in self.kb.qa_pairs:
+            qa_concepts = set(qa.get('concepts', []))
+            overlap = entity_set & qa_concepts
+            if not overlap:
+                continue
+            precision = len(overlap) / len(qa_concepts) if qa_concepts else 0.0
+            score = 2.0 * len(overlap) * precision
+            for entity in entities:
+                neighbors = self.kb.get_neighbors(entity)
+                score += sum(neighbors[c] for c in qa_concepts if c in neighbors)
+            if intent == qa.get('intent', ''):
+                score += 10.0
+            candidates.append((score, qa.get('answer', '')))
         if not candidates:
-            return None
+            return []
         candidates.sort(key=lambda x: x[0], reverse=True)
-        return candidates[0][1]
+        return candidates[:top_k]

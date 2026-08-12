@@ -90,3 +90,34 @@ def test_compare_algorithms_no_path():
     results = se.compare_algorithms("a", "z")
     for entry in results.values():
         assert entry["path"] is None
+
+
+def make_qa_kb():
+    kb = KnowledgeBase()
+    kb.add_relation("diabete", "insuline", 0.8)
+    kb.qa_pairs = [
+        {"question": "Qu'est-ce que le diabete ?", "answer": "Definition diabete.",
+         "concepts": ["diabete"], "intent": "DEFINITION"},
+        {"question": "Comment traiter le diabete ?", "answer": "Traitement diabete.",
+         "concepts": ["diabete", "insuline"], "intent": "TRAITEMENT"},
+    ]
+    return kb
+
+
+def test_find_best_answer_no_entities_returns_empty():
+    se = SearchEngine(make_qa_kb())
+    assert se.find_best_answer([], "DEFINITION") == []
+
+
+def test_find_best_answer_returns_scored_candidates_sorted():
+    se = SearchEngine(make_qa_kb())
+    candidates = se.find_best_answer(["diabete"], "DEFINITION")
+    assert candidates
+    scores = [score for score, _ in candidates]
+    assert scores == sorted(scores, reverse=True)
+
+
+def test_find_best_answer_intent_match_ranks_first():
+    se = SearchEngine(make_qa_kb())
+    candidates = se.find_best_answer(["diabete"], "TRAITEMENT")
+    assert candidates[0][1] == "Traitement diabete."

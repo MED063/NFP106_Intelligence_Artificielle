@@ -46,10 +46,19 @@ class ChatBot:
             return 'Au revoir !'
 
         entities = self.nlp.extract_entities(tokens, self.kb)
-        raw_answer = self.search.find_best_answer(entities, intent)
-        ranked = self.learner.rank_answers(tokens, [raw_answer] if raw_answer else [])
+        candidates = self.search.find_best_answer(entities, intent)
+        if not candidates:
+            return "Je n'ai pas trouvé de réponse à votre question."
 
-        return ranked[0] if ranked else "Je n'ai pas trouvé de réponse à votre question."
+        # Le score du graphe (chevauchement d'entites + intention) fait
+        # foi ; le TF-IDF ne sert qu'a departager les reponses ex-aequo
+        # (ex : deux Q/A partageant exactement les memes concepts).
+        top_score = candidates[0][0]
+        tied = [answer for score, answer in candidates if score == top_score]
+        if len(tied) == 1:
+            return tied[0]
+        ranked = self.learner.rank_answers(tokens, tied)
+        return ranked[0] if ranked else tied[0]
 
 
 if __name__ == '__main__':
