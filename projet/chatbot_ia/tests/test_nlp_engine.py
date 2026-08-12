@@ -58,6 +58,18 @@ def test_tokenize_strips_accents_and_ligatures():
     assert "coeur" in nlp.tokenize("cœur")
 
 
+def test_classify_intent_uses_nb_fallback_when_no_rule_matches():
+    nlp = NLPEngine()
+    tokens = ["xyzzy", "inconnu"]
+    assert nlp.classify_intent(tokens, nb_fallback=lambda t: "FONCTIONNEMENT") == "FONCTIONNEMENT"
+
+
+def test_classify_intent_rule_takes_priority_over_nb_fallback():
+    nlp = NLPEngine()
+    tokens = ["bonjour"]
+    assert nlp.classify_intent(tokens, nb_fallback=lambda t: "FONCTIONNEMENT") == "SALUTATION"
+
+
 def test_extract_entities():
     nlp = NLPEngine()
     kb = KnowledgeBase()

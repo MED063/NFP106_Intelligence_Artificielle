@@ -33,12 +33,28 @@ class ChatBot:
         if documents:
             self.learner.build_tfidf(documents)
 
+        # V2 de classify_intent : Naive Bayes entraine sur les intentions
+        # etiquetees des qa_pairs, utilise comme filet de securite quand
+        # aucune regle (V1) ne s'applique.
+        labeled = [
+            (self.nlp.preprocess(qa['question']), qa['intent'])
+            for qa in self.kb.qa_pairs
+            if qa.get('question') and qa.get('intent')
+        ]
+        if labeled:
+            X, y = zip(*labeled)
+            self.learner.train_naive_bayes(list(X), list(y))
+            self._nb_ready = True
+        else:
+            self._nb_ready = False
+
     def retrain(self) -> None:
         self.learner.retrain(self.kb)
 
     def answer(self, user_input: str) -> str:
         tokens = self.nlp.preprocess(user_input)
-        intent = self.nlp.classify_intent(tokens)
+        nb_fallback = self.learner.predict_intent if self._nb_ready else None
+        intent = self.nlp.classify_intent(tokens, nb_fallback=nb_fallback)
 
         if intent == 'SALUTATION':
             return 'Bonjour ! Comment puis-je vous aider ?'

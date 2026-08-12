@@ -59,7 +59,11 @@ class NLPEngine:
         tokens = self.stem(tokens)
         return tokens
 
-    def classify_intent(self, tokens: list) -> str:
+    def classify_intent(self, tokens: list, nb_fallback=None) -> str:
+        """Classifie l'intention par regles (V1) puis, si aucune regle
+        specifique ne s'applique, delegue a un classifieur Naive Bayes
+        entraine sur des exemples etiquetes (V2), si fourni via
+        `nb_fallback` (ex : LearningEngine.predict_intent)."""
         words = set(tokens)
 
         def has_root(roots):
@@ -85,6 +89,10 @@ class NLPEngine:
             return 'FONCTIONNEMENT'
         if 'qu' in words or has_root(['définition', 'definition', 'définir', 'definir', 'signifie', 'signif']):
             return 'DEFINITION'
+        if nb_fallback is not None:
+            predicted = nb_fallback(tokens)
+            if predicted:
+                return predicted
         return 'DEFINITION'
 
     def extract_entities(self, tokens: list, kb) -> list:
