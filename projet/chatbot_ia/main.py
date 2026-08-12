@@ -14,7 +14,7 @@ class ChatBot:
         self.kb = KnowledgeBase()
         self.nlp = NLPEngine()
         self.search = SearchEngine(self.kb)
-        self.learner = LearningEngine()
+        self.learner = LearningEngine(tokenizer=self.nlp.preprocess)
         self._load_data(data_dir)
 
     def _load_data(self, data_dir: str) -> None:

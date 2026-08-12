@@ -4,7 +4,7 @@ from collections import defaultdict
 
 
 class LearningEngine:
-    def __init__(self):
+    def __init__(self, tokenizer=None):
         self.tfidf_matrix = None
         self.vocabulary = {}
         self.idf = {}
@@ -12,6 +12,14 @@ class LearningEngine:
         self._nb_prior = {}
         self._nb_likelihood = {}
         self._nb_classes = []
+        # Tokenizer applique aux reponses candidates dans rank_answers.
+        # Par defaut un simple split (retro-compatible) ; en pratique on y
+        # injecte NLPEngine.preprocess pour que les candidats soient
+        # normalises (accents, ponctuation, stemming) exactement comme le
+        # vocabulaire TF-IDF construit par build_tfidf, sans quoi des
+        # reponses correctes sont mal classees a cause d'un simple accent
+        # ou d'une parenthese collee au mot.
+        self._tokenize_candidate = tokenizer or (lambda text: text.lower().split())
 
     def build_tfidf(self, documents: list) -> None:
         N = len(documents)
@@ -61,7 +69,7 @@ class LearningEngine:
         for candidate in candidates:
             if not candidate:
                 continue
-            tokens = candidate.lower().split()
+            tokens = self._tokenize_candidate(candidate)
             tf2 = defaultdict(int)
             for t in tokens:
                 tf2[t] += 1

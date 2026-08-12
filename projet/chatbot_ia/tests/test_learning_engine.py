@@ -62,6 +62,14 @@ def test_rank_answers_prefers_relevant():
     assert ranked[0] == candidates[0]
 
 
+def test_rank_answers_uses_injected_tokenizer():
+    le = LearningEngine(tokenizer=lambda text: [t.strip('().,;?!') for t in text.lower().split()])
+    le.build_tfidf([['imc'], ['obesite']])
+    candidates = ['Indice de masse corporelle (IMC).', "L'obesite est frequente."]
+    ranked = le.rank_answers(['imc'], candidates)
+    assert ranked[0] == candidates[0]
+
+
 def test_train_naive_bayes_populates_classes():
     le = LearningEngine()
     X = [['python', 'langage'], ['bfs', 'graphe'], ['python', 'objet']]
