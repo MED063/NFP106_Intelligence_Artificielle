@@ -7,18 +7,18 @@ from knowledge_base import KnowledgeBase
 from search_engine import SearchEngine
 
 PAIRS = [
-    ("python", "programmation"),
-    ("java", "heritage"),
-    ("algorithme", "a_star"),
-    ("structure_donnees", "graphe"),
-    ("graphe", "bfs"),
-    ("dfs", "recursion"),
-    ("objet", "encapsulation"),
-    ("ia", "nlp"),
-    ("http", "api"),
-    ("test", "debug"),
-    ("algorithme", "arbre"),
-    ("reseau", "web"),
+    ("diabete", "insuline"),
+    ("diabete", "avc"),
+    ("obesite", "imc"),
+    ("hypertension", "statines"),
+    ("cholesterol", "infarctus"),
+    ("grippe", "vaccin"),
+    ("depression", "antidepresseurs"),
+    ("asthme", "poumons"),
+    ("regime_mediterraneen", "avc"),
+    ("obesite", "hypertension"),
+    ("diabete", "coeur"),
+    ("osteoporose", "imc"),
 ]
 
 
