@@ -162,6 +162,7 @@
     "question": "Qu'est-ce que l'hépatite ?",
     "answer": "L'hépatite est une inflammation du foie pouvant être causée par des virus, l'alcool, certains médicaments ou des maladies auto-immunes. Les formes chroniques peuvent évoluer vers des complications graves.",
     "concepts": [
+      "hepatite",
       "foie"
     ],
     "intent": "DEFINITION"
@@ -353,6 +354,7 @@
     "question": "Comment améliorer son sommeil ?",
     "answer": "Pour améliorer le sommeil : maintenir des horaires réguliers, créer un environnement propice au repos, éviter les écrans avant de dormir et limiter la caféine en fin de journée.",
     "concepts": [
+      "sommeil",
       "insomnie"
     ],
     "intent": "PREVENTION"

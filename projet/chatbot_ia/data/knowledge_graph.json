@@ -1,5 +1,7 @@
 {
   "concepts": [
+    "hepatite",
+    "sommeil",
     "diabete",
     "hypertension",
     "cancer",
@@ -36,6 +38,16 @@
     "imc"
   ],
   "relations": [
+    {
+      "src": "hepatite",
+      "dst": "foie",
+      "weight": 0.9
+    },
+    {
+      "src": "sommeil",
+      "dst": "insomnie",
+      "weight": 0.9
+    },
     {
       "src": "diabete",
       "dst": "insuline",
