@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from collections import defaultdict
 
 
@@ -18,8 +19,16 @@ class NLPEngine:
         self.stopwords = STOPWORDS_FR
         self.stemmer = None
 
+    def _strip_accents(self, text: str) -> str:
+        """Normalise les accents/ligatures francais (obesite == obésité,
+        coeur == cœur) afin que le matching avec les concepts du graphe
+        (ecrits sans accent) fonctionne sans distance de Levenshtein."""
+        text = text.replace('œ', 'oe').replace('æ', 'ae')
+        text = unicodedata.normalize('NFKD', text)
+        return ''.join(c for c in text if not unicodedata.combining(c))
+
     def tokenize(self, text: str) -> list:
-        text = text.lower()
+        text = self._strip_accents(text.lower())
         text = re.sub(r'[^\w\s]', ' ', text)
         return [t for t in text.split() if t]
 

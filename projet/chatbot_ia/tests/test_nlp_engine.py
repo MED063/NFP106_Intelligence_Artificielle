@@ -52,6 +52,12 @@ def test_classify_intent_prevention():
     assert nlp.classify_intent(tokens) == "PREVENTION"
 
 
+def test_tokenize_strips_accents_and_ligatures():
+    nlp = NLPEngine()
+    assert "obesite" in nlp.tokenize("obésité")
+    assert "coeur" in nlp.tokenize("cœur")
+
+
 def test_extract_entities():
     nlp = NLPEngine()
     kb = KnowledgeBase()
