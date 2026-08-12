@@ -7,7 +7,7 @@ from main import ChatBot
 
 
 def run_cli(bot: ChatBot) -> None:
-    print("=== ChatBot IA - Informatique ===")
+    print("=== ChatBot IA - Santé ===")
     print("Tapez 'quit' pour quitter.\n")
     feedback_count = 0
     data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
