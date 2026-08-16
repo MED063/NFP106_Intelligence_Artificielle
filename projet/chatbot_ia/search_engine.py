@@ -4,6 +4,13 @@ import heapq
 import time
 
 
+# Intentions pour lesquelles la question porte sur les causes/facteurs
+# d'un concept (l'effet) plutot que sur ses consequences : le graphe
+# oriente ne modelisant que 'cause -> effet', il faut alors remonter les
+# relations entrantes (get_predecessors) plutot que les sortantes.
+CAUSAL_INTENTS = {'CAUSES', 'FACTEURS_RISQUE'}
+
+
 class SearchEngine:
     def __init__(self, kb):
         self.kb = kb
@@ -117,8 +124,19 @@ class SearchEngine:
             precision = len(overlap) / len(qa_concepts) if qa_concepts else 0.0
             score = 2.0 * len(overlap) * precision
             for entity in entities:
-                neighbors = self.kb.get_neighbors(entity)
-                score += sum(neighbors[c] for c in qa_concepts if c in neighbors)
+                # Pour une question CAUSES/FACTEURS_RISQUE, seules les
+                # relations entrantes (X -> entite, X = cause) sont
+                # pertinentes : les relations sortantes de l'entite
+                # representent ses consequences, pas ses causes, et les
+                # compter ici favorisait des Q/A hors sujet (ex : les
+                # complications de l'hypertension quand on demande ses
+                # causes).
+                related = (
+                    self.kb.get_predecessors(entity)
+                    if intent in CAUSAL_INTENTS
+                    else self.kb.get_neighbors(entity)
+                )
+                score += sum(related[c] for c in qa_concepts if c in related)
             if intent == qa.get('intent', ''):
                 score += 10.0
             candidates.append((score, qa.get('answer', '')))

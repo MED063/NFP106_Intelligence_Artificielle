@@ -19,6 +19,18 @@ class KnowledgeBase:
     def get_neighbors(self, concept: str) -> dict:
         return self.graph.get(concept, {})
 
+    def get_predecessors(self, concept: str) -> dict:
+        """Retourne les concepts ayant une relation entrante vers
+        `concept` (src -> concept), avec leur poids. Le graphe etant
+        oriente (ex : 'obesite -> hypertension' pour modeliser un facteur
+        de risque/une cause), get_neighbors seul ne donne que les effets
+        d'un concept ; get_predecessors permet de remonter ses causes."""
+        return {
+            src: weights[concept]
+            for src, weights in self.graph.items()
+            if concept in weights
+        }
+
     def load_from_json(self, filepath: str) -> None:
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)

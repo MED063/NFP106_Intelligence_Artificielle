@@ -142,6 +142,8 @@ L'heuristique utilisée est `h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal))` 
 
 `SearchEngine.find_best_answer` note chaque Q/A candidate selon : le chevauchement pondéré par précision entre les entités extraites et les concepts de la Q/A, la proximité de ces concepts dans le graphe, et une forte prime en cas de correspondance d'intention (ex : distinguer une DEFINITION d'un TRAITEMENT sur le même concept). Quand plusieurs Q/A obtiennent le score maximal (ex æquo — cas des concepts strictement identiques comme IMC/obésité), `LearningEngine.rank_answers` les départage par similarité cosinus TF-IDF avec la question d'origine, réponses et requête étant tokenisées par le même pipeline NLP pour rester comparables.
 
+Pour les intentions CAUSES et FACTEURS_RISQUE, la proximité dans le graphe est mesurée via `KnowledgeBase.get_predecessors` (relations entrantes, X → entité) plutôt que `get_neighbors` (relations sortantes) : le graphe étant orienté « cause → effet », les relations sortantes d'un concept représentent ses conséquences, pas ses causes ; les compter y faisait remonter des Q/A hors sujet (ex : les complications de l'hypertension quand la question porte sur ses causes).
+
 ### Classification de l'intention (V1 + V2)
 
 `NLPEngine.classify_intent` applique d'abord des règles par mots-clés (V1). Si aucune règle ne matche, elle délègue à un classifieur Naïve Bayes multinomial (`LearningEngine.train_naive_bayes` / `predict_intent`, implémentation maison) entraîné au démarrage sur les intentions étiquetées des `qa_pairs` (V2), comme filet de sécurité.
@@ -160,14 +162,14 @@ L'heuristique utilisée est `h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal))` 
 - NLP optimisé pour le français (stemming par règles de suffixes, pas d'embeddings)
 - Pas de prise en compte du contexte conversationnel multi-tour
 - Heuristique A* basée sur des bigrammes de caractères — proxy simple, pas de vraie sémantique
-- Le graphe modélise des relations dirigées génériques (pas explicitement « cause de » vs « associé à ») : sur quelques questions de type CAUSES, une Q/A voisine mais moins pertinente peut l'emporter
+- Le graphe distingue causes (relations entrantes) et conséquences (relations sortantes) via `get_predecessors`, mais reste un simple graphe pondéré : quand une relation existe dans les deux sens entre deux concepts comorbides (ex : hypertension ↔ AVC, mutuellement facteurs de risque l'un de l'autre), l'ambiguïté persiste sur de rares questions CAUSES (2/62 dans `evaluate.py`)
 - Le mécanisme de feedback ajuste le classement entre réponses déjà connues mais ne comble pas une lacune de la base (concept manquant) ; sur le jeu de test actuel, la précision est déjà proche du plafond donc le gain mesuré par `evaluate.py` est nul (voir tableau ci-dessus) — la démonstration du mécanisme reste effective sur des cas ambigus (ex-aequo)
 
 ## Pistes d'amélioration (M2)
 
 - Remplacer le stemming par des embeddings denses (transformers)
 - Heuristique A* basée sur la similarité cosinus entre embeddings denses
-- Modéliser explicitement la sémantique des relations (cause/conséquence/traitement) plutôt qu'un simple poids
+- Typer les relations du graphe (cause_de, traite, associe_a...) plutôt qu'un simple poids directionnel, pour lever l'ambiguïté des relations bidirectionnelles entre concepts comorbides
 - Architecture distribuée pour la base de connaissances
 - Interface web Flask
 

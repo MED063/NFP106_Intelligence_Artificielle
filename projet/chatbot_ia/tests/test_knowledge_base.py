@@ -33,6 +33,20 @@ def test_get_neighbors_unknown():
     assert kb.get_neighbors("inconnu") == {}
 
 
+def test_get_predecessors():
+    kb = KnowledgeBase()
+    kb.add_relation("obesite", "hypertension", 0.75)
+    kb.add_relation("cholesterol", "hypertension", 0.6)
+    kb.add_relation("hypertension", "avc", 0.8)
+    predecessors = kb.get_predecessors("hypertension")
+    assert predecessors == {"obesite": 0.75, "cholesterol": 0.6}
+
+
+def test_get_predecessors_unknown():
+    kb = KnowledgeBase()
+    assert kb.get_predecessors("inconnu") == {}
+
+
 def test_load_from_json(tmp_path):
     import json
     data = {

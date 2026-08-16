@@ -121,3 +121,24 @@ def test_find_best_answer_intent_match_ranks_first():
     se = SearchEngine(make_qa_kb())
     candidates = se.find_best_answer(["diabete"], "TRAITEMENT")
     assert candidates[0][1] == "Traitement diabete."
+
+
+def make_causal_kb():
+    kb = KnowledgeBase()
+    # obesite est une cause (predecesseur) de l'hypertension ; avc en est
+    # une consequence (successeur), pas une cause.
+    kb.add_relation("obesite", "hypertension", 0.9)
+    kb.add_relation("hypertension", "avc", 0.9)
+    kb.qa_pairs = [
+        {"question": "Quelles sont les causes de l'hypertension ?",
+         "answer": "Causes : obesite.", "concepts": ["hypertension", "obesite"], "intent": "CAUSES"},
+        {"question": "Quelles sont les causes de l'AVC ?",
+         "answer": "Causes : hypertension.", "concepts": ["hypertension", "avc"], "intent": "CAUSES"},
+    ]
+    return kb
+
+
+def test_find_best_answer_causes_uses_predecessors_not_successors():
+    se = SearchEngine(make_causal_kb())
+    candidates = se.find_best_answer(["hypertension"], "CAUSES")
+    assert candidates[0][1] == "Causes : obesite."
