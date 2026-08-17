@@ -20,12 +20,12 @@ ChatBot IA capable de répondre aux questions sur la santé (maladies chroniques
 - Parcours du graphe de connaissances via BFS, DFS et A*, avec comparaison mesurée (chemin, nœuds explorés, temps)
 - Sélection de réponse par score de graphe (chevauchement d'entités + proximité + intention), départagée par similarité TF-IDF quand plusieurs Q/A sont ex æquo
 - Apprentissage par feedback utilisateur (TF-IDF + Naïve Bayes), re-entraînement automatique tous les 3 retours
-- Interface CLI interactive
+- Deux interfaces au choix : CLI interactive (`main.py`) et interface web Flask (`web_app.py`)
 
 ## Prérequis
 
 - Python 3.10+
-- numpy, pytest (voir `requirements.txt`)
+- numpy, pytest, flask (voir `requirements.txt`)
 
 ## Installation
 
@@ -37,9 +37,19 @@ pip install -r requirements.txt
 
 ## Lancement
 
+Interface en ligne de commande :
+
 ```bash
 python main.py
 ```
+
+Interface web (Flask) :
+
+```bash
+python web_app.py
+```
+
+puis ouvrir http://127.0.0.1:5000 dans un navigateur. La page de discussion envoie les questions au point d'entrée `/ask` (réponse JSON) et permet de noter chaque réponse de 1 à 5 via `/feedback` ; le modèle se ré-entraîne automatiquement tous les 3 retours, comme en CLI. Le bot est instancié une seule fois au démarrage et partagé entre les requêtes.
 
 ## Tests
 
@@ -77,8 +87,11 @@ Calcule les 5 métriques attendues (précision des réponses, précision des int
 chatbot_ia/
 ├── main.py              # Point d'entrée + classe ChatBot
 ├── ui.py                # Interface CLI
+├── web_app.py           # Interface web Flask (/, /ask, /feedback)
+├── templates/
+│   └── index.html       # Page de discussion (interface web)
 ├── nlp_engine.py        # Tokenisation, stemming, NER, classification d'intention
-├── knowledge_base.py    # Graphe de connaissances orienté pondéré
+├── knowledge_base.py    # Graphe de connaissances orienté pondéré (relations typées)
 ├── search_engine.py     # BFS / DFS / A* + comparaison (nœuds explorés, temps)
 ├── learning_engine.py   # TF-IDF / similarité cosinus / Naïve Bayes / feedback
 ├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
@@ -92,7 +105,8 @@ chatbot_ia/
 │   ├── test_nlp_engine.py
 │   ├── test_search_engine.py
 │   ├── test_learning_engine.py
-│   └── test_main.py
+│   ├── test_main.py
+│   └── test_web_app.py
 └── requirements.txt
 ```
 
