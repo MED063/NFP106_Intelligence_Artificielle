@@ -3,6 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import config
 from knowledge_base import KnowledgeBase
 from nlp_engine import NLPEngine
 from search_engine import SearchEngine
@@ -10,12 +11,16 @@ from learning_engine import LearningEngine
 
 
 class ChatBot:
-    def __init__(self, data_dir: str = 'data/'):
+    def __init__(self, data_dir: str = config.DATA_DIR):
         self.kb = KnowledgeBase()
         self.nlp = NLPEngine()
         self.search = SearchEngine(self.kb)
         self.learner = LearningEngine(tokenizer=self.nlp.preprocess)
+        self.logger = config.get_logger()
         self._load_data(data_dir)
+        self.logger.info(
+            'ChatBot initialise : %d concepts, %d Q/A',
+            len(self.kb.graph), len(self.kb.qa_pairs))
 
     def _load_data(self, data_dir: str) -> None:
         kg_path = os.path.join(data_dir, 'knowledge_graph.json')
@@ -55,6 +60,7 @@ class ChatBot:
         tokens = self.nlp.preprocess(user_input)
         nb_fallback = self.learner.predict_intent if self._nb_ready else None
         intent = self.nlp.classify_intent(tokens, nb_fallback=nb_fallback)
+        self.logger.info('Question=%r intent=%s', user_input, intent)
 
         if intent == 'SALUTATION':
             return 'Bonjour ! Comment puis-je vous aider ?'
@@ -64,6 +70,7 @@ class ChatBot:
         entities = self.nlp.extract_entities(tokens, self.kb)
         candidates = self.search.find_best_answer(entities, intent)
         if not candidates:
+            self.logger.warning('Aucune reponse trouvee (entites=%s)', entities)
             return "Je n'ai pas trouvé de réponse à votre question."
 
         # Le score du graphe (chevauchement d'entites + intention) fait
