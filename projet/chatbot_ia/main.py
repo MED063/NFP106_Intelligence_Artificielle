@@ -8,6 +8,7 @@ from knowledge_base import KnowledgeBase
 from nlp_engine import NLPEngine
 from search_engine import SearchEngine
 from learning_engine import LearningEngine
+from llm_engine import LLMEngine
 
 
 class ChatBot:
@@ -17,6 +18,9 @@ class ChatBot:
         self.search = SearchEngine(self.kb)
         self.learner = LearningEngine(tokenizer=self.nlp.preprocess)
         self.logger = config.get_logger()
+        # LLM optionnel : desactive par defaut (config.USE_LLM=False), le
+        # coeur maison reste autonome. Voir llm_engine.py.
+        self.llm = LLMEngine(logger=self.logger)
         self._load_data(data_dir)
         self.logger.info(
             'ChatBot initialise : %d concepts, %d Q/A',
@@ -71,6 +75,11 @@ class ChatBot:
         candidates = self.search.find_best_answer(entities, intent)
         if not candidates:
             self.logger.warning('Aucune reponse trouvee (entites=%s)', entities)
+            # Filet de secours LLM optionnel (desactive par defaut).
+            if self.llm.is_available():
+                reply = self.llm.answer_fallback(user_input)
+                if reply:
+                    return reply
             return "Je n'ai pas trouvé de réponse à votre question."
 
         # Le score du graphe (chevauchement d'entites + intention) fait
@@ -79,9 +88,19 @@ class ChatBot:
         top_score = candidates[0][0]
         tied = [answer for score, answer in candidates if score == top_score]
         if len(tied) == 1:
-            return tied[0]
-        ranked = self.learner.rank_answers(tokens, tied)
-        return ranked[0] if ranked else tied[0]
+            answer = tied[0]
+        else:
+            ranked = self.learner.rank_answers(tokens, tied)
+            answer = ranked[0] if ranked else tied[0]
+
+        # Reformulation LLM optionnelle (RAG) : le LLM n'a le droit que de
+        # reformuler la reponse maison, sans rien y ajouter. En cas d'echec
+        # ou si desactive, on renvoie la reponse brute inchangee.
+        if self.llm.is_available():
+            reply = self.llm.reformulate(user_input, answer)
+            if reply:
+                return reply
+        return answer
 
 
 if __name__ == '__main__':
