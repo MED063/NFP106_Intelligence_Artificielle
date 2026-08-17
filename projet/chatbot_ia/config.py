@@ -28,6 +28,23 @@ LEVENSHTEIN_MAX_DISTANCE = 1
 LOG_FILE = os.path.join(BASE_DIR, 'chatbot.log')
 LOG_LEVEL = 'INFO'
 
+# --- LLM optionnel (reformulation RAG) ---
+# Desactive par defaut : le systeme fonctionne entierement sans LLM (le
+# coeur maison reste autonome). Active, le LLM ne fait que REFORMULER en
+# langage naturel la reponse deja trouvee par le moteur maison (approche
+# RAG : il ne doit rien inventer), et sert de filet de secours quand aucune
+# reponse n'est trouvee. Compatible avec toute API "OpenAI-compatible"
+# (Groq gratuit par defaut ; Mistral, Gemini via endpoint compatible, etc.)
+# en changeant simplement les variables d'environnement ci-dessous.
+USE_LLM = os.environ.get('USE_LLM', '0') in ('1', 'true', 'True', 'yes')
+LLM_API_BASE = os.environ.get('LLM_API_BASE', 'https://api.groq.com/openai/v1')
+LLM_MODEL = os.environ.get('LLM_MODEL', 'llama-3.3-70b-versatile')
+# La cle est lue dans l'environnement (jamais ecrite dans le depot).
+LLM_API_KEY = os.environ.get('LLM_API_KEY', os.environ.get('GROQ_API_KEY', ''))
+LLM_TIMEOUT = float(os.environ.get('LLM_TIMEOUT', '15'))
+LLM_TEMPERATURE = 0.2
+LLM_MAX_TOKENS = 500
+
 
 def get_logger(name: str = 'chatbot') -> logging.Logger:
     """Retourne un logger configure pour ecrire dans `LOG_FILE`.
