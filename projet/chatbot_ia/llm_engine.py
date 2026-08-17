@@ -1,0 +1,111 @@
+"""Moteur LLM optionnel (reformulation RAG).
+
+Ce module est **facultatif** : le ChatBot fonctionne entierement sans lui.
+Quand `config.USE_LLM` est actif et qu'une cle d'API est fournie, il permet
+deux choses :
+
+1. Reformuler en langage naturel la reponse deja selectionnee par le moteur
+   maison (recherche dans le graphe + TF-IDF). C'est une approche RAG : le
+   LLM ne s'appuie que sur le contexte fourni et ne doit rien inventer, ce
+   qui limite fortement les hallucinations — essentiel en sante.
+2. Servir de filet de secours quand le moteur maison ne trouve aucune
+   reponse, en repondant de facon prudente.
+
+L'implementation utilise uniquement la bibliotheque standard (`urllib`) et
+parle a n'importe quelle API "OpenAI-compatible" (Groq gratuit par defaut,
+mais aussi Mistral, un endpoint compatible Gemini, un serveur local Ollama,
+etc.) via l'endpoint `/chat/completions`. Aucune dependance lourde n'est
+ajoutee, conformement aux contraintes du projet.
+
+Toute erreur (cle absente, reseau indisponible, delai depasse, reponse
+inattendue) est capturee et renvoie `None` : l'appelant retombe alors sur
+la reponse brute du moteur maison. Le LLM ne peut donc jamais casser le
+pipeline.
+"""
+import json
+import urllib.error
+import urllib.request
+
+import config
+
+SYSTEM_REFORMULATE = (
+    "Tu es un assistant sante francophone. On te donne une QUESTION et une "
+    "REPONSE de reference issue d'une base de connaissances verifiee. "
+    "Reformule cette reponse de facon claire, naturelle et concise pour "
+    "repondre a la question. Ne t'appuie QUE sur la reponse de reference : "
+    "n'ajoute aucune information medicale qui n'y figure pas. Reponds en "
+    "francais. Termine par un bref rappel que cela ne remplace pas un avis "
+    "medical."
+)
+
+SYSTEM_FALLBACK = (
+    "Tu es un assistant sante francophone. La base de connaissances ne "
+    "contient pas de reponse a cette question. Reponds brievement et "
+    "prudemment si le sujet releve de la sante generale ; si tu n'es pas sur "
+    "ou si la question sort du domaine de la sante, dis-le clairement plutot "
+    "que d'inventer. Termine par un rappel que cela ne remplace pas un avis "
+    "medical."
+)
+
+
+class LLMEngine:
+    """Client minimal vers une API de chat "OpenAI-compatible"."""
+
+    def __init__(self, logger=None):
+        self.logger = logger
+
+    def is_available(self) -> bool:
+        """Vrai seulement si le LLM est active ET qu'une cle est fournie."""
+        return bool(config.USE_LLM and config.LLM_API_KEY)
+
+    def reformulate(self, question: str, reference_answer: str):
+        """Reformule `reference_answer` pour repondre a `question`.
+        Renvoie le texte reformule, ou None en cas d'echec (l'appelant
+        retombe alors sur `reference_answer`)."""
+        if not self.is_available() or not reference_answer:
+            return None
+        messages = [
+            {"role": "system", "content": SYSTEM_REFORMULATE},
+            {"role": "user",
+             "content": f"QUESTION : {question}\n\nREPONSE DE REFERENCE : {reference_answer}"},
+        ]
+        return self._chat(messages)
+
+    def answer_fallback(self, question: str):
+        """Repond a une question pour laquelle le moteur maison n'a rien
+        trouve. Renvoie None en cas d'echec."""
+        if not self.is_available():
+            return None
+        messages = [
+            {"role": "system", "content": SYSTEM_FALLBACK},
+            {"role": "user", "content": question},
+        ]
+        return self._chat(messages)
+
+    def _chat(self, messages: list):
+        """Appelle l'endpoint /chat/completions. Renvoie le contenu texte
+        ou None en cas d'erreur (jamais d'exception propagee)."""
+        url = config.LLM_API_BASE.rstrip('/') + '/chat/completions'
+        payload = json.dumps({
+            "model": config.LLM_MODEL,
+            "messages": messages,
+            "temperature": config.LLM_TEMPERATURE,
+            "max_tokens": config.LLM_MAX_TOKENS,
+        }).encode('utf-8')
+        request = urllib.request.Request(
+            url, data=payload, method='POST',
+            headers={
+                'Authorization': f'Bearer {config.LLM_API_KEY}',
+                'Content-Type': 'application/json',
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=config.LLM_TIMEOUT) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+            content = data['choices'][0]['message']['content'].strip()
+            return content or None
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError,
+                KeyError, IndexError, ValueError) as exc:
+            if self.logger:
+                self.logger.warning('Appel LLM echoue (%s), repli sur la reponse maison', exc)
+            return None
