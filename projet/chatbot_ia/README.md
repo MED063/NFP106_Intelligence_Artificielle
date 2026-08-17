@@ -144,6 +144,10 @@ L'heuristique utilisée est `h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal))` 
 
 Pour les intentions CAUSES et FACTEURS_RISQUE, la proximité dans le graphe est mesurée via `KnowledgeBase.get_predecessors` (relations entrantes, X → entité) plutôt que `get_neighbors` (relations sortantes) : le graphe étant orienté « cause → effet », les relations sortantes d'un concept représentent ses conséquences, pas ses causes ; les compter y faisait remonter des Q/A hors sujet (ex : les complications de l'hypertension quand la question porte sur ses causes).
 
+### Relations typées du graphe
+
+Chaque arête du graphe porte un **type sémantique** (`cause_de`, `associe_a`, `traite_par`, `symptome`, `affecte`, `previent`) en plus de son poids. Ce typage lève l'ambiguïté des relations bidirectionnelles entre concepts comorbides : lorsque deux pathologies sont mutuellement facteurs de risque l'une de l'autre (ex : hypertension ↔ AVC, ou diabète ↔ obésité), le graphe contient une arête dans chaque sens. Sans distinction, `get_predecessors` remontait l'arête inverse comme une « cause » et faisait gagner une Q/A voisine. En marquant ces liens `associe_a` (association) plutôt que `cause_de`, les requêtes CAUSES/FACTEURS_RISQUE (`SearchEngine.find_best_answer` via `get_predecessors(entity, types={'cause_de'})`) ne remontent plus que les vraies causes. Le typage reste optionnel : une relation sans type demeure un simple lien pondéré (rétro-compatibilité), et les algorithmes de recherche (BFS/DFS/A*) continuent d'utiliser le graphe pondéré tel quel.
+
 ### Classification de l'intention (V1 + V2)
 
 `NLPEngine.classify_intent` applique d'abord des règles par mots-clés (V1). Si aucune règle ne matche, elle délègue à un classifieur Naïve Bayes multinomial (`LearningEngine.train_naive_bayes` / `predict_intent`, implémentation maison) entraîné au démarrage sur les intentions étiquetées des `qa_pairs` (V2), comme filet de sécurité.
@@ -162,16 +166,15 @@ Pour les intentions CAUSES et FACTEURS_RISQUE, la proximité dans le graphe est 
 - NLP optimisé pour le français (stemming par règles de suffixes, pas d'embeddings)
 - Pas de prise en compte du contexte conversationnel multi-tour
 - Heuristique A* basée sur des bigrammes de caractères — proxy simple, pas de vraie sémantique
-- Le graphe distingue causes (relations entrantes) et conséquences (relations sortantes) via `get_predecessors`, mais reste un simple graphe pondéré : quand une relation existe dans les deux sens entre deux concepts comorbides (ex : hypertension ↔ AVC, mutuellement facteurs de risque l'un de l'autre), l'ambiguïté persiste sur de rares questions CAUSES (2/68 dans `evaluate.py`)
+- Le graphe distingue causes et conséquences via `get_predecessors`, et le typage des relations (`cause_de` vs `associe_a`) lève désormais l'ambiguïté des relations bidirectionnelles entre concepts comorbides (ex : hypertension ↔ AVC). Le typage reste renseigné manuellement, à maintenir à jour lors de l'ajout de nouvelles relations
 - Le mécanisme de feedback ajuste le classement entre réponses déjà connues mais ne comble pas une lacune de la base (concept manquant) ; sur le jeu de test actuel, la précision est déjà proche du plafond donc le gain mesuré par `evaluate.py` est nul (voir tableau ci-dessus) — la démonstration du mécanisme reste effective sur des cas ambigus (ex-aequo)
 
 ## Pistes d'amélioration (M2)
 
 - Remplacer le stemming par des embeddings denses (transformers)
 - Heuristique A* basée sur la similarité cosinus entre embeddings denses
-- Typer les relations du graphe (cause_de, traite, associe_a...) plutôt qu'un simple poids directionnel, pour lever l'ambiguïté des relations bidirectionnelles entre concepts comorbides
 - Architecture distribuée pour la base de connaissances
-- Interface web Flask
+- Inférer automatiquement le type des relations plutôt que de le renseigner à la main
 
 ## Usage IA
 
