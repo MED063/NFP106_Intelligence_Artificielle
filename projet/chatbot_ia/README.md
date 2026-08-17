@@ -61,13 +61,13 @@ Compare les trois algorithmes (chemin, nœuds explorés, temps) sur 12 requêtes
 python evaluate.py
 ```
 
-Calcule les 5 métriques attendues (précision des réponses, précision des intentions, temps de réponse moyen, nœuds explorés BFS vs A*, gain par feedback sur 3 cycles) sur les 68 questions de `qa_pairs.json`. Résultats mesurés sur cette base :
+Calcule les 5 métriques attendues (précision des réponses, précision des intentions, temps de réponse moyen, nœuds explorés BFS vs A*, gain par feedback sur 3 cycles) sur les 79 questions de `qa_pairs.json`. Résultats mesurés sur cette base :
 
 | Métrique | Résultat mesuré | Cible |
 |---|---|---|
-| Précision des réponses | 97,1 % (66/68) | ≥ 70 % |
-| Précision des intentions | 100 % (68/68) | ≥ 80 % |
-| Temps de réponse moyen | ~1,4 ms | ≤ 2 s |
+| Précision des réponses | 100 % (79/79) | ≥ 70 % |
+| Précision des intentions | 100 % (79/79) | ≥ 80 % |
+| Temps de réponse moyen | ~1,5 ms | ≤ 2 s |
 | Nœuds explorés (12 requêtes) | BFS 5,5 vs A* 3,1 | A* < BFS |
 | Gain par feedback (3 cycles) | +0,0 % | ≥ +5 % |
 
@@ -84,8 +84,8 @@ chatbot_ia/
 ├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
 ├── evaluate.py           # Rapport d'évaluation (5 métriques du sujet)
 ├── data/
-│   ├── qa_pairs.json        # 68 paires question/réponse
-│   ├── knowledge_graph.json # Graphe (39 concepts, 68 relations)
+│   ├── qa_pairs.json        # 79 paires question/réponse
+│   ├── knowledge_graph.json # Graphe (46 concepts, 80 relations typées)
 │   └── feedback_log.json    # Historique des retours utilisateur
 ├── tests/
 │   ├── test_knowledge_base.py
@@ -162,7 +162,7 @@ Chaque arête du graphe porte un **type sémantique** (`cause_de`, `associe_a`, 
 
 ## Limites identifiées
 
-- Base de connaissances limitée à 68 Q/R et 39 concepts
+- Base de connaissances limitée à 79 Q/R et 46 concepts
 - NLP optimisé pour le français (stemming par règles de suffixes, pas d'embeddings)
 - Pas de prise en compte du contexte conversationnel multi-tour
 - Heuristique A* basée sur des bigrammes de caractères — proxy simple, pas de vraie sémantique
