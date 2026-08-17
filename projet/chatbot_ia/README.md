@@ -21,6 +21,7 @@ ChatBot IA capable de répondre aux questions sur la santé (maladies chroniques
 - Sélection de réponse par score de graphe (chevauchement d'entités + proximité + intention), départagée par similarité TF-IDF quand plusieurs Q/A sont ex æquo
 - Apprentissage par feedback utilisateur (TF-IDF + Naïve Bayes), re-entraînement automatique tous les 3 retours
 - Deux interfaces au choix : CLI interactive (`main.py`) et interface web Flask (`web_app.py`)
+- Reformulation optionnelle des réponses par un LLM (approche RAG, désactivée par défaut)
 
 ## Prérequis
 
@@ -86,7 +87,8 @@ Calcule les 5 métriques attendues (précision des réponses, précision des int
 ```
 chatbot_ia/
 ├── main.py              # Point d'entrée + classe ChatBot (journalisation)
-├── config.py            # Configuration centralisée (chemins, paramètres, logs)
+├── config.py            # Configuration centralisée (chemins, paramètres, logs, LLM)
+├── llm_engine.py        # Reformulation LLM optionnelle (RAG, API compatible OpenAI)
 ├── ui.py                # Interface CLI
 ├── web_app.py           # Interface web Flask (/, /ask, /feedback)
 ├── templates/
@@ -108,7 +110,8 @@ chatbot_ia/
 │   ├── test_learning_engine.py
 │   ├── test_main.py
 │   ├── test_web_app.py
-│   └── test_config.py
+│   ├── test_config.py
+│   └── test_llm_engine.py
 └── requirements.txt
 ```
 
@@ -117,6 +120,23 @@ chatbot_ia/
 Le module `config.py` centralise en un seul endroit les chemins de données (`DATA_DIR`, `KNOWLEDGE_GRAPH`, `QA_PAIRS`, `FEEDBACK_LOG`), les paramètres de comportement (`FEEDBACK_RETRAIN_EVERY`, `LEVENSHTEIN_MAX_DISTANCE`) et la configuration des logs. Les interfaces (`main.py`, `ui.py`, `web_app.py`) importent ces valeurs plutôt que de coder des constantes en dur, ce qui facilite l'ajustement du comportement sans toucher au code métier.
 
 La classe `ChatBot` journalise via `config.get_logger()` chaque question reçue, l'intention détectée et les cas sans réponse, dans le fichier `chatbot.log` (niveau et emplacement configurables dans `config.py`). Le logger est idempotent (pas de handler dupliqué) et n'écrit pas sur la sortie standard, pour ne pas interférer avec la CLI ni les tests.
+
+### Option : reformulation par un LLM (RAG)
+
+Le module `llm_engine.py` permet, **de façon facultative**, de reformuler les réponses en langage naturel à l'aide d'un modèle de langage. L'approche est du **RAG** (retrieval-augmented generation) : le moteur maison (graphe + TF-IDF) reste le cœur qui *trouve* la réponse, et le LLM ne fait que la *reformuler* à partir de ce contexte, sans avoir le droit d'inventer d'information médicale. Il sert aussi de filet de secours quand aucune réponse n'est trouvée. Toute erreur (clé absente, réseau, délai) fait retomber sur la réponse brute du moteur maison : le LLM ne peut jamais casser le pipeline.
+
+L'option est **désactivée par défaut** (`USE_LLM=False`) : le système fonctionne intégralement sans LLM et sans dépendance supplémentaire (appels via `urllib` standard). Elle est compatible avec toute API « OpenAI-compatible ». Exemple avec l'offre gratuite de Groq (créer une clé sur console.groq.com, sans carte bancaire) :
+
+```bash
+export USE_LLM=1
+export LLM_API_KEY="votre_cle_groq"
+# valeurs par défaut : Groq + llama-3.3-70b-versatile
+python web_app.py     # ou python main.py
+```
+
+Pour un autre fournisseur (Mistral, endpoint compatible Gemini, serveur local Ollama…), il suffit de surcharger `LLM_API_BASE` et `LLM_MODEL`. La clé est toujours lue dans l'environnement, jamais écrite dans le dépôt.
+
+> Avertissement : les réponses de l'assistant, avec ou sans LLM, sont fournies à titre informatif et ne remplacent pas un avis médical professionnel. Lorsque le LLM est activé, la précision mesurée par `evaluate.py` (comparaison mot à mot avec la réponse de référence) n'est plus pertinente : le LLM sert le confort de lecture, pas la métrique.
 
 ## Exemples d'utilisation
 
