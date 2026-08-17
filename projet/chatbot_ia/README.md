@@ -61,14 +61,14 @@ Compare les trois algorithmes (chemin, nœuds explorés, temps) sur 12 requêtes
 python evaluate.py
 ```
 
-Calcule les 5 métriques attendues (précision des réponses, précision des intentions, temps de réponse moyen, nœuds explorés BFS vs A*, gain par feedback sur 3 cycles) sur les 62 questions de `qa_pairs.json`. Résultats mesurés sur cette base :
+Calcule les 5 métriques attendues (précision des réponses, précision des intentions, temps de réponse moyen, nœuds explorés BFS vs A*, gain par feedback sur 3 cycles) sur les 68 questions de `qa_pairs.json`. Résultats mesurés sur cette base :
 
 | Métrique | Résultat mesuré | Cible |
 |---|---|---|
-| Précision des réponses | 96,8 % (60/62) | ≥ 70 % |
-| Précision des intentions | 100 % (62/62) | ≥ 80 % |
+| Précision des réponses | 97,1 % (66/68) | ≥ 70 % |
+| Précision des intentions | 100 % (68/68) | ≥ 80 % |
 | Temps de réponse moyen | ~1,4 ms | ≤ 2 s |
-| Nœuds explorés (12 requêtes) | BFS 5,2 vs A* 3,0 | A* < BFS |
+| Nœuds explorés (12 requêtes) | BFS 5,5 vs A* 3,1 | A* < BFS |
 | Gain par feedback (3 cycles) | +0,0 % | ≥ +5 % |
 
 ## Structure du projet
@@ -84,8 +84,8 @@ chatbot_ia/
 ├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
 ├── evaluate.py           # Rapport d'évaluation (5 métriques du sujet)
 ├── data/
-│   ├── qa_pairs.json        # 62 paires question/réponse
-│   ├── knowledge_graph.json # Graphe (36 concepts, 60 relations)
+│   ├── qa_pairs.json        # 68 paires question/réponse
+│   ├── knowledge_graph.json # Graphe (39 concepts, 68 relations)
 │   └── feedback_log.json    # Historique des retours utilisateur
 ├── tests/
 │   ├── test_knowledge_base.py
@@ -136,7 +136,7 @@ Question utilisateur
 
 L'heuristique utilisée est `h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal))` (`SearchEngine.heuristic_bigram`). Elle est admissible : la similarité de Jaccard est toujours ≤ 1, donc `h(n) ≥ 0`, et elle ne peut jamais surestimer le coût réel restant (`1 - poids`, lui aussi ≥ 0). Deux concepts orthographiquement proches partagent davantage de bigrammes, ce qui guide la recherche sans jamais la biaiser vers un chemin sous-optimal.
 
-`SearchEngine.compare_algorithms(start, goal)` instrumente les trois algorithmes (nœuds explorés via `self.nodes_explored`, temps via `time.perf_counter`) et retourne un dictionnaire comparatif. Sur les 12 requêtes du benchmark (`benchmark_search.py`), A* explore en moyenne moins de nœuds que BFS (3,0 contre 5,2 — voir `evaluate.py`).
+`SearchEngine.compare_algorithms(start, goal)` instrumente les trois algorithmes (nœuds explorés via `self.nodes_explored`, temps via `time.perf_counter`) et retourne un dictionnaire comparatif. Sur les 12 requêtes du benchmark (`benchmark_search.py`), A* explore en moyenne moins de nœuds que BFS (3,1 contre 5,5 — voir `evaluate.py`).
 
 ### Sélection de la réponse
 
@@ -158,11 +158,11 @@ Pour les intentions CAUSES et FACTEURS_RISQUE, la proximité dans le graphe est 
 
 ## Limites identifiées
 
-- Base de connaissances limitée à 62 Q/R et 36 concepts
+- Base de connaissances limitée à 68 Q/R et 39 concepts
 - NLP optimisé pour le français (stemming par règles de suffixes, pas d'embeddings)
 - Pas de prise en compte du contexte conversationnel multi-tour
 - Heuristique A* basée sur des bigrammes de caractères — proxy simple, pas de vraie sémantique
-- Le graphe distingue causes (relations entrantes) et conséquences (relations sortantes) via `get_predecessors`, mais reste un simple graphe pondéré : quand une relation existe dans les deux sens entre deux concepts comorbides (ex : hypertension ↔ AVC, mutuellement facteurs de risque l'un de l'autre), l'ambiguïté persiste sur de rares questions CAUSES (2/62 dans `evaluate.py`)
+- Le graphe distingue causes (relations entrantes) et conséquences (relations sortantes) via `get_predecessors`, mais reste un simple graphe pondéré : quand une relation existe dans les deux sens entre deux concepts comorbides (ex : hypertension ↔ AVC, mutuellement facteurs de risque l'un de l'autre), l'ambiguïté persiste sur de rares questions CAUSES (2/68 dans `evaluate.py`)
 - Le mécanisme de feedback ajuste le classement entre réponses déjà connues mais ne comble pas une lacune de la base (concept manquant) ; sur le jeu de test actuel, la précision est déjà proche du plafond donc le gain mesuré par `evaluate.py` est nul (voir tableau ci-dessus) — la démonstration du mécanisme reste effective sur des cas ambigus (ex-aequo)
 
 ## Pistes d'amélioration (M2)

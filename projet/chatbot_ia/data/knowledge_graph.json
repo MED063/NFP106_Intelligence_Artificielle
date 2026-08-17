@@ -1,5 +1,8 @@
 {
   "concepts": [
+    "glycemie",
+    "tabac",
+    "alcool",
     "hepatite",
     "sommeil",
     "diabete",
@@ -38,6 +41,46 @@
     "imc"
   ],
   "relations": [
+    {
+      "src": "diabete",
+      "dst": "glycemie",
+      "weight": 0.85
+    },
+    {
+      "src": "tabac",
+      "dst": "cancer",
+      "weight": 0.9
+    },
+    {
+      "src": "tabac",
+      "dst": "infarctus",
+      "weight": 0.8
+    },
+    {
+      "src": "tabac",
+      "dst": "avc",
+      "weight": 0.75
+    },
+    {
+      "src": "tabac",
+      "dst": "poumons",
+      "weight": 0.85
+    },
+    {
+      "src": "alcool",
+      "dst": "foie",
+      "weight": 0.85
+    },
+    {
+      "src": "alcool",
+      "dst": "cancer",
+      "weight": 0.6
+    },
+    {
+      "src": "alcool",
+      "dst": "osteoporose",
+      "weight": 0.4
+    },
     {
       "src": "hepatite",
       "dst": "foie",

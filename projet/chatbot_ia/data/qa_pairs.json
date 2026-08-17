@@ -16,7 +16,8 @@
     "answer": "Le diabète est une maladie chronique caractérisée par un taux de sucre (glucose) élevé dans le sang, appelé hyperglycémie. Il existe deux types principaux : le diabète de type 1 (auto-immun, déficit en insuline) et le diabète de type 2 (résistance à l'insuline, lié au mode de vie).",
     "concepts": [
       "diabete",
-      "insuline"
+      "insuline",
+      "glycemie"
     ],
     "intent": "DEFINITION"
   },
@@ -163,7 +164,8 @@
     "answer": "L'hépatite est une inflammation du foie pouvant être causée par des virus, l'alcool, certains médicaments ou des maladies auto-immunes. Les formes chroniques peuvent évoluer vers des complications graves.",
     "concepts": [
       "hepatite",
-      "foie"
+      "foie",
+      "alcool"
     ],
     "intent": "DEFINITION"
   },
@@ -336,7 +338,9 @@
     "concepts": [
       "osteoporose",
       "alimentation_saine",
-      "activite_physique"
+      "activite_physique",
+      "tabac",
+      "alcool"
     ],
     "intent": "PREVENTION"
   },
@@ -346,7 +350,8 @@
     "concepts": [
       "cancer",
       "arret_tabac",
-      "alimentation_saine"
+      "alimentation_saine",
+      "alcool"
     ],
     "intent": "PREVENTION"
   },
@@ -457,7 +462,8 @@
     "concepts": [
       "infarctus",
       "cholesterol",
-      "coeur"
+      "coeur",
+      "tabac"
     ],
     "intent": "CAUSES"
   },
@@ -484,7 +490,9 @@
     "answer": "Les principaux facteurs de risque du cancer sont le tabagisme (premier facteur évitable), la consommation excessive d'alcool, une alimentation déséquilibrée, la sédentarité et les facteurs génétiques héréditaires.",
     "concepts": [
       "cancer",
-      "arret_tabac"
+      "arret_tabac",
+      "tabac",
+      "alcool"
     ],
     "intent": "FACTEURS_RISQUE"
   },
@@ -495,7 +503,8 @@
       "infarctus",
       "cholesterol",
       "hypertension",
-      "arret_tabac"
+      "arret_tabac",
+      "tabac"
     ],
     "intent": "FACTEURS_RISQUE"
   },
@@ -505,7 +514,8 @@
     "concepts": [
       "avc",
       "hypertension",
-      "cholesterol"
+      "cholesterol",
+      "tabac"
     ],
     "intent": "FACTEURS_RISQUE"
   },
@@ -531,7 +541,8 @@
     "answer": "L'insuline, produite par le pancréas, permet aux cellules d'absorber le glucose présent dans le sang pour l'utiliser comme énergie. Dans le diabète, ce mécanisme est déficient ou inefficace, ce qui provoque une hyperglycémie.",
     "concepts": [
       "insuline",
-      "diabete"
+      "diabete",
+      "glycemie"
     ],
     "intent": "FONCTIONNEMENT"
   },
@@ -560,5 +571,60 @@
       "avc"
     ],
     "intent": "FONCTIONNEMENT"
+  },
+  {
+    "question": "Qu'est-ce que la glycémie ?",
+    "answer": "La glycémie est le taux de glucose (sucre) présent dans le sang. À jeun, une glycémie normale se situe entre 0,70 et 1,10 g/L. On parle d'hyperglycémie au-delà, caractéristique du diabète, et d'hypoglycémie en dessous de 0,60 g/L, qui peut provoquer tremblements, sueurs et malaise.",
+    "concepts": [
+      "glycemie",
+      "diabete"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment surveiller sa glycémie ?",
+    "answer": "La glycémie se mesure par une prise de sang à jeun ou avec un lecteur de glycémie capillaire (autopiqueur), voire en continu grâce à un capteur pour les personnes diabétiques. Une surveillance régulière permet d'ajuster le traitement et l'alimentation.",
+    "concepts": [
+      "glycemie",
+      "diabete"
+    ],
+    "intent": "FONCTIONNEMENT"
+  },
+  {
+    "question": "Quels sont les risques du tabac pour la santé ?",
+    "answer": "Le tabac est le premier facteur de risque évitable de cancer, notamment du poumon, et augmente fortement le risque d'infarctus, d'AVC et de maladies respiratoires chroniques. Il endommage les artères et les poumons dès les premières années de consommation.",
+    "concepts": [
+      "tabac",
+      "cancer",
+      "poumons"
+    ],
+    "intent": "FACTEURS_RISQUE"
+  },
+  {
+    "question": "Comment arrêter le tabac ?",
+    "answer": "L'arrêt du tabac repose sur la motivation personnelle, éventuellement soutenue par des substituts nicotiniques (patchs, gommes), un accompagnement médical ou psychologique, et un suivi progressif. Les bénéfices sur la santé cardiovasculaire et respiratoire apparaissent dès les premières semaines.",
+    "concepts": [
+      "tabac",
+      "arret_tabac"
+    ],
+    "intent": "PREVENTION"
+  },
+  {
+    "question": "Quels sont les effets de l'alcool sur la santé ?",
+    "answer": "Une consommation excessive d'alcool endommage le foie (pouvant conduire à une hépatite alcoolique puis une cirrhose), augmente le risque de plusieurs cancers, fragilise les os et peut aggraver l'hypertension. Les repères de consommation à moindre risque sont de ne pas dépasser 10 verres par semaine.",
+    "concepts": [
+      "alcool",
+      "foie",
+      "cancer"
+    ],
+    "intent": "FACTEURS_RISQUE"
+  },
+  {
+    "question": "Comment éviter une consommation excessive d'alcool ?",
+    "answer": "Pour réduire sa consommation d'alcool : fixer des jours sans alcool dans la semaine, éviter de boire seul ou par habitude, et se faire accompagner par un médecin ou une association en cas de dépendance.",
+    "concepts": [
+      "alcool"
+    ],
+    "intent": "PREVENTION"
   }
 ]

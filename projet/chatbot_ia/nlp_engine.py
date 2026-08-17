@@ -83,7 +83,7 @@ class NLPEngine:
             return 'SYMPTOMES'
         if has_root(['trait', 'guér', 'guer', 'soign', 'médicament', 'medicament', 'thérap', 'therap', 'gér', 'ger', 'réduir', 'reduir']) or 'faire' in words:
             return 'TRAITEMENT'
-        if has_root(['préven', 'preven', 'évite', 'evite', 'protèg', 'proteg', 'amélior', 'amelior']):
+        if has_root(['préven', 'preven', 'évite', 'evite', 'protèg', 'proteg', 'amélior', 'amelior', 'arrêt', 'arret']):
             return 'PREVENTION'
         if has_root(['fonction', 'mécanis', 'mecanis', 'processus', 'marche', 'affect']):
             return 'FONCTIONNEMENT'
