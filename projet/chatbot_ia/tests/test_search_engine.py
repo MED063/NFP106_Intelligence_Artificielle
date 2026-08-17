@@ -142,3 +142,30 @@ def test_find_best_answer_causes_uses_predecessors_not_successors():
     se = SearchEngine(make_causal_kb())
     candidates = se.find_best_answer(["hypertension"], "CAUSES")
     assert candidates[0][1] == "Causes : obesite."
+
+
+def make_comorbidity_kb():
+    """Cas piege : hypertension et AVC sont mutuellement facteurs de risque
+    (relation bidirectionnelle). Sans typage, la relation 'associe_a'
+    AVC -> hypertension remonterait a tort l'AVC comme cause de
+    l'hypertension et ferait gagner la Q/A des causes de l'AVC."""
+    kb = KnowledgeBase()
+    kb.add_relation("obesite", "hypertension", 0.75, rel_type="cause_de")
+    kb.add_relation("cholesterol", "hypertension", 0.6, rel_type="cause_de")
+    kb.add_relation("hypertension", "avc", 0.8, rel_type="cause_de")
+    kb.add_relation("avc", "hypertension", 0.85, rel_type="associe_a")
+    kb.qa_pairs = [
+        {"question": "Quelles sont les causes de l'hypertension ?",
+         "answer": "Causes hypertension : obesite, cholesterol.",
+         "concepts": ["hypertension", "obesite", "cholesterol"], "intent": "CAUSES"},
+        {"question": "Quelles sont les causes de l'AVC ?",
+         "answer": "Causes AVC : hypertension, cholesterol.",
+         "concepts": ["avc", "hypertension", "cholesterol"], "intent": "CAUSES"},
+    ]
+    return kb
+
+
+def test_find_best_answer_causes_ignores_associative_relations():
+    se = SearchEngine(make_comorbidity_kb())
+    candidates = se.find_best_answer(["hypertension"], "CAUSES")
+    assert candidates[0][1] == "Causes hypertension : obesite, cholesterol."
