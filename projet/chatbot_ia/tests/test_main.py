@@ -48,6 +48,22 @@ def test_chatbot_answers_tabac_and_alcool_questions(bot):
     assert 'alcool' in bot.answer("Quels sont les effets de l'alcool sur la santé ?").lower()
 
 
+def test_chatbot_answers_enriched_topics(bot):
+    # Concepts ajoutes lors de l'enrichissement de la base sante.
+    assert 'stress' in bot.answer("Qu'est-ce que le stress ?").lower()
+    assert 'sédentar' in bot.answer("Qu'est-ce que la sédentarité ?").lower()
+    assert 'ménopause' in bot.answer("Qu'est-ce que la ménopause ?").lower()
+    assert 'antibiot' in bot.answer("Qu'est-ce que les antibiotiques ?").lower()
+
+
+def test_chatbot_causes_obesite_not_confused_with_diabete(bot):
+    # Regression : "diabete -> obesite" (comorbidite, associe_a) ne doit pas
+    # faire remonter la Q/A des causes du diabete pour cette question.
+    response = bot.answer("Quelles sont les causes de l'obésité ?")
+    assert 'obésité résulte' in response.lower() or "l'obésité" in response.lower()
+    assert 'diabète de type 2 est principalement' not in response.lower()
+
+
 def test_chatbot_naive_bayes_is_trained(bot):
     # V2 de classify_intent : Naive Bayes entraine sur les intentions
     # etiquetees des qa_pairs (cf. sujet section 4.2).
