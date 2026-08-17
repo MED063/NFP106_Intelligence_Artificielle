@@ -481,7 +481,8 @@
     "answer": "L'obésité résulte d'un déséquilibre prolongé entre les apports énergétiques et les dépenses, favorisé par une alimentation déséquilibrée, la sédentarité et des facteurs génétiques.",
     "concepts": [
       "obesite",
-      "alimentation_saine"
+      "alimentation_saine",
+      "sedentarite"
     ],
     "intent": "CAUSES"
   },
@@ -626,5 +627,96 @@
       "alcool"
     ],
     "intent": "PREVENTION"
+  },
+  {
+    "question": "Qu'est-ce que le stress ?",
+    "answer": "Le stress est une réaction physiologique et psychologique de l'organisme face à une situation perçue comme menaçante ou exigeante. Ponctuel, il est utile et adaptatif ; chronique, il devient délétère et favorise l'hypertension, les troubles du sommeil et l'anxiété.",
+    "concepts": [
+      "stress"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Quels sont les risques du stress chronique pour la santé ?",
+    "answer": "Le stress chronique augmente le risque d'hypertension artérielle, favorise l'insomnie et les troubles anxieux, peut déclencher des migraines et aggraver la dépression. Il agit aussi indirectement en favorisant des comportements à risque (tabac, alimentation déséquilibrée).",
+    "concepts": [
+      "stress"
+    ],
+    "intent": "FACTEURS_RISQUE"
+  },
+  {
+    "question": "Qu'est-ce que l'anxiété ?",
+    "answer": "L'anxiété est un état émotionnel d'appréhension ou d'inquiétude excessive, souvent disproportionné par rapport à la situation réelle. Quand elle devient chronique et handicapante, on parle de trouble anxieux, qui peut s'accompagner d'insomnie et évoluer vers une dépression.",
+    "concepts": [
+      "anxiete"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment gérer l'anxiété ?",
+    "answer": "La gestion de l'anxiété repose sur des techniques de relaxation et de respiration, une activité physique régulière, un sommeil de qualité et, si nécessaire, une psychothérapie (notamment les thérapies cognitivo-comportementales) ou un accompagnement médical.",
+    "concepts": [
+      "anxiete"
+    ],
+    "intent": "TRAITEMENT"
+  },
+  {
+    "question": "Qu'est-ce que la sédentarité ?",
+    "answer": "La sédentarité désigne un mode de vie pauvre en activité physique, caractérisé par de longues périodes assises ou allongées. C'est un facteur de risque majeur et évitable d'obésité, de diabète de type 2 et de maladies cardiovasculaires.",
+    "concepts": [
+      "sedentarite"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Quels sont les risques de la sédentarité ?",
+    "answer": "La sédentarité augmente le risque d'obésité, de diabète de type 2, d'hypertension et de maladies cardiovasculaires. L'OMS recommande au moins 150 minutes d'activité physique modérée par semaine pour en limiter les effets.",
+    "concepts": [
+      "sedentarite"
+    ],
+    "intent": "FACTEURS_RISQUE"
+  },
+  {
+    "question": "Qu'est-ce que la ménopause ?",
+    "answer": "La ménopause est l'arrêt définitif des règles, lié à la fin de l'activité ovarienne, survenant en moyenne vers 50 ans. La chute des œstrogènes qui l'accompagne accélère la perte osseuse et augmente le risque d'ostéoporose et de maladies cardiovasculaires.",
+    "concepts": [
+      "menopause",
+      "osteoporose"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une migraine ?",
+    "answer": "La migraine est un mal de tête intense, souvent pulsatile et localisé d'un seul côté, pouvant s'accompagner de nausées et d'une sensibilité à la lumière et au bruit. Le stress, le manque de sommeil et certains aliments comptent parmi ses déclencheurs fréquents.",
+    "concepts": [
+      "migraine"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce que les antibiotiques ?",
+    "answer": "Les antibiotiques sont des médicaments qui détruisent les bactéries ou bloquent leur multiplication. Ils sont efficaces contre les infections bactériennes (comme l'angine bactérienne) mais totalement inutiles contre les virus, d'où le slogan « les antibiotiques, c'est pas automatique ».",
+    "concepts": [
+      "antibiotiques"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Qu'est-ce qu'une angine ?",
+    "answer": "L'angine est une inflammation de la gorge (amygdales) d'origine virale dans la majorité des cas, ou bactérienne. Elle provoque des maux de gorge et de la fièvre. Seule l'angine bactérienne, confirmée par un test, justifie la prise d'antibiotiques.",
+    "concepts": [
+      "angine",
+      "antibiotiques"
+    ],
+    "intent": "DEFINITION"
+  },
+  {
+    "question": "Comment soigne-t-on une angine ?",
+    "answer": "Une angine virale se soigne par du repos, des antalgiques et une bonne hydratation ; les antibiotiques y sont inutiles. Une angine bactérienne, elle, nécessite des antibiotiques prescrits par un médecin après un test de diagnostic rapide.",
+    "concepts": [
+      "angine",
+      "antibiotiques"
+    ],
+    "intent": "TRAITEMENT"
   }
 ]
