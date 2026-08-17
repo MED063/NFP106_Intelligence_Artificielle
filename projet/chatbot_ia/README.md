@@ -85,7 +85,8 @@ Calcule les 5 métriques attendues (précision des réponses, précision des int
 
 ```
 chatbot_ia/
-├── main.py              # Point d'entrée + classe ChatBot
+├── main.py              # Point d'entrée + classe ChatBot (journalisation)
+├── config.py            # Configuration centralisée (chemins, paramètres, logs)
 ├── ui.py                # Interface CLI
 ├── web_app.py           # Interface web Flask (/, /ask, /feedback)
 ├── templates/
@@ -106,9 +107,16 @@ chatbot_ia/
 │   ├── test_search_engine.py
 │   ├── test_learning_engine.py
 │   ├── test_main.py
-│   └── test_web_app.py
+│   ├── test_web_app.py
+│   └── test_config.py
 └── requirements.txt
 ```
+
+### Configuration et journalisation
+
+Le module `config.py` centralise en un seul endroit les chemins de données (`DATA_DIR`, `KNOWLEDGE_GRAPH`, `QA_PAIRS`, `FEEDBACK_LOG`), les paramètres de comportement (`FEEDBACK_RETRAIN_EVERY`, `LEVENSHTEIN_MAX_DISTANCE`) et la configuration des logs. Les interfaces (`main.py`, `ui.py`, `web_app.py`) importent ces valeurs plutôt que de coder des constantes en dur, ce qui facilite l'ajustement du comportement sans toucher au code métier.
+
+La classe `ChatBot` journalise via `config.get_logger()` chaque question reçue, l'intention détectée et les cas sans réponse, dans le fichier `chatbot.log` (niveau et emplacement configurables dans `config.py`). Le logger est idempotent (pas de handler dupliqué) et n'écrit pas sur la sortie standard, pour ne pas interférer avec la CLI ni les tests.
 
 ## Exemples d'utilisation
 
