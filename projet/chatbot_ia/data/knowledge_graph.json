@@ -44,342 +44,410 @@
     {
       "src": "diabete",
       "dst": "glycemie",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "affecte"
     },
     {
       "src": "tabac",
       "dst": "cancer",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "cause_de"
     },
     {
       "src": "tabac",
       "dst": "infarctus",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "cause_de"
     },
     {
       "src": "tabac",
       "dst": "avc",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "cause_de"
     },
     {
       "src": "tabac",
       "dst": "poumons",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "affecte"
     },
     {
       "src": "alcool",
       "dst": "foie",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "affecte"
     },
     {
       "src": "alcool",
       "dst": "cancer",
-      "weight": 0.6
+      "weight": 0.6,
+      "type": "cause_de"
     },
     {
       "src": "alcool",
       "dst": "osteoporose",
-      "weight": 0.4
+      "weight": 0.4,
+      "type": "cause_de"
     },
     {
       "src": "hepatite",
       "dst": "foie",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "affecte"
     },
     {
       "src": "sommeil",
       "dst": "insomnie",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "associe_a"
     },
     {
       "src": "diabete",
       "dst": "insuline",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "traite_par"
     },
     {
       "src": "diabete",
       "dst": "metformine",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "traite_par"
     },
     {
       "src": "diabete",
       "dst": "obesite",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "associe_a"
     },
     {
       "src": "diabete",
       "dst": "hypertension",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "associe_a"
     },
     {
       "src": "diabete",
       "dst": "avc",
-      "weight": 0.6
+      "weight": 0.6,
+      "type": "cause_de"
     },
     {
       "src": "diabete",
       "dst": "infarctus",
-      "weight": 0.65
+      "weight": 0.65,
+      "type": "cause_de"
     },
     {
       "src": "diabete",
       "dst": "alimentation_saine",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "previent"
     },
     {
       "src": "diabete",
       "dst": "activite_physique",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "previent"
     },
     {
       "src": "hypertension",
       "dst": "avc",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "cause_de"
     },
     {
       "src": "hypertension",
       "dst": "infarctus",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "cause_de"
     },
     {
       "src": "hypertension",
       "dst": "statines",
-      "weight": 0.5
+      "weight": 0.5,
+      "type": "traite_par"
     },
     {
       "src": "hypertension",
       "dst": "alimentation_saine",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "previent"
     },
     {
       "src": "hypertension",
       "dst": "arret_tabac",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "previent"
     },
     {
       "src": "cholesterol",
       "dst": "statines",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "traite_par"
     },
     {
       "src": "cholesterol",
       "dst": "infarctus",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "cause_de"
     },
     {
       "src": "cholesterol",
       "dst": "avc",
-      "weight": 0.65
+      "weight": 0.65,
+      "type": "cause_de"
     },
     {
       "src": "cholesterol",
       "dst": "hypertension",
-      "weight": 0.6
+      "weight": 0.6,
+      "type": "cause_de"
     },
     {
       "src": "cholesterol",
       "dst": "alimentation_saine",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "previent"
     },
     {
       "src": "obesite",
       "dst": "diabete",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "cause_de"
     },
     {
       "src": "obesite",
       "dst": "hypertension",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "cause_de"
     },
     {
       "src": "obesite",
       "dst": "cholesterol",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "cause_de"
     },
     {
       "src": "obesite",
       "dst": "activite_physique",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "previent"
     },
     {
       "src": "obesite",
       "dst": "alimentation_saine",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "previent"
     },
     {
       "src": "obesite",
       "dst": "imc",
-      "weight": 1.0
+      "weight": 1.0,
+      "type": "associe_a"
     },
     {
       "src": "grippe",
       "dst": "vaccin",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "previent"
     },
     {
       "src": "grippe",
       "dst": "paracetamol",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "traite_par"
     },
     {
       "src": "grippe",
       "dst": "fievre",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "symptome"
     },
     {
       "src": "grippe",
       "dst": "fatigue",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "symptome"
     },
     {
       "src": "grippe",
       "dst": "poumons",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "affecte"
     },
     {
       "src": "asthme",
       "dst": "poumons",
-      "weight": 0.95
+      "weight": 0.95,
+      "type": "affecte"
     },
     {
       "src": "asthme",
       "dst": "allergie",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "associe_a"
     },
     {
       "src": "depression",
       "dst": "antidepresseurs",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "traite_par"
     },
     {
       "src": "depression",
       "dst": "fatigue",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "symptome"
     },
     {
       "src": "depression",
       "dst": "insomnie",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "symptome"
     },
     {
       "src": "depression",
       "dst": "activite_physique",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "previent"
     },
     {
       "src": "avc",
       "dst": "cerveau",
-      "weight": 1.0
+      "weight": 1.0,
+      "type": "affecte"
     },
     {
       "src": "avc",
       "dst": "hypertension",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "associe_a"
     },
     {
       "src": "infarctus",
       "dst": "coeur",
-      "weight": 1.0
+      "weight": 1.0,
+      "type": "affecte"
     },
     {
       "src": "infarctus",
       "dst": "douleur_thoracique",
-      "weight": 0.95
+      "weight": 0.95,
+      "type": "symptome"
     },
     {
       "src": "osteoporose",
       "dst": "alimentation_saine",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "previent"
     },
     {
       "src": "osteoporose",
       "dst": "activite_physique",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "previent"
     },
     {
       "src": "alzheimer",
       "dst": "cerveau",
-      "weight": 1.0
+      "weight": 1.0,
+      "type": "affecte"
     },
     {
       "src": "alzheimer",
       "dst": "activite_physique",
-      "weight": 0.6
+      "weight": 0.6,
+      "type": "previent"
     },
     {
       "src": "hypothyroidie",
       "dst": "thyroide",
-      "weight": 1.0
+      "weight": 1.0,
+      "type": "affecte"
     },
     {
       "src": "hypothyroidie",
       "dst": "fatigue",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "symptome"
     },
     {
       "src": "insomnie",
       "dst": "depression",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "associe_a"
     },
     {
       "src": "insomnie",
       "dst": "activite_physique",
-      "weight": 0.65
+      "weight": 0.65,
+      "type": "previent"
     },
     {
       "src": "allergie",
       "dst": "asthme",
-      "weight": 0.6
+      "weight": 0.6,
+      "type": "associe_a"
     },
     {
       "src": "regime_mediterraneen",
       "dst": "hypertension",
-      "weight": 0.75
+      "weight": 0.75,
+      "type": "previent"
     },
     {
       "src": "regime_mediterraneen",
       "dst": "cholesterol",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "previent"
     },
     {
       "src": "regime_mediterraneen",
       "dst": "diabete",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "previent"
     },
     {
       "src": "arret_tabac",
       "dst": "cancer",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "previent"
     },
     {
       "src": "arret_tabac",
       "dst": "avc",
-      "weight": 0.8
+      "weight": 0.8,
+      "type": "previent"
     },
     {
       "src": "vaccin",
       "dst": "grippe",
-      "weight": 0.85
+      "weight": 0.85,
+      "type": "previent"
     },
     {
       "src": "activite_physique",
       "dst": "depression",
-      "weight": 0.7
+      "weight": 0.7,
+      "type": "previent"
     },
     {
       "src": "activite_physique",
       "dst": "obesite",
-      "weight": 0.9
+      "weight": 0.9,
+      "type": "previent"
     },
     {
       "src": "foie",
       "dst": "alimentation_saine",
-      "weight": 0.55
+      "weight": 0.55,
+      "type": "previent"
     },
     {
       "src": "cholesterol",
       "dst": "foie",
-      "weight": 0.5
+      "weight": 0.5,
+      "type": "associe_a"
     }
   ]
 }
