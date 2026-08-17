@@ -10,6 +10,13 @@ import time
 # relations entrantes (get_predecessors) plutot que les sortantes.
 CAUSAL_INTENTS = {'CAUSES', 'FACTEURS_RISQUE'}
 
+# Parmi les relations entrantes, seules les vraies relations causales
+# comptent pour une question CAUSES/FACTEURS_RISQUE. On exclut ainsi les
+# associations bidirectionnelles ('associe_a', ex : hypertension <-> AVC ou
+# diabete <-> obesite, mutuellement facteurs de risque) qui, comptees comme
+# des causes, faisaient remonter une Q/A voisine a la place de la bonne.
+CAUSAL_RELATION_TYPES = {'cause_de'}
+
 
 class SearchEngine:
     def __init__(self, kb):
@@ -132,7 +139,7 @@ class SearchEngine:
                 # complications de l'hypertension quand on demande ses
                 # causes).
                 related = (
-                    self.kb.get_predecessors(entity)
+                    self.kb.get_predecessors(entity, types=CAUSAL_RELATION_TYPES)
                     if intent in CAUSAL_INTENTS
                     else self.kb.get_neighbors(entity)
                 )
