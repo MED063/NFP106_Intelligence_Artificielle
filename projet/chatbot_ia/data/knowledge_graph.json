@@ -38,7 +38,14 @@
     "poumons",
     "thyroide",
     "regime_mediterraneen",
-    "imc"
+    "imc",
+    "sedentarite",
+    "stress",
+    "migraine",
+    "anxiete",
+    "menopause",
+    "angine",
+    "antibiotiques"
   ],
   "relations": [
     {
@@ -448,6 +455,78 @@
       "dst": "foie",
       "weight": 0.5,
       "type": "associe_a"
+    },
+    {
+      "src": "sedentarite",
+      "dst": "obesite",
+      "weight": 0.85,
+      "type": "cause_de"
+    },
+    {
+      "src": "sedentarite",
+      "dst": "diabete",
+      "weight": 0.8,
+      "type": "cause_de"
+    },
+    {
+      "src": "sedentarite",
+      "dst": "hypertension",
+      "weight": 0.65,
+      "type": "cause_de"
+    },
+    {
+      "src": "stress",
+      "dst": "hypertension",
+      "weight": 0.6,
+      "type": "cause_de"
+    },
+    {
+      "src": "stress",
+      "dst": "insomnie",
+      "weight": 0.7,
+      "type": "cause_de"
+    },
+    {
+      "src": "stress",
+      "dst": "depression",
+      "weight": 0.55,
+      "type": "cause_de"
+    },
+    {
+      "src": "stress",
+      "dst": "migraine",
+      "weight": 0.6,
+      "type": "cause_de"
+    },
+    {
+      "src": "anxiete",
+      "dst": "insomnie",
+      "weight": 0.7,
+      "type": "cause_de"
+    },
+    {
+      "src": "anxiete",
+      "dst": "depression",
+      "weight": 0.65,
+      "type": "associe_a"
+    },
+    {
+      "src": "menopause",
+      "dst": "osteoporose",
+      "weight": 0.7,
+      "type": "cause_de"
+    },
+    {
+      "src": "angine",
+      "dst": "antibiotiques",
+      "weight": 0.85,
+      "type": "traite_par"
+    },
+    {
+      "src": "angine",
+      "dst": "fievre",
+      "weight": 0.8,
+      "type": "symptome"
     }
   ]
 }
