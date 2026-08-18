@@ -130,7 +130,8 @@ L'option est **désactivée par défaut** (`USE_LLM=False`) : le système foncti
 ```bash
 export USE_LLM=1
 export LLM_API_KEY="votre_cle_groq"
-# valeurs par défaut : Groq + llama-3.3-70b-versatile
+# valeurs par défaut : Groq + openai/gpt-oss-20b
+# (lister les modèles de ta clé : curl .../v1/models ; surcharger avec LLM_MODEL)
 python web_app.py     # ou python main.py
 ```
 
