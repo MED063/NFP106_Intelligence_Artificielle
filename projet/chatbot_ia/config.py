@@ -38,7 +38,7 @@ LOG_LEVEL = 'INFO'
 # en changeant simplement les variables d'environnement ci-dessous.
 USE_LLM = os.environ.get('USE_LLM', '0') in ('1', 'true', 'True', 'yes')
 LLM_API_BASE = os.environ.get('LLM_API_BASE', 'https://api.groq.com/openai/v1')
-LLM_MODEL = os.environ.get('LLM_MODEL', 'llama-3.3-70b-versatile')
+LLM_MODEL = os.environ.get('LLM_MODEL', 'openai/gpt-oss-20b')
 # La cle est lue dans l'environnement (jamais ecrite dans le depot).
 LLM_API_KEY = os.environ.get('LLM_API_KEY', os.environ.get('GROQ_API_KEY', ''))
 LLM_TIMEOUT = float(os.environ.get('LLM_TIMEOUT', '15'))
