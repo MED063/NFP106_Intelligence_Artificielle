@@ -28,6 +28,21 @@ import urllib.request
 
 import config
 
+# Certains fournisseurs placent leur API derriere Cloudflare, qui rejette
+# l'User-Agent par defaut d'urllib ("Python-urllib/x") avec une erreur 403
+# (code Cloudflare 1010, "banned based on your signature"). On envoie donc
+# un User-Agent explicite pour que la requete passe le pare-feu.
+USER_AGENT = 'Mozilla/5.0 (compatible; chatbot-ia/1.0; +https://github.com/MED063)'
+
+
+def _headers() -> dict:
+    return {
+        'Authorization': f'Bearer {config.LLM_API_KEY}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': USER_AGENT,
+    }
+
 SYSTEM_REFORMULATE = (
     "Tu es un assistant sante francophone. On te donne une QUESTION et une "
     "REPONSE de reference issue d'une base de connaissances verifiee. "
@@ -93,12 +108,7 @@ class LLMEngine:
             "max_tokens": config.LLM_MAX_TOKENS,
         }).encode('utf-8')
         request = urllib.request.Request(
-            url, data=payload, method='POST',
-            headers={
-                'Authorization': f'Bearer {config.LLM_API_KEY}',
-                'Content-Type': 'application/json',
-            },
-        )
+            url, data=payload, method='POST', headers=_headers())
         try:
             with urllib.request.urlopen(request, timeout=config.LLM_TIMEOUT) as resp:
                 data = json.loads(resp.read().decode('utf-8'))
@@ -131,8 +141,7 @@ def self_test() -> int:
         "messages": [{"role": "user", "content": "Reponds juste: OK"}],
         "max_tokens": 5,
     }).encode('utf-8')
-    req = urllib.request.Request(url, data=payload, method='POST', headers={
-        'Authorization': f'Bearer {key}', 'Content-Type': 'application/json'})
+    req = urllib.request.Request(url, data=payload, method='POST', headers=_headers())
     try:
         with urllib.request.urlopen(req, timeout=config.LLM_TIMEOUT) as resp:
             data = json.loads(resp.read().decode('utf-8'))
