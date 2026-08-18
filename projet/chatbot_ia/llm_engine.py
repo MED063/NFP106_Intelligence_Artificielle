@@ -109,3 +109,49 @@ class LLMEngine:
             if self.logger:
                 self.logger.warning('Appel LLM echoue (%s), repli sur la reponse maison', exc)
             return None
+
+
+def self_test() -> int:
+    """Diagnostic : verifie la config LLM et tente un appel reel, en
+    affichant la cause exacte en cas d'echec (statut HTTP + corps de la
+    reponse). A lancer avec :  python llm_engine.py"""
+    key = config.LLM_API_KEY
+    print("--- Diagnostic LLM ---")
+    print(f"USE_LLM        : {config.USE_LLM}")
+    print(f"Cle presente   : {bool(key)}" + (f" (…{key[-4:]})" if key else ""))
+    print(f"Endpoint       : {config.LLM_API_BASE}")
+    print(f"Modele         : {config.LLM_MODEL}")
+    if not key:
+        print("\n=> Aucune cle. Definis-la puis relance :")
+        print('   export LLM_API_KEY="ta_cle_groq"')
+        return 1
+    url = config.LLM_API_BASE.rstrip('/') + '/chat/completions'
+    payload = json.dumps({
+        "model": config.LLM_MODEL,
+        "messages": [{"role": "user", "content": "Reponds juste: OK"}],
+        "max_tokens": 5,
+    }).encode('utf-8')
+    req = urllib.request.Request(url, data=payload, method='POST', headers={
+        'Authorization': f'Bearer {key}', 'Content-Type': 'application/json'})
+    try:
+        with urllib.request.urlopen(req, timeout=config.LLM_TIMEOUT) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+        print("\n=> Appel reussi. Reponse du modele :",
+              data['choices'][0]['message']['content'].strip())
+        print("Le LLM est fonctionnel.")
+        return 0
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode('utf-8', 'replace')
+        print(f"\n=> Echec HTTP {exc.code}. Reponse de l'API :\n{body}")
+        print("(401 = cle invalide ; 404/400 model = changer LLM_MODEL ; "
+              "429 = quota/rate limit)")
+        return 1
+    except Exception as exc:  # noqa: BLE001 - diagnostic
+        print(f"\n=> Echec : {type(exc).__name__}: {exc}")
+        print("(souvent : pas de reseau, ou endpoint LLM_API_BASE incorrect)")
+        return 1
+
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(self_test())
