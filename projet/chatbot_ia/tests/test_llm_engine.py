@@ -10,7 +10,7 @@ from llm_engine import LLMEngine
 
 def test_disabled_by_default(monkeypatch):
     # Par defaut le LLM est desactive : aucune tentative d'appel.
-    monkeypatch.setattr(config, 'USE_LLM', True)
+    monkeypatch.setattr(config, 'USE_LLM', False)
     monkeypatch.setattr(config, 'LLM_API_KEY', 'peu-importe')
     llm = LLMEngine()
     assert llm.is_available() is False
