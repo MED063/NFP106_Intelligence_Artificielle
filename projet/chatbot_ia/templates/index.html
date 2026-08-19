@@ -3,75 +3,236 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ChatBot IA — Assistant Santé</title>
+  <title>Assistant Santé — ChatBot IA</title>
   <style>
-    :root { --bg:#0f172a; --panel:#1e293b; --bot:#334155; --user:#2563eb;
-            --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; }
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --surface-2: #eef1f4;
+      --border: #dde1e6;
+      --text: #1a1f29;
+      --muted: #5b6472;
+      --accent: #1f5fd6;
+      --accent-hover: #1a4fb4;
+      --accent-soft: #e7eefb;
+      --on-accent: #ffffff;
+      --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+      --radius: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1216;
+        --surface: #171b21;
+        --surface-2: #1e242c;
+        --border: #2a313b;
+        --text: #e6e9ef;
+        --muted: #97a1b0;
+        --accent: #4f8cf0;
+        --accent-hover: #6a9df3;
+        --accent-soft: #1b2436;
+        --on-accent: #0b1220;
+        --shadow: none;
+      }
+    }
     * { box-sizing: border-box; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-           background: var(--bg); color: var(--text); height:100vh; display:flex;
-           flex-direction:column; align-items:center; }
-    header { padding:16px; text-align:center; }
-    header h1 { margin:0; font-size:1.25rem; }
-    header p { margin:4px 0 0; color: var(--muted); font-size:.85rem; }
-    #chat { flex:1; width:100%; max-width:720px; overflow-y:auto; padding:16px;
-            display:flex; flex-direction:column; gap:12px; }
-    .msg { max-width:80%; padding:10px 14px; border-radius:14px; line-height:1.4;
-           white-space:pre-wrap; }
-    .msg.user { align-self:flex-end; background: var(--user); color:#fff;
-                border-bottom-right-radius:4px; }
-    .msg.bot { align-self:flex-start; background: var(--bot);
-               border-bottom-left-radius:4px; }
-    .fb { margin-top:6px; display:flex; gap:4px; }
-    .fb button { background:transparent; border:1px solid var(--muted); color:var(--muted);
-                 border-radius:8px; width:28px; height:28px; cursor:pointer; font-size:.8rem; }
-    .fb button:hover { border-color: var(--accent); color: var(--accent); }
-    .fb .done { color: var(--accent); font-size:.8rem; align-self:center; }
-    form { width:100%; max-width:720px; display:flex; gap:8px; padding:16px; }
-    #q { flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--panel);
-         background: var(--panel); color: var(--text); font-size:1rem; }
-    #q:focus { outline:2px solid var(--accent); }
-    button.send { padding:0 20px; border:none; border-radius:12px; background: var(--accent);
-                  color:#04222f; font-weight:600; cursor:pointer; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- Barre supérieure --- */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+    .monogram {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: var(--accent); color: var(--on-accent);
+      display: grid; place-items: center;
+      font-weight: 700; font-size: .95rem; letter-spacing: .5px;
+    }
+    .brand h1 { margin: 0; font-size: 1.02rem; font-weight: 650; }
+    .brand p { margin: 1px 0 0; font-size: .78rem; color: var(--muted); }
+
+    /* --- Contrôle LLM --- */
+    .llm {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 12px;
+    }
+    .llm .meta { display: flex; flex-direction: column; line-height: 1.15; }
+    .llm .meta strong { font-size: .8rem; font-weight: 600; }
+    .llm .meta span { font-size: .7rem; color: var(--muted); }
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .track {
+      position: absolute; inset: 0; cursor: pointer;
+      background: #b6bdc8; border-radius: 999px; transition: background .18s;
+    }
+    .track::before {
+      content: ""; position: absolute; height: 16px; width: 16px;
+      left: 3px; top: 3px; background: #fff; border-radius: 50%;
+      transition: transform .18s; box-shadow: 0 1px 2px rgba(0,0,0,.25);
+    }
+    .switch input:checked + .track { background: var(--accent); }
+    .switch input:checked + .track::before { transform: translateX(18px); }
+    .switch input:disabled + .track { opacity: .5; cursor: not-allowed; }
+    .switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* --- Transcript --- */
+    main { flex: 1; overflow-y: auto; padding: 24px 16px; }
+    .thread { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+    .empty { max-width: 760px; margin: 8vh auto 0; text-align: center; color: var(--muted); }
+    .empty h2 { color: var(--text); font-size: 1.15rem; font-weight: 600; margin: 0 0 6px; }
+    .empty p { margin: 0 0 20px; font-size: .9rem; }
+    .examples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .chip {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 14px; border-radius: 999px; font-size: .85rem; cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .chip:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+    .row { display: flex; flex-direction: column; gap: 5px; }
+    .row .who { font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .row.user { align-items: flex-end; }
+    .bubble {
+      max-width: 82%; padding: 12px 15px; border-radius: var(--radius);
+      line-height: 1.55; font-size: .94rem; white-space: pre-wrap; box-shadow: var(--shadow);
+    }
+    .row.user .bubble { background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 4px; }
+    .row.bot .bubble { background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .bubble.pending { color: var(--muted); font-style: italic; }
+
+    /* --- Feedback --- */
+    .feedback { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .feedback .label { font-size: .78rem; color: var(--muted); }
+    .rating { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .rating button {
+      border: 0; background: var(--surface); color: var(--muted);
+      width: 30px; height: 28px; font-size: .82rem; cursor: pointer;
+      border-right: 1px solid var(--border);
+    }
+    .rating button:last-child { border-right: 0; }
+    .rating button:hover { background: var(--accent-soft); color: var(--accent); }
+    .thanks { font-size: .78rem; color: var(--accent); font-weight: 500; }
+
+    /* --- Composer --- */
+    footer { border-top: 1px solid var(--border); background: var(--surface); padding: 14px 16px; }
+    .composer { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
+    .composer input[type=text] {
+      flex: 1; padding: 12px 14px; font-size: .95rem; color: var(--text);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    }
+    .composer input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+    .send {
+      padding: 12px 20px; border: 0; border-radius: 10px; font-size: .92rem; font-weight: 600;
+      background: var(--accent); color: var(--on-accent); cursor: pointer; transition: background .15s;
+    }
+    .send:hover { background: var(--accent-hover); }
+    .send:disabled { opacity: .5; cursor: default; }
+    .disclaimer { max-width: 760px; margin: 10px auto 0; text-align: center; font-size: .72rem; color: var(--muted); }
   </style>
 </head>
 <body>
   <header>
-    <h1>🩺 ChatBot IA — Assistant Santé</h1>
-    <p>Posez une question sur les maladies, symptômes, causes, traitements ou la prévention.</p>
+    <div class="brand">
+      <div class="monogram" aria-hidden="true">AS</div>
+      <div>
+        <h1>Assistant Santé</h1>
+        <p>Informations générales sur les maladies, symptômes, traitements et prévention</p>
+      </div>
+    </div>
+    <div class="llm" id="llm-control" hidden>
+      <div class="meta">
+        <strong>Reformulation IA</strong>
+        <span id="llm-info">indisponible</span>
+      </div>
+      <label class="switch" title="Activer la reformulation des réponses par un modèle de langage">
+        <input type="checkbox" id="llm-toggle" disabled>
+        <span class="track"></span>
+      </label>
+    </div>
   </header>
 
-  <div id="chat"></div>
+  <main>
+    <div class="empty" id="empty">
+      <h2>Comment puis-je vous aider ?</h2>
+      <p>Posez une question sur la santé. Cet assistant s'appuie sur une base de connaissances médicale.</p>
+      <div class="examples" id="examples">
+        <button class="chip">Quels sont les symptômes du diabète ?</button>
+        <button class="chip">Quelles sont les causes de l'hypertension ?</button>
+        <button class="chip">Comment prévenir l'ostéoporose ?</button>
+        <button class="chip">Qu'est-ce que la sédentarité ?</button>
+      </div>
+    </div>
+    <div class="thread" id="thread"></div>
+  </main>
 
-  <form id="form" autocomplete="off">
-    <input id="q" type="text" placeholder="Ex : Quels sont les symptômes du diabète ?" required>
-    <button class="send" type="submit">Envoyer</button>
-  </form>
+  <footer>
+    <form class="composer" id="form" autocomplete="off">
+      <input id="q" type="text" aria-label="Votre question" placeholder="Écrivez votre question sur la santé…" required>
+      <button class="send" type="submit">Envoyer</button>
+    </form>
+    <p class="disclaimer">Ces informations sont fournies à titre indicatif et ne remplacent pas l'avis d'un professionnel de santé.</p>
+  </footer>
 
   <script>
-    const chat = document.getElementById('chat');
+    const thread = document.getElementById('thread');
     const form = document.getElementById('form');
     const input = document.getElementById('q');
+    const empty = document.getElementById('empty');
 
-    function addMessage(text, who) {
-      const div = document.createElement('div');
-      div.className = 'msg ' + who;
-      div.textContent = text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-      return div;
+    function addMessage(text, who, pending) {
+      const row = document.createElement('div');
+      row.className = 'row ' + who;
+      const label = document.createElement('div');
+      label.className = 'who';
+      label.textContent = who === 'user' ? 'Vous' : 'Assistant';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble' + (pending ? ' pending' : '');
+      bubble.textContent = text;
+      row.appendChild(label);
+      row.appendChild(bubble);
+      thread.appendChild(row);
+      row.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      return { row, bubble };
     }
 
-    function addFeedback(botDiv, question, answer) {
+    function addFeedback(row, question, answer) {
       const fb = document.createElement('div');
-      fb.className = 'fb';
+      fb.className = 'feedback';
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = 'Cette réponse vous a-t-elle été utile ?';
+      const rating = document.createElement('div');
+      rating.className = 'rating';
+      rating.setAttribute('role', 'group');
+      rating.setAttribute('aria-label', 'Noter la réponse de 1 à 5');
       for (let i = 1; i <= 5; i++) {
         const b = document.createElement('button');
+        b.type = 'button';
         b.textContent = i;
+        b.setAttribute('aria-label', 'Note ' + i + ' sur 5');
         b.onclick = () => sendFeedback(question, answer, i, fb);
-        fb.appendChild(b);
+        rating.appendChild(b);
       }
-      botDiv.appendChild(fb);
+      fb.appendChild(label);
+      fb.appendChild(rating);
+      row.appendChild(fb);
     }
 
     async function sendFeedback(question, answer, score, fb) {
@@ -82,16 +243,14 @@
           body: JSON.stringify({ question, answer, score })
         });
       } catch (e) { /* silencieux */ }
-      fb.innerHTML = '<span class="done">Merci pour votre retour ✓</span>';
+      fb.innerHTML = '<span class="thanks">Merci pour votre retour.</span>';
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const question = input.value.trim();
-      if (!question) return;
+    async function ask(question) {
+      empty.style.display = 'none';
       addMessage(question, 'user');
-      input.value = '';
-      let answer = '…';
+      const holder = addMessage('Recherche en cours…', 'bot', true);
+      let answer = '';
       try {
         const res = await fetch('/ask', {
           method: 'POST',
@@ -99,12 +258,52 @@
           body: JSON.stringify({ question })
         });
         const data = await res.json();
-        answer = data.answer || data.error || 'Erreur.';
+        answer = data.answer || data.error || 'Aucune réponse.';
       } catch (e) {
         answer = 'Erreur de connexion au serveur.';
       }
-      const botDiv = addMessage(answer, 'bot');
-      addFeedback(botDiv, question, answer);
+      holder.bubble.classList.remove('pending');
+      holder.bubble.textContent = answer;
+      addFeedback(holder.row, question, answer);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      ask(q);
+    });
+
+    document.getElementById('examples').addEventListener('click', (e) => {
+      if (e.target.classList.contains('chip')) ask(e.target.textContent);
+    });
+
+    /* --- Contrôle de la reformulation LLM --- */
+    const llmControl = document.getElementById('llm-control');
+    const llmToggle = document.getElementById('llm-toggle');
+    const llmInfo = document.getElementById('llm-info');
+
+    function renderLlm(s) {
+      llmControl.hidden = false;
+      llmToggle.checked = !!s.enabled;
+      if (!s.key_present) {
+        llmToggle.disabled = true;
+        llmInfo.textContent = 'clé API non configurée';
+      } else {
+        llmToggle.disabled = false;
+        llmInfo.textContent = (s.available ? 'active · ' : 'désactivée · ') + (s.model || '');
+      }
+    }
+
+    fetch('/llm/status').then(r => r.json()).then(renderLlm).catch(() => {});
+
+    llmToggle.addEventListener('change', () => {
+      fetch('/llm/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: llmToggle.checked })
+      }).then(r => r.json()).then(renderLlm).catch(() => {});
     });
   </script>
 </body>
