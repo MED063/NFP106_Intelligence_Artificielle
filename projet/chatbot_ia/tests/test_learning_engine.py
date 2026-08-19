@@ -7,6 +7,22 @@ from learning_engine import LearningEngine
 from knowledge_base import KnowledgeBase
 
 
+def test_feedback_score_neutral_without_feedback():
+    le = LearningEngine(tokenizer=lambda t: t.lower().split())
+    assert le.feedback_score('une question', 'une reponse') == 0.0
+
+
+def test_feedback_score_reinforces_and_penalizes():
+    le = LearningEngine(tokenizer=lambda t: t.lower().split())
+    q = 'quelles sont les causes de l obesite'
+    le.record_feedback(q, 'bonne reponse', 5)   # renforce
+    le.record_feedback(q, 'mauvaise reponse', 1)  # penalise
+    assert le.feedback_score(q, 'bonne reponse') > 0
+    assert le.feedback_score(q, 'mauvaise reponse') < 0
+    # Une question sans rapport ne recoit aucun ajustement.
+    assert le.feedback_score('sujet totalement different ici', 'bonne reponse') == 0.0
+
+
 def make_engine():
     le = LearningEngine()
     docs = [

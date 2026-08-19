@@ -120,11 +120,42 @@ class LearningEngine:
                 best_score, best_class = score, c
         return best_class or 'QUESTION'
 
+    # Poids applique a l'ajustement par feedback dans feedback_score.
+    FEEDBACK_GAIN = 3.0
+
     def record_feedback(self, question: str, answer: str, score: int) -> None:
         """Enregistre le retour utilisateur (1-5).
         score >= 4 : renforce l'association ; score <= 2 : pénalise.
         """
         self.feedback_log.append({'question': question, 'answer': answer, 'score': score})
+
+    def feedback_score(self, question: str, candidate_answer: str) -> float:
+        """Ajustement de pertinence issu du feedback pour une reponse
+        candidate face a une question donnee. Conformement au sujet, une
+        note >= 4 renforce l'association question/reponse et une note <= 2
+        la penalise. La contribution de chaque retour est (note - 3), agregee
+        sur les questions quasi identiques (Jaccard des tokens >= 0.8) et
+        ponderee par FEEDBACK_GAIN.
+
+        Neutre (0.0) tant qu'aucun feedback pertinent n'existe : le
+        comportement par defaut du ChatBot est donc strictement inchange, et
+        le feedback ne fait qu'ameliorer le classement des reponses futures."""
+        if not self.feedback_log:
+            return 0.0
+        q_tokens = set(self._tokenize_candidate(question))
+        if not q_tokens:
+            return 0.0
+        total = 0.0
+        for entry in self.feedback_log:
+            if entry.get('answer') != candidate_answer:
+                continue
+            e_tokens = set(self._tokenize_candidate(entry.get('question', '')))
+            if not e_tokens:
+                continue
+            jaccard = len(q_tokens & e_tokens) / len(q_tokens | e_tokens)
+            if jaccard >= 0.8:
+                total += entry.get('score', 3) - 3
+        return total * self.FEEDBACK_GAIN
 
     def retrain(self, kb=None) -> None:
         """Re-entraîne TF-IDF sur les réponses bien notées et met à jour les poids du graphe."""
