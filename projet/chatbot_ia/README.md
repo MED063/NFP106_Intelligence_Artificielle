@@ -50,7 +50,9 @@ Interface web (Flask) :
 python web_app.py
 ```
 
-puis ouvrir http://127.0.0.1:5000 dans un navigateur. La page de discussion envoie les questions au point d'entrée `/ask` (réponse JSON) et permet de noter chaque réponse de 1 à 5 via `/feedback` ; le modèle se ré-entraîne automatiquement tous les 3 retours, comme en CLI. Le bot est instancié une seule fois au démarrage et partagé entre les requêtes.
+puis ouvrir http://127.0.0.1:5000 dans un navigateur. L'interface (thème clair/sombre automatique) envoie les questions au point d'entrée `/ask` (réponse JSON) et permet de noter chaque réponse de 1 à 5 via `/feedback` ; le modèle se ré-entraîne automatiquement tous les 3 retours, comme en CLI. Le bot est instancié une seule fois au démarrage et partagé entre les requêtes.
+
+Un interrupteur en haut de page (« Reformulation IA ») permet d'**activer ou désactiver le LLM optionnel** sans redémarrer, via les points d'entrée `/llm/status` et `/llm/toggle` ; il affiche le modèle utilisé et signale l'absence de clé API le cas échéant.
 
 ## Tests
 
