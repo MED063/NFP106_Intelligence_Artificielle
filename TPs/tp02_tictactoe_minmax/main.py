@@ -151,7 +151,8 @@ class Game:
         pygame.time.wait(THINK_DELAY_MS)
         self.play(self.decision.move, AI)
 
-    # rendu 
+    # rendu
+    def render(self):
         self.screen.fill(BG)
         self._draw_board()
         self._draw_panel()
