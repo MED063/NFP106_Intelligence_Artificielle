@@ -6,6 +6,10 @@ renvoie la reponse du bot en JSON, et `/feedback` pour enregistrer la
 note de l'utilisateur (1-5), avec re-entrainement automatique tous les
 `FEEDBACK_RETRAIN_EVERY` retours — exactement comme la boucle CLI.
 
+Deux points d'entree `/llm/status` et `/llm/toggle` permettent de consulter
+et de basculer depuis l'interface la reformulation optionnelle par un LLM
+(voir llm_engine.py).
+
 Lancement :
     pip install -r requirements.txt
     python web_app.py
@@ -18,14 +22,12 @@ import os
 
 from flask import Flask, jsonify, render_template, request
 
+import config
 from main import ChatBot
 
-try:  # config centralisee optionnelle (cf. config.py)
-    from config import DATA_DIR, FEEDBACK_LOG, FEEDBACK_RETRAIN_EVERY
-except ImportError:  # valeurs par defaut si config.py absent
-    DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data') + os.sep
-    FEEDBACK_LOG = os.path.join(DATA_DIR, 'feedback_log.json')
-    FEEDBACK_RETRAIN_EVERY = 3
+DATA_DIR = config.DATA_DIR
+FEEDBACK_LOG = config.FEEDBACK_LOG
+FEEDBACK_RETRAIN_EVERY = config.FEEDBACK_RETRAIN_EVERY
 
 
 app = Flask(__name__)
@@ -36,6 +38,31 @@ _feedback_count = 0
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/llm/status')
+def llm_status():
+    """Etat de la reformulation LLM optionnelle, pour l'interface."""
+    return jsonify({
+        'enabled': bool(config.USE_LLM),
+        'key_present': bool(config.LLM_API_KEY),
+        'available': bot.llm.is_available(),
+        'model': config.LLM_MODEL,
+    })
+
+
+@app.route('/llm/toggle', methods=['POST'])
+def llm_toggle():
+    """Active/desactive la reformulation LLM depuis l'interface. N'a d'effet
+    que si une cle d'API est configuree (sinon 'available' reste faux)."""
+    data = request.get_json(silent=True) or {}
+    config.USE_LLM = bool(data.get('enabled'))
+    return jsonify({
+        'enabled': bool(config.USE_LLM),
+        'key_present': bool(config.LLM_API_KEY),
+        'available': bot.llm.is_available(),
+        'model': config.LLM_MODEL,
+    })
 
 
 @app.route('/ask', methods=['POST'])

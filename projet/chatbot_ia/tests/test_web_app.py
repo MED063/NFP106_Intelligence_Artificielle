@@ -50,3 +50,29 @@ def test_feedback_rejects_out_of_range_score(client):
     resp = client.post('/feedback', json={
         'question': 'Q', 'answer': 'A', 'score': 9})
     assert resp.status_code == 400
+
+
+def test_llm_status_reports_fields(client):
+    resp = client.get('/llm/status')
+    assert resp.status_code == 200
+    data = resp.get_json()
+    for key in ('enabled', 'key_present', 'available', 'model'):
+        assert key in data
+
+
+def test_llm_toggle_enables_when_key_present(client, monkeypatch):
+    import config
+    monkeypatch.setattr(config, 'LLM_API_KEY', 'cle-test')
+    monkeypatch.setattr(config, 'USE_LLM', False)
+    resp = client.post('/llm/toggle', json={'enabled': True})
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data['enabled'] is True and data['available'] is True
+
+
+def test_llm_toggle_unavailable_without_key(client, monkeypatch):
+    import config
+    monkeypatch.setattr(config, 'LLM_API_KEY', '')
+    resp = client.post('/llm/toggle', json={'enabled': True})
+    assert resp.status_code == 200
+    assert resp.get_json()['available'] is False
