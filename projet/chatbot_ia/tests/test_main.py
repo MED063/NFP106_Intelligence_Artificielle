@@ -64,6 +64,19 @@ def test_chatbot_causes_obesite_not_confused_with_diabete(bot):
     assert 'diabète de type 2 est principalement' not in response.lower()
 
 
+def test_feedback_improves_future_answer(bot):
+    # Une reformulation inedite mal routee : le feedback (penalisation de la
+    # mauvaise reponse + enseignement de la bonne) doit corriger la reponse.
+    question = "Qu'est-ce qui provoque un AVC ?"
+    before = bot.answer(question)
+    good = next(qa['answer'] for qa in bot.kb.qa_pairs
+                if qa['question'] == "Quelles sont les causes de l'AVC ?")
+    assert before != good  # initialement mal routee
+    bot.learner.record_feedback(question, before, 1)
+    bot.learner.record_feedback(question, good, 5)
+    assert bot.answer(question) == good
+
+
 def test_chatbot_naive_bayes_is_trained(bot):
     # V2 de classify_intent : Naive Bayes entraine sur les intentions
     # etiquetees des qa_pairs (cf. sujet section 4.2).

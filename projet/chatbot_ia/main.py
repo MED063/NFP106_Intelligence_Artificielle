@@ -72,7 +72,11 @@ class ChatBot:
             return 'Au revoir !'
 
         entities = self.nlp.extract_entities(tokens, self.kb)
-        candidates = self.search.find_best_answer(entities, intent)
+        # On recupere un large ensemble de candidats (pas seulement le top-5)
+        # afin que le feedback puisse promouvoir une bonne reponse initialement
+        # mal classee. Sans feedback, c'est toujours le meilleur score de
+        # graphe qui l'emporte : le comportement par defaut est inchange.
+        candidates = self.search.find_best_answer(entities, intent, top_k=25)
         if not candidates:
             self.logger.warning('Aucune reponse trouvee (entites=%s)', entities)
             # Filet de secours LLM optionnel (desactive par defaut).
@@ -83,8 +87,16 @@ class ChatBot:
             return "Je n'ai pas trouvé de réponse à votre question."
 
         # Le score du graphe (chevauchement d'entites + intention) fait
-        # foi ; le TF-IDF ne sert qu'a departager les reponses ex-aequo
-        # (ex : deux Q/A partageant exactement les memes concepts).
+        # foi, ajuste par le feedback utilisateur (renforcement des bonnes
+        # associations question/reponse, penalisation des mauvaises). Sans
+        # aucun feedback l'ajustement est nul : l'ordre reste inchange.
+        candidates = sorted(
+            ((score + self.learner.feedback_score(user_input, answer), answer)
+             for score, answer in candidates),
+            key=lambda x: x[0], reverse=True)
+
+        # Le TF-IDF ne sert qu'a departager les reponses ex-aequo (ex : deux
+        # Q/A partageant exactement les memes concepts).
         top_score = candidates[0][0]
         tied = [answer for score, answer in candidates if score == top_score]
         if len(tied) == 1:
