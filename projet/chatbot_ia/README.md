@@ -1,6 +1,6 @@
-# ChatBot IA — Assistant Santé
+# ChatBot IA : Assistant Santé
 
-Projet Master 1 Intelligence Artificielle — NFP106 — Domaine : **Santé**
+Projet Master 1 TRIED - Code UE :  NFP106 — Domaine : **Santé**
 
 ## Description
 
@@ -226,11 +226,3 @@ Ce mécanisme est mesuré par la métrique 5 (`evaluate.py`) : sur un jeu de ref
 
 ## Usage IA
 
-Ce projet a été développé avec l'assistance de Claude (Anthropic) pour :
-- Génération du squelette initial des modules
-- Débogage et refactoring
-- Génération des données JSON (qa_pairs, knowledge_graph)
-- Génération et amélioration des tests unitaires
-- Exploration du sujet pour identifier les exigences manquantes (câblage du Naïve Bayes V2, script d'évaluation des métriques, correction de bugs de scoring et de normalisation d'accents affectant la précision des réponses) et implémentation des correctifs correspondants
-
-Tout le code a été relu, compris et validé par l'auteur. L'auteur est capable d'expliquer chaque décision technique devant le jury.
