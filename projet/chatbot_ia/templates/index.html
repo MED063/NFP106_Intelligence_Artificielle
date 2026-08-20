@@ -3,148 +3,126 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chatbot assistant santé </title>
+  <title>Assistant Santé — ChatBot IA</title>
   <style>
     :root {
-      --bg: #f4f5f7;
-      --surface: #ffffff;
-      --surface-2: #eef1f4;
-      --border: #dde1e6;
-      --text: #1a1f29;
-      --muted: #5b6472;
-      --accent: #1f5fd6;
-      --accent-hover: #1a4fb4;
-      --accent-soft: #e7eefb;
-      --on-accent: #ffffff;
-      --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+      --bg: #f4f5f7; --surface: #ffffff; --surface-2: #eef1f4; --border: #dde1e6;
+      --text: #1a1f29; --muted: #5b6472;
+      --accent: #1f5fd6; --accent-hover: #1a4fb4; --accent-soft: #e7eefb; --on-accent: #ffffff;
+      --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
       --radius: 12px;
+      --rel-cause_de: #d1495b; --rel-associe_a: #8d99ae; --rel-traite_par: #2a9d8f;
+      --rel-symptome: #9b5de5; --rel-affecte: #3a6ff0; --rel-previent: #06a77d; --rel-autre: #adb5bd;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f1216;
-        --surface: #171b21;
-        --surface-2: #1e242c;
-        --border: #2a313b;
-        --text: #e6e9ef;
-        --muted: #97a1b0;
-        --accent: #4f8cf0;
-        --accent-hover: #6a9df3;
-        --accent-soft: #1b2436;
-        --on-accent: #0b1220;
+        --bg: #0f1216; --surface: #171b21; --surface-2: #1e242c; --border: #2a313b;
+        --text: #e6e9ef; --muted: #97a1b0;
+        --accent: #4f8cf0; --accent-hover: #6a9df3; --accent-soft: #1b2436; --on-accent: #0b1220;
         --shadow: none;
       }
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
-      margin: 0;
+      margin: 0; color: var(--text); background: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;
     }
-
-    /* --- Barre supérieure --- */
     header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 12px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
     }
     .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
     .monogram {
-      width: 38px; height: 38px; border-radius: 9px;
-      background: var(--accent); color: var(--on-accent);
-      display: grid; place-items: center;
-      font-weight: 700; font-size: .95rem; letter-spacing: .5px;
+      width: 38px; height: 38px; border-radius: 9px; background: var(--accent); color: var(--on-accent);
+      display: grid; place-items: center; font-weight: 700; font-size: .95rem; letter-spacing: .5px;
     }
     .brand h1 { margin: 0; font-size: 1.02rem; font-weight: 650; }
     .brand p { margin: 1px 0 0; font-size: .78rem; color: var(--muted); }
-
-    /* --- Contrôle LLM --- */
-    .llm {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 999px; padding: 6px 12px;
-    }
+    .llm { display: flex; align-items: center; gap: 10px; background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; }
     .llm .meta { display: flex; flex-direction: column; line-height: 1.15; }
     .llm .meta strong { font-size: .8rem; font-weight: 600; }
     .llm .meta span { font-size: .7rem; color: var(--muted); }
     .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .track {
-      position: absolute; inset: 0; cursor: pointer;
-      background: #b6bdc8; border-radius: 999px; transition: background .18s;
-    }
-    .track::before {
-      content: ""; position: absolute; height: 16px; width: 16px;
-      left: 3px; top: 3px; background: #fff; border-radius: 50%;
-      transition: transform .18s; box-shadow: 0 1px 2px rgba(0,0,0,.25);
-    }
+    .track { position: absolute; inset: 0; cursor: pointer; background: #b6bdc8; border-radius: 999px; transition: background .18s; }
+    .track::before { content: ""; position: absolute; height: 16px; width: 16px; left: 3px; top: 3px;
+      background: #fff; border-radius: 50%; transition: transform .18s; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
     .switch input:checked + .track { background: var(--accent); }
     .switch input:checked + .track::before { transform: translateX(18px); }
     .switch input:disabled + .track { opacity: .5; cursor: not-allowed; }
     .switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    /* --- Transcript --- */
     main { flex: 1; overflow-y: auto; padding: 24px 16px; }
-    .thread { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
-
-    .empty { max-width: 760px; margin: 8vh auto 0; text-align: center; color: var(--muted); }
+    .thread { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+    .empty { max-width: 780px; margin: 8vh auto 0; text-align: center; color: var(--muted); }
     .empty h2 { color: var(--text); font-size: 1.15rem; font-weight: 600; margin: 0 0 6px; }
     .empty p { margin: 0 0 20px; font-size: .9rem; }
     .examples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-    .chip {
-      background: var(--surface); border: 1px solid var(--border); color: var(--text);
-      padding: 8px 14px; border-radius: 999px; font-size: .85rem; cursor: pointer;
-      transition: border-color .15s, background .15s;
-    }
+    .chip { background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 14px; border-radius: 999px; font-size: .85rem; cursor: pointer; transition: border-color .15s, background .15s; }
     .chip:hover { border-color: var(--accent); background: var(--accent-soft); }
 
     .row { display: flex; flex-direction: column; gap: 5px; }
     .row .who { font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
     .row.user { align-items: flex-end; }
-    .bubble {
-      max-width: 82%; padding: 12px 15px; border-radius: var(--radius);
-      line-height: 1.55; font-size: .94rem; white-space: pre-wrap; box-shadow: var(--shadow);
-    }
+    .bubble { max-width: 82%; padding: 12px 15px; border-radius: var(--radius); line-height: 1.55;
+      font-size: .94rem; white-space: pre-wrap; box-shadow: var(--shadow); }
     .row.user .bubble { background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 4px; }
     .row.bot .bubble { background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
     .bubble.pending { color: var(--muted); font-style: italic; }
 
-    /* --- Feedback --- */
-    .feedback { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .bubble-actions { display: flex; gap: 12px; margin-top: 2px; }
+    .linkish { background: none; border: 0; color: var(--muted); font-size: .76rem; cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 5px; }
+    .linkish:hover { color: var(--accent); }
+    .caret { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .15s; }
+    .linkish.open .caret { transform: rotate(45deg); }
+
+    /* --- Analyse (pilier reconnaissance) --- */
+    .analysis { margin-top: 4px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .tag { font-size: .72rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); }
+    .tag.intent { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+    .tag.entity { background: transparent; }
+
+    /* --- Graphe (pilier recherche) --- */
+    .graph-panel { margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+    .graph-scroll { overflow-x: auto; }
+    .graph-panel svg { display: block; width: 100%; height: auto; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; padding: 8px 12px; border-top: 1px solid var(--border); font-size: .72rem; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+    .gnode { cursor: pointer; }
+    .gnode text { font-size: 11px; fill: var(--text); pointer-events: none; }
+    .gnode circle { fill: var(--surface-2); stroke: var(--border); stroke-width: 1.5; transition: stroke .15s; }
+    .gnode.center circle { fill: var(--accent); stroke: var(--accent); }
+    .gnode.center text { fill: var(--on-accent); font-weight: 600; }
+    .gnode:hover circle { stroke: var(--accent); }
+
+    .feedback { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
     .feedback .label { font-size: .78rem; color: var(--muted); }
     .rating { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .rating button {
-      border: 0; background: var(--surface); color: var(--muted);
-      width: 30px; height: 28px; font-size: .82rem; cursor: pointer;
-      border-right: 1px solid var(--border);
-    }
+    .rating button { border: 0; background: var(--surface); color: var(--muted); width: 30px; height: 28px; font-size: .82rem; cursor: pointer; border-right: 1px solid var(--border); }
     .rating button:last-child { border-right: 0; }
     .rating button:hover { background: var(--accent-soft); color: var(--accent); }
     .thanks { font-size: .78rem; color: var(--accent); font-weight: 500; }
 
-    /* --- Composer --- */
     footer { border-top: 1px solid var(--border); background: var(--surface); padding: 14px 16px; }
-    .composer { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
-    .composer input[type=text] {
-      flex: 1; padding: 12px 14px; font-size: .95rem; color: var(--text);
-      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-    }
+    .composer { max-width: 780px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+    .composer input[type=text] { flex: 1; padding: 12px 14px; font-size: .95rem; color: var(--text);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px; }
     .composer input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
-    .send {
-      padding: 12px 20px; border: 0; border-radius: 10px; font-size: .92rem; font-weight: 600;
-      background: var(--accent); color: var(--on-accent); cursor: pointer; transition: background .15s;
-    }
+    .icon-btn { width: 44px; height: 44px; border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+      border-radius: 10px; cursor: pointer; display: grid; place-items: center; }
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .icon-btn.recording { border-color: var(--rel-cause_de); color: var(--rel-cause_de); animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: .5; } }
+    .send { padding: 12px 20px; border: 0; border-radius: 10px; font-size: .92rem; font-weight: 600;
+      background: var(--accent); color: var(--on-accent); cursor: pointer; transition: background .15s; }
     .send:hover { background: var(--accent-hover); }
-    .send:disabled { opacity: .5; cursor: default; }
-    .disclaimer { max-width: 760px; margin: 10px auto 0; text-align: center; font-size: .72rem; color: var(--muted); }
+    .disclaimer { max-width: 780px; margin: 10px auto 0; text-align: center; font-size: .72rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -171,7 +149,7 @@
   <main>
     <div class="empty" id="empty">
       <h2>Comment puis-je vous aider ?</h2>
-      <p>Posez une question sur la santé. Cet assistant s'appuie sur une base de connaissances médicale.</p>
+      <p>Posez une question sur la santé. Chaque réponse montre l'intention détectée, les entités reconnues et le graphe de connaissances exploré.</p>
       <div class="examples" id="examples">
         <button class="chip">Quels sont les symptômes du diabète ?</button>
         <button class="chip">Quelles sont les causes de l'hypertension ?</button>
@@ -184,6 +162,9 @@
 
   <footer>
     <form class="composer" id="form" autocomplete="off">
+      <button class="icon-btn" id="mic" type="button" title="Dicter la question" aria-label="Saisie vocale" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+      </button>
       <input id="q" type="text" aria-label="Votre question" placeholder="Écrivez votre question sur la santé…" required>
       <button class="send" type="submit">Envoyer</button>
     </form>
@@ -191,58 +172,166 @@
   </footer>
 
   <script>
+    const SVGNS = 'http://www.w3.org/2000/svg';
+    const REL_LABELS = { cause_de: 'cause', associe_a: 'association', traite_par: 'traitement',
+      symptome: 'symptôme', affecte: 'organe affecté', previent: 'prévention' };
+    const relColor = t => getComputedStyle(document.documentElement)
+      .getPropertyValue('--rel-' + (t || 'autre')).trim() || '#adb5bd';
+    const pretty = s => s.replace(/_/g, ' ');
+
     const thread = document.getElementById('thread');
     const form = document.getElementById('form');
     const input = document.getElementById('q');
     const empty = document.getElementById('empty');
+    const speechOn = 'speechSynthesis' in window;
+
+    function el(tag, cls, text) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
 
     function addMessage(text, who, pending) {
-      const row = document.createElement('div');
-      row.className = 'row ' + who;
-      const label = document.createElement('div');
-      label.className = 'who';
-      label.textContent = who === 'user' ? 'Vous' : 'Assistant';
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble' + (pending ? ' pending' : '');
+      const row = el('div', 'row ' + who);
+      row.appendChild(el('div', 'who', who === 'user' ? 'Vous' : 'Assistant'));
+      const bubble = el('div', 'bubble' + (pending ? ' pending' : ''));
       bubble.textContent = text;
-      row.appendChild(label);
       row.appendChild(bubble);
       thread.appendChild(row);
       row.scrollIntoView({ behavior: 'smooth', block: 'end' });
       return { row, bubble };
     }
 
+    /* --- Rendu du sous-graphe en SVG --- */
+    function buildGraph(graph) {
+      const W = 700, H = 340, cx = W / 2, cy = H / 2;
+      const centers = graph.nodes.filter(n => n.center);
+      const others = graph.nodes.filter(n => !n.center);
+      const pos = {};
+      centers.forEach((n, i) => {
+        const a = centers.length === 1 ? 0 : (2 * Math.PI * i) / centers.length;
+        const r = centers.length === 1 ? 0 : 46;
+        pos[n.id] = { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+      });
+      const R = 128;
+      others.forEach((n, i) => {
+        const a = (2 * Math.PI * i) / Math.max(others.length, 1) - Math.PI / 2;
+        pos[n.id] = { x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) };
+      });
+
+      const svg = document.createElementNS(SVGNS, 'svg');
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Graphe de connaissances des concepts liés');
+
+      const defs = document.createElementNS(SVGNS, 'defs');
+      const usedTypes = [...new Set(graph.edges.map(e => e.type || 'autre'))];
+      usedTypes.forEach(t => {
+        const m = document.createElementNS(SVGNS, 'marker');
+        m.setAttribute('id', 'arrow-' + t); m.setAttribute('viewBox', '0 0 10 10');
+        m.setAttribute('refX', '9'); m.setAttribute('refY', '5');
+        m.setAttribute('markerWidth', '6'); m.setAttribute('markerHeight', '6'); m.setAttribute('orient', 'auto-start-reverse');
+        const p = document.createElementNS(SVGNS, 'path');
+        p.setAttribute('d', 'M0,0 L10,5 L0,10 z'); p.setAttribute('fill', relColor(t));
+        m.appendChild(p); defs.appendChild(m);
+      });
+      svg.appendChild(defs);
+
+      graph.edges.forEach(e => {
+        const a = pos[e.src], b = pos[e.dst]; if (!a || !b) return;
+        const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len, uy = dy / len;
+        const line = document.createElementNS(SVGNS, 'line');
+        line.setAttribute('x1', a.x + ux * 22); line.setAttribute('y1', a.y + uy * 22);
+        line.setAttribute('x2', b.x - ux * 24); line.setAttribute('y2', b.y - uy * 24);
+        line.setAttribute('stroke', relColor(e.type));
+        line.setAttribute('stroke-width', String(0.8 + e.weight * 2.2));
+        line.setAttribute('opacity', '0.85');
+        line.setAttribute('marker-end', 'url(#arrow-' + (e.type || 'autre') + ')');
+        const title = document.createElementNS(SVGNS, 'title');
+        title.textContent = `${pretty(e.src)} → ${pretty(e.dst)} (${REL_LABELS[e.type] || 'lien'}, poids ${e.weight})`;
+        line.appendChild(title);
+        svg.appendChild(line);
+      });
+
+      graph.nodes.forEach(n => {
+        const p = pos[n.id]; if (!p) return;
+        const g = document.createElementNS(SVGNS, 'g');
+        g.setAttribute('class', 'gnode' + (n.center ? ' center' : ''));
+        g.setAttribute('transform', `translate(${p.x},${p.y})`);
+        g.setAttribute('tabindex', '0');
+        const c = document.createElementNS(SVGNS, 'circle');
+        c.setAttribute('r', n.center ? '22' : '18');
+        const t = document.createElementNS(SVGNS, 'text');
+        t.setAttribute('text-anchor', 'middle'); t.setAttribute('dy', '32');
+        t.textContent = pretty(n.id);
+        if (n.center) { t.setAttribute('dy', '4'); }
+        g.appendChild(c); g.appendChild(t);
+        g.addEventListener('click', () => ask('Qu\'est-ce que ' + pretty(n.id) + ' ?'));
+        g.addEventListener('keydown', ev => { if (ev.key === 'Enter') ask('Qu\'est-ce que ' + pretty(n.id) + ' ?'); });
+        svg.appendChild(g);
+      });
+
+      const panel = el('div', 'graph-panel');
+      const scroll = el('div', 'graph-scroll'); scroll.appendChild(svg); panel.appendChild(scroll);
+      const legend = el('div', 'legend');
+      usedTypes.forEach(t => {
+        const s = el('span'); const i = el('i'); i.style.background = relColor(t);
+        s.appendChild(i); s.appendChild(el('span', null, REL_LABELS[t] || 'lien'));
+        legend.appendChild(s);
+      });
+      panel.appendChild(legend);
+      return panel;
+    }
+
+    /* --- Bloc d'analyse (intention + entités + graphe) --- */
+    function addAnalysis(row, data) {
+      if (!data.entities || !data.entities.length) return;
+      const wrap = el('div', 'analysis');
+      const tags = el('div', 'tags');
+      tags.appendChild(el('span', 'tag intent', 'Intention : ' + data.intent));
+      data.entities.forEach(e => tags.appendChild(el('span', 'tag entity', pretty(e))));
+      wrap.appendChild(tags);
+
+      if (data.graph && data.graph.nodes.length > 1) {
+        const actions = el('div', 'bubble-actions');
+        const toggle = el('button', 'linkish');
+        toggle.type = 'button';
+        toggle.appendChild(el('span', null, 'Explorer le graphe de connaissances'));
+        toggle.appendChild(el('span', 'caret'));
+        actions.appendChild(toggle);
+        wrap.appendChild(actions);
+        let panel = null;
+        toggle.addEventListener('click', () => {
+          if (!panel) { panel = buildGraph(data.graph); wrap.appendChild(panel); toggle.classList.add('open'); }
+          else { const shown = panel.style.display !== 'none'; panel.style.display = shown ? 'none' : 'block'; toggle.classList.toggle('open', !shown); }
+        });
+      }
+      row.appendChild(wrap);
+    }
+
     function addFeedback(row, question, answer) {
-      const fb = document.createElement('div');
-      fb.className = 'feedback';
-      const label = document.createElement('span');
-      label.className = 'label';
-      label.textContent = 'Cette réponse vous a-t-elle été utile ?';
-      const rating = document.createElement('div');
-      rating.className = 'rating';
+      const fb = el('div', 'feedback');
+      fb.appendChild(el('span', 'label', 'Cette réponse vous a-t-elle été utile ?'));
+      const rating = el('div', 'rating');
       rating.setAttribute('role', 'group');
       rating.setAttribute('aria-label', 'Noter la réponse de 1 à 5');
       for (let i = 1; i <= 5; i++) {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.textContent = i;
+        const b = el('button', null, String(i)); b.type = 'button';
         b.setAttribute('aria-label', 'Note ' + i + ' sur 5');
         b.onclick = () => sendFeedback(question, answer, i, fb);
         rating.appendChild(b);
       }
-      fb.appendChild(label);
       fb.appendChild(rating);
       row.appendChild(fb);
     }
 
     async function sendFeedback(question, answer, score, fb) {
       try {
-        await fetch('/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question, answer, score })
-        });
-      } catch (e) { /* silencieux */ }
+        await fetch('/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question, answer, score }) });
+      } catch (e) {}
       fb.innerHTML = '<span class="thanks">Merci pour votre retour.</span>';
     }
 
@@ -250,60 +339,70 @@
       empty.style.display = 'none';
       addMessage(question, 'user');
       const holder = addMessage('Recherche en cours…', 'bot', true);
-      let answer = '';
+      let data = {};
       try {
-        const res = await fetch('/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question })
-        });
-        const data = await res.json();
-        answer = data.answer || data.error || 'Aucune réponse.';
-      } catch (e) {
-        answer = 'Erreur de connexion au serveur.';
-      }
+        const res = await fetch('/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question }) });
+        data = await res.json();
+      } catch (e) { data = { answer: 'Erreur de connexion au serveur.' }; }
+      const answer = data.answer || data.error || 'Aucune réponse.';
       holder.bubble.classList.remove('pending');
       holder.bubble.textContent = answer;
+
+      const actions = el('div', 'bubble-actions');
+      if (speechOn) {
+        const listen = el('button', 'linkish', 'Écouter');
+        listen.type = 'button';
+        listen.onclick = () => {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(answer); u.lang = 'fr-FR';
+          window.speechSynthesis.speak(u);
+        };
+        actions.appendChild(listen);
+      }
+      if (actions.childNodes.length) holder.row.appendChild(actions);
+
+      addAnalysis(holder.row, data);
       addFeedback(holder.row, question, answer);
     }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = input.value.trim();
-      if (!q) return;
-      input.value = '';
-      ask(q);
+      const q = input.value.trim(); if (!q) return;
+      input.value = ''; ask(q);
     });
-
     document.getElementById('examples').addEventListener('click', (e) => {
       if (e.target.classList.contains('chip')) ask(e.target.textContent);
     });
+
+    /* --- Saisie vocale (Web Speech API, si disponible) --- */
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const mic = document.getElementById('mic');
+    if (SR) {
+      mic.hidden = false;
+      const rec = new SR(); rec.lang = 'fr-FR'; rec.interimResults = false; rec.maxAlternatives = 1;
+      mic.addEventListener('click', () => { try { rec.start(); } catch (e) {} });
+      rec.onstart = () => mic.classList.add('recording');
+      rec.onend = () => mic.classList.remove('recording');
+      rec.onresult = (ev) => {
+        const t = ev.results[0][0].transcript.trim();
+        if (t) { input.value = t; form.requestSubmit(); }
+      };
+    }
 
     /* --- Contrôle de la reformulation LLM --- */
     const llmControl = document.getElementById('llm-control');
     const llmToggle = document.getElementById('llm-toggle');
     const llmInfo = document.getElementById('llm-info');
-
     function renderLlm(s) {
-      llmControl.hidden = false;
-      llmToggle.checked = !!s.enabled;
-      if (!s.key_present) {
-        llmToggle.disabled = true;
-        llmInfo.textContent = 'clé API non configurée';
-      } else {
-        llmToggle.disabled = false;
-        llmInfo.textContent = (s.available ? 'active · ' : 'désactivée · ') + (s.model || '');
-      }
+      llmControl.hidden = false; llmToggle.checked = !!s.enabled;
+      if (!s.key_present) { llmToggle.disabled = true; llmInfo.textContent = 'clé API non configurée'; }
+      else { llmToggle.disabled = false; llmInfo.textContent = (s.available ? 'active · ' : 'désactivée · ') + (s.model || ''); }
     }
-
     fetch('/llm/status').then(r => r.json()).then(renderLlm).catch(() => {});
-
     llmToggle.addEventListener('change', () => {
-      fetch('/llm/toggle', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled: llmToggle.checked })
-      }).then(r => r.json()).then(renderLlm).catch(() => {});
+      fetch('/llm/toggle', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: llmToggle.checked }) }).then(r => r.json()).then(renderLlm).catch(() => {});
     });
   </script>
 </body>
