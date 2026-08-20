@@ -65,14 +65,59 @@ def llm_toggle():
     })
 
 
+def _subgraph(entities: list, max_per_entity: int = 8) -> dict:
+    """Construit le sous-graphe autour des entites detectees : chaque entite
+    (noeud central) avec ses relations sortantes (get_neighbors) et entrantes
+    (get_predecessors), typees et ponderees. Sert a visualiser dans
+    l'interface le pilier "recherche sur graphe"."""
+    nodes, edges, seen = {}, [], set()
+
+    def add_node(cid, center=False):
+        node = nodes.setdefault(cid, {'id': cid, 'center': False})
+        if center:
+            node['center'] = True
+
+    for entity in entities:
+        add_node(entity, center=True)
+        outgoing = list(bot.kb.get_neighbors(entity).items())[:max_per_entity]
+        for dst, weight in outgoing:
+            add_node(dst)
+            key = (entity, dst)
+            if key not in seen:
+                seen.add(key)
+                edges.append({'src': entity, 'dst': dst, 'weight': round(weight, 2),
+                              'type': bot.kb.get_relation_type(entity, dst)})
+        incoming = list(bot.kb.get_predecessors(entity).items())[:max_per_entity]
+        for src, weight in incoming:
+            add_node(src)
+            key = (src, entity)
+            if key not in seen:
+                seen.add(key)
+                edges.append({'src': src, 'dst': entity, 'weight': round(weight, 2),
+                              'type': bot.kb.get_relation_type(src, entity)})
+    return {'nodes': list(nodes.values()), 'edges': edges}
+
+
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.get_json(silent=True) or {}
     question = (data.get('question') or '').strip()
     if not question:
         return jsonify({'error': 'question vide'}), 400
+    # On expose aussi l'intention detectee et les entites extraites (pilier
+    # "reconnaissance") ainsi que le sous-graphe explore (pilier "recherche"),
+    # pour les rendre visibles dans l'interface.
+    tokens = bot.nlp.preprocess(question)
+    nb_fallback = bot.learner.predict_intent if bot._nb_ready else None
+    intent = bot.nlp.classify_intent(tokens, nb_fallback=nb_fallback)
+    entities = bot.nlp.extract_entities(tokens, bot.kb)
     answer = bot.answer(question)
-    return jsonify({'answer': answer})
+    return jsonify({
+        'answer': answer,
+        'intent': intent,
+        'entities': entities,
+        'graph': _subgraph(entities),
+    })
 
 
 @app.route('/feedback', methods=['POST'])

@@ -34,6 +34,17 @@ def test_ask_returns_answer(client):
     assert 'diab' in data['answer'].lower()
 
 
+def test_ask_returns_analysis_and_graph(client):
+    resp = client.post('/ask', json={'question': "Quelles sont les causes de l'hypertension ?"})
+    data = resp.get_json()
+    assert data['intent'] == 'CAUSES'
+    assert 'hypertension' in data['entities']
+    # Le sous-graphe expose des noeuds typent les relations pour la visualisation.
+    ids = {n['id'] for n in data['graph']['nodes']}
+    assert 'hypertension' in ids and len(data['graph']['edges']) > 0
+    assert any(e.get('type') == 'cause_de' for e in data['graph']['edges'])
+
+
 def test_ask_rejects_empty_question(client):
     resp = client.post('/ask', json={'question': '   '})
     assert resp.status_code == 400
