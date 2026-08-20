@@ -1,6 +1,6 @@
-# ChatBot IA : Assistant Santé
+# ChatBot IA — Assistant Santé
 
-Projet Master 1 TRIED - Code UE :  NFP106 — Domaine : **Santé**
+Projet Master 1 Intelligence Artificielle — NFP106 — Domaine : **Santé**
 
 ## Description
 
@@ -53,6 +53,8 @@ python web_app.py
 puis ouvrir http://127.0.0.1:5000 dans un navigateur. L'interface (thème clair/sombre automatique) envoie les questions au point d'entrée `/ask` (réponse JSON) et permet de noter chaque réponse de 1 à 5 via `/feedback` ; le modèle se ré-entraîne automatiquement tous les 3 retours, comme en CLI. Le bot est instancié une seule fois au démarrage et partagé entre les requêtes.
 
 Un interrupteur en haut de page (« Reformulation IA ») permet d'**activer ou désactiver le LLM optionnel** sans redémarrer, via les points d'entrée `/llm/status` et `/llm/toggle` ; il affiche le modèle utilisé et signale l'absence de clé API le cas échéant.
+
+L'interface **rend visibles les trois piliers de l'IA** à chaque réponse : un panneau « Analyse » affiche l'**intention détectée** et les **entités extraites** (reconnaissance), et un **graphe de connaissances interactif** dessine le sous-graphe exploré autour des concepts, avec les arêtes colorées par type de relation (`cause_de`, `associe_a`, `traite_par`…) et les nœuds cliquables pour rebondir d'un concept à l'autre (recherche). Deux fonctions natives du navigateur complètent l'ensemble : la **saisie vocale** (Web Speech API) et la **lecture à voix haute** des réponses. Le point d'entrée `/ask` renvoie désormais, en plus de la réponse, l'intention, les entités et le sous-graphe typé.
 
 ## Tests
 
@@ -226,3 +228,11 @@ Ce mécanisme est mesuré par la métrique 5 (`evaluate.py`) : sur un jeu de ref
 
 ## Usage IA
 
+Ce projet a été développé avec l'assistance de Claude (Anthropic) pour :
+- Génération du squelette initial des modules
+- Débogage et refactoring
+- Génération des données JSON (qa_pairs, knowledge_graph)
+- Génération et amélioration des tests unitaires
+- Exploration du sujet pour identifier les exigences manquantes (câblage du Naïve Bayes V2, script d'évaluation des métriques, correction de bugs de scoring et de normalisation d'accents affectant la précision des réponses) et implémentation des correctifs correspondants
+
+Tout le code a été relu, compris et validé par l'auteur. L'auteur est capable d'expliquer chaque décision technique devant le jury.
