@@ -41,13 +41,13 @@ pip install -r requirements.txt
 Interface en ligne de commande :
 
 ```bash
-python main.py
+python src/main.py
 ```
 
 Interface web (Flask) :
 
 ```bash
-python web_app.py
+python src/web_app.py
 ```
 
 puis ouvrir http://127.0.0.1:5000 dans un navigateur. L'interface (thème clair/sombre automatique) envoie les questions au point d'entrée `/ask` (réponse JSON) et permet de noter chaque réponse de 1 à 5 via `/feedback` ; le modèle se ré-entraîne automatiquement tous les 3 retours, comme en CLI. Le bot est instancié une seule fois au démarrage et partagé entre les requêtes.
@@ -65,7 +65,7 @@ pytest tests/ -v
 ## Benchmark BFS / DFS / A*
 
 ```bash
-python benchmark_search.py
+python src/benchmark_search.py
 ```
 
 Compare les trois algorithmes (chemin, nœuds explorés, temps) sur 12 requêtes du graphe de connaissances santé.
@@ -73,7 +73,7 @@ Compare les trois algorithmes (chemin, nœuds explorés, temps) sur 12 requêtes
 ## Évaluation (métriques du rapport technique)
 
 ```bash
-python evaluate.py
+python src/evaluate.py
 ```
 
 Calcule les 5 métriques attendues (précision des réponses, précision des intentions, temps de réponse moyen, nœuds explorés BFS vs A*, gain par feedback sur 3 cycles) sur les 79 questions de `qa_pairs.json`. Résultats mesurés sur cette base :
@@ -92,26 +92,27 @@ La métrique de feedback est mesurée sur un jeu de **reformulations inédites**
 
 ```
 chatbot_ia/
-├── main.py              # Point d'entrée + classe ChatBot (journalisation)
-├── config.py            # Configuration centralisée (chemins, paramètres, logs, LLM)
-├── llm_engine.py        # Reformulation LLM optionnelle (RAG, API compatible OpenAI)
-├── ui.py                # Interface CLI
-├── web_app.py           # Interface web Flask (/, /ask, /feedback, /llm, statut)
+├── src/                     # code source Python
+│   ├── main.py              # Point d'entrée + classe ChatBot (journalisation)
+│   ├── config.py            # Configuration centralisée (chemins, paramètres, logs, LLM)
+│   ├── nlp_engine.py        # Tokenisation, stemming, NER, classification d'intention
+│   ├── knowledge_base.py    # Graphe de connaissances orienté pondéré (relations typées)
+│   ├── search_engine.py     # BFS / DFS / A* + comparaison (nœuds explorés, temps)
+│   ├── learning_engine.py   # TF-IDF / similarité cosinus / Naïve Bayes / feedback
+│   ├── llm_engine.py        # Reformulation LLM optionnelle (RAG, API compatible OpenAI)
+│   ├── ui.py                # Interface CLI
+│   ├── web_app.py           # Interface web Flask (/, /ask, /feedback, /llm, statut)
+│   ├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
+│   └── evaluate.py          # Rapport d'évaluation (5 métriques du sujet)
 ├── templates/
-│   └── index.html       # Page de discussion (markup de l'interface web)
+│   └── index.html           # Page de discussion (markup de l'interface web)
 ├── static/
-│   └── style.css        # Feuille de style de l'interface web
-├── nlp_engine.py        # Tokenisation, stemming, NER, classification d'intention
-├── knowledge_base.py    # Graphe de connaissances orienté pondéré (relations typées)
-├── search_engine.py     # BFS / DFS / A* + comparaison (nœuds explorés, temps)
-├── learning_engine.py   # TF-IDF / similarité cosinus / Naïve Bayes / feedback
-├── benchmark_search.py  # Comparaison BFS/DFS/A* sur 12 requêtes du graphe
-├── evaluate.py           # Rapport d'évaluation (5 métriques du sujet)
+│   └── style.css            # Feuille de style de l'interface web
 ├── data/
-│   ├── qa_pairs.json        # 79 paires question/réponse
-│   ├── knowledge_graph.json # Graphe (46 concepts, 80 relations typées)
-│   └── feedback_log.json    # Historique des retours utilisateur
-├── tests/
+│   ├── qa_pairs.json         # 79 paires question/réponse
+│   ├── knowledge_graph.json  # Graphe (46 concepts, 80 relations typées)
+│   └── feedback_log.json     # Historique des retours utilisateur (généré, gitignoré)
+├── tests/                   # 85 tests pytest
 │   ├── test_knowledge_base.py
 │   ├── test_nlp_engine.py
 │   ├── test_search_engine.py
@@ -120,7 +121,8 @@ chatbot_ia/
 │   ├── test_web_app.py
 │   ├── test_config.py
 │   └── test_llm_engine.py
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ### Configuration et journalisation
