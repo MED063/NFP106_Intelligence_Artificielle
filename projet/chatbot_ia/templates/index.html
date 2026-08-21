@@ -186,6 +186,51 @@
     const empty = document.getElementById('empty');
     const speechOn = 'speechSynthesis' in window;
 
+    /* --- Lecture a voix haute : selection d'une VOIX FRANCAISE explicite --- */
+    let frVoices = [], chosenVoice = null;
+    const voiceCtl = document.getElementById('voice-ctl');
+    const voiceSel = document.getElementById('voice');
+
+    function rankVoice(v) {
+      const n = v.name.toLowerCase();
+      if (n.includes('google')) return 4;                         // voix reseau, tres bonne qualite
+      if (/(enhanced|premium|amélie|amelie|aurelie|thomas|audrey|marie)/.test(n)) return 3;
+      if (v.localService) return 2;
+      return 1;
+    }
+    function loadVoices() {
+      frVoices = speechSynthesis.getVoices()
+        .filter(v => /^fr/i.test(v.lang))
+        .sort((a, b) => rankVoice(b) - rankVoice(a));
+      if (!frVoices.length) { if (voiceCtl) voiceCtl.hidden = true; chosenVoice = null; return; }
+      const keep = chosenVoice && frVoices.find(v => v.name === chosenVoice.name);
+      chosenVoice = keep || frVoices[0];
+      if (voiceSel) {
+        voiceSel.innerHTML = '';
+        frVoices.forEach((v, i) => {
+          const o = document.createElement('option');
+          o.value = i; o.textContent = v.name.replace('Google ', '') + ' (' + v.lang + ')';
+          if (v.name === chosenVoice.name) o.selected = true;
+          voiceSel.appendChild(o);
+        });
+        voiceCtl.hidden = false;
+      }
+    }
+    if (speechOn) {
+      loadVoices();
+      speechSynthesis.onvoiceschanged = loadVoices;
+      if (voiceSel) voiceSel.addEventListener('change', () => { chosenVoice = frVoices[voiceSel.value] || chosenVoice; });
+    }
+
+    function speak(text) {
+      if (!speechOn) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'fr-FR'; u.rate = 0.98; u.pitch = 1;
+      if (chosenVoice) u.voice = chosenVoice;
+      speechSynthesis.speak(u);
+    }
+
     function el(tag, cls, text) {
       const e = document.createElement(tag);
       if (cls) e.className = cls;
@@ -410,11 +455,7 @@
       if (speechOn) {
         const listen = el('button', 'linkish', 'Écouter');
         listen.type = 'button';
-        listen.onclick = () => {
-          window.speechSynthesis.cancel();
-          const u = new SpeechSynthesisUtterance(answer); u.lang = 'fr-FR';
-          window.speechSynthesis.speak(u);
-        };
+        listen.onclick = () => speak(answer);
         actions.appendChild(listen);
       }
       if (actions.childNodes.length) holder.row.appendChild(actions);
