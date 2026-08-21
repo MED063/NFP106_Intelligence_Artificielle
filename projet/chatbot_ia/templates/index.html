@@ -390,9 +390,16 @@
     const llmToggle = document.getElementById('llm-toggle');
     const llmInfo = document.getElementById('llm-info');
     function renderLlm(s) {
-      llmControl.hidden = false; llmToggle.checked = !!s.enabled;
-      if (!s.key_present) { llmToggle.disabled = true; llmInfo.textContent = 'clé API non configurée'; }
-      else { llmToggle.disabled = false; llmInfo.textContent = (s.available ? 'active · ' : 'désactivée · ') + (s.model || ''); }
+      llmControl.hidden = false;
+      llmToggle.checked = !!s.enabled;
+      llmToggle.disabled = !s.key_present;
+      // L'etat affiche suit l'etat reel du toggle (enabled), pas la disponibilite :
+      // ainsi couper le toggle passe toujours le texte a "desactivee".
+      if (!s.key_present) {
+        llmInfo.textContent = 'clé API requise';
+      } else {
+        llmInfo.textContent = (s.enabled ? 'activée' : 'désactivée') + ' · ' + (s.model || '');
+      }
     }
     fetch('/llm/status').then(r => r.json()).then(renderLlm).catch(() => {});
     llmToggle.addEventListener('change', () => {
