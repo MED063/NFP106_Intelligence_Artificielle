@@ -1,20 +1,23 @@
+"""
+ce fichier se concentre sur le moteur de recherche du ChatBot, qui explore le graphe de connaissances 
+pour trouver les Q/A les plus pertinentes en fonction des entités extraites 
+de la question de l'utilisateur et de l'intention classifiée."""
+
 from collections import deque
 from typing import Optional, List
 import heapq
 import time
 
 
-# Intentions pour lesquelles la question porte sur les causes/facteurs
-# d'un concept (l'effet) plutot que sur ses consequences : le graphe
-# oriente ne modelisant que 'cause -> effet', il faut alors remonter les
-# relations entrantes (get_predecessors) plutot que les sortantes.
+""" Intentions pour lesquelles la question porte sur les causes/facteurs d'un concept (l'effet) plutot que sur ses consequences : 
+le graphe oriente ne modelisant que 'cause -> effet', il faut alors remonter les  relations entrantes (get_predecessors) 
+plutot que les sortantes."""
 CAUSAL_INTENTS = {'CAUSES', 'FACTEURS_RISQUE'}
 
-# Parmi les relations entrantes, seules les vraies relations causales
-# comptent pour une question CAUSES/FACTEURS_RISQUE. On exclut ainsi les
-# associations bidirectionnelles ('associe_a', ex : hypertension <-> AVC ou
-# diabete <-> obesite, mutuellement facteurs de risque) qui, comptees comme
-# des causes, faisaient remonter une Q/A voisine a la place de la bonne.
+""" Parmi les relations entrantes, seules les vraies relations causales  comptent pour une question CAUSES/FACTEURS_RISQUE. On exclut ainsi les
+ associations bidirectionnelles ('associe_a', ex : hypertension <-> AVC oudiabete <-> obesite, 
+ mutuellement facteurs de risque) qui, comptees comme des causes, faisaient remonter une Q/A voisine a la place de la bonne.
+"""
 CAUSAL_RELATION_TYPES = {'cause_de'}
 
 
@@ -81,8 +84,8 @@ class SearchEngine:
 
     def heuristic_bigram(self, node: str, goal: str) -> float:
         """h(n) = 1 - Jaccard(bigrammes(n), bigrammes(goal)).
-        Admissible : Jaccard <= 1 donc h >= 0, et le cout reel d'une arete
-        (1 - poids) est aussi >= 0 ; h ne peut donc pas surestimer le cout restant.
+        Admissible : Jaccard <= 1 donc h >= 0, et le cout reel d'une arete (1 - poids) est aussi >= 0 ;
+          h ne peut donc pas surestimer le cout restant.
         """
         def bigrams(word):
             return {word[i:i + 2] for i in range(len(word) - 1)} or {word}
@@ -110,15 +113,8 @@ class SearchEngine:
         return results
 
     def find_best_answer(self, entities: list, intent: str, top_k: int = 5) -> List[tuple]:
-        """Explore les Q/A liees aux entites via le graphe et retourne les
-        `top_k` plus pertinentes sous forme de tuples (score, reponse),
-        tries par score de graphe decroissant (chevauchement d'entites +
-        proximite dans le graphe + correspondance d'intention). Les scores
-        sont conserves pour permettre au ChatBot de ne departager par
-        similarite TF-IDF (LearningEngine.rank_answers) que les reponses
-        reellement ex-aequo — ex : IMC et obesite partagent exactement les
-        memes concepts et ne peuvent etre distinguees que par le texte de
-        la question d'origine."""
+        """Explore les Q/A liees aux entites via le graphe et retourne les`top_k` plus pertinentes sous forme de tuples (score, reponse),
+        tries par score de graphe decroissant (chevauchement d'entites + proximite dans le graphe + correspondance d'intention). """
         if not entities:
             return []
         entity_set = set(entities)
@@ -131,13 +127,6 @@ class SearchEngine:
             precision = len(overlap) / len(qa_concepts) if qa_concepts else 0.0
             score = 2.0 * len(overlap) * precision
             for entity in entities:
-                # Pour une question CAUSES/FACTEURS_RISQUE, seules les
-                # relations entrantes (X -> entite, X = cause) sont
-                # pertinentes : les relations sortantes de l'entite
-                # representent ses consequences, pas ses causes, et les
-                # compter ici favorisait des Q/A hors sujet (ex : les
-                # complications de l'hypertension quand on demande ses
-                # causes).
                 related = (
                     self.kb.get_predecessors(entity, types=CAUSAL_RELATION_TYPES)
                     if intent in CAUSAL_INTENTS
