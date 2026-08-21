@@ -1,3 +1,8 @@
+"""
+ce fichier contient la classe KnowledgeBase, qui represente le graphe de connaissances et les paires question/reponse.
+Il fournit des methodes pour ajouter des concepts, des relations, charger/sauver depuis/vers JSON, et recuperer les voisins et predecesseurs d'un concept.
+"""
+
 import json
 from collections import defaultdict
 
@@ -5,12 +10,10 @@ from collections import defaultdict
 class KnowledgeBase:
     def __init__(self):
         self.graph = {}
-        # Type semantique de chaque arete, indexe par (src, dst). Optionnel :
-        # une relation sans type reste un simple lien pondere (retro-compatible).
-        # Les types permettent de distinguer une causalite ('cause_de') d'une
-        # simple association/comorbidite ('associe_a'), d'un traitement
-        # ('traite_par'), d'un symptome ('symptome'), d'une atteinte d'organe
-        # ('affecte') ou d'une mesure preventive ('previent').
+        """
+         Type semantique de chaque arete, indexe par (src, dst). ce qui est  optionnel :  une relation sans type reste un simple lien pondere (retro-compatible).
+         Les types permettent de distinguer une causalite ('cause_de') d'une  simple association/comorbidite ('associe_a'), d'un traitement
+         ('traite_par'), d'un symptome ('symptome'), d'une atteinte d'organe ('affecte') ou d'une mesure preventive ('previent')."""
         self.relation_types = {}
         self.qa_pairs = []
 
@@ -34,18 +37,8 @@ class KnowledgeBase:
         return self.relation_types.get((src, dst))
 
     def get_predecessors(self, concept: str, types=None) -> dict:
-        """Retourne les concepts ayant une relation entrante vers
-        `concept` (src -> concept), avec leur poids. Le graphe etant
-        oriente (ex : 'obesite -> hypertension' pour modeliser un facteur
-        de risque/une cause), get_neighbors seul ne donne que les effets
-        d'un concept ; get_predecessors permet de remonter ses causes.
-
-        Si `types` est fourni (ensemble de types de relations), seules les
-        aretes de ces types — ou non typees, par retro-compatibilite — sont
-        retenues. Cela permet de ne remonter que les vraies causes
-        ('cause_de') en ignorant les associations bidirectionnelles
-        ('associe_a', ex : hypertension <-> AVC, mutuellement facteurs de
-        risque) qui, sinon, remonteraient a tort comme des causes."""
+        """Retourne les concepts ayant une relation entrante vers `concept` (src -> concept), avec leur poids. 
+        """
         result = {}
         for src, weights in self.graph.items():
             if concept not in weights:
