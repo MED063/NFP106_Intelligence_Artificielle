@@ -1,3 +1,7 @@
+"""
+ce fichier implemente l'interface utilisateur du ChatBot IA, qui peut etre lancee en mode CLI (ligne de commande) ou via un serveur web Flask.
+"""
+
 import os
 import sys
 
