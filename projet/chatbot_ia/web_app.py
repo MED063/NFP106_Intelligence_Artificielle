@@ -32,6 +32,7 @@ def index():
     return render_template('index.html')
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 @app.route('/llm/status')
 def llm_status():
     """Etat de la reformulation LLM optionnelle, pour l'interface."""
@@ -88,6 +89,7 @@ def _subgraph(entities: list, max_per_entity: int = 8) -> dict:
     return {'nodes': list(nodes.values()), 'edges': edges}
 
 
+# ###############################################
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.get_json(silent=True) or {}
