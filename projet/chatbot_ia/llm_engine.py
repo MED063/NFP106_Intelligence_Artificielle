@@ -1,26 +1,20 @@
 """Moteur LLM optionnel (reformulation RAG).
 
-Ce module est **facultatif** : le ChatBot fonctionne entierement sans lui.
-Quand `config.USE_LLM` est actif et qu'une cle d'API est fournie, il permet
-deux choses :
+Ce module est **facultatif** : le ChatBot fonctionne entierement sans lui. Quand `config.USE_LLM` est actif et qu'une cle d'API est fournie,
+il permet deux choses :
 
 1. Reformuler en langage naturel la reponse deja selectionnee par le moteur
    maison (recherche dans le graphe + TF-IDF). C'est une approche RAG : le
    LLM ne s'appuie que sur le contexte fourni et ne doit rien inventer, ce
-   qui limite fortement les hallucinations — essentiel en sante.
+   qui limite fortement les hallucinations  essentiel en sante.
 2. Servir de filet de secours quand le moteur maison ne trouve aucune
    reponse, en repondant de facon prudente.
 
-L'implementation utilise uniquement la bibliotheque standard (`urllib`) et
-parle a n'importe quelle API "OpenAI-compatible" (Groq gratuit par defaut,
-mais aussi Mistral, un endpoint compatible Gemini, un serveur local Ollama,
-etc.) via l'endpoint `/chat/completions`. Aucune dependance lourde n'est
-ajoutee, conformement aux contraintes du projet.
+L'implementation utilise uniquement la bibliotheque standard (`urllib`) et parle a n'importe quelle API "OpenAI-compatible" (Groq ratuit par defaut,
+aucune dependance lourde n'est ajoutee, conformement aux contraintes du projet.
 
-Toute erreur (cle absente, reseau indisponible, delai depasse, reponse
-inattendue) est capturee et renvoie `None` : l'appelant retombe alors sur
-la reponse brute du moteur maison. Le LLM ne peut donc jamais casser le
-pipeline.
+Toute erreur (cle absente, reseau indisponible, delai depasse, reponseinattendue) est capturee et renvoie `None` :
+l'appelant retombe alors sur la reponse brute du moteur maison. Le LLM ne peut donc jamais casser le pipeline.
 """
 import json
 import urllib.error
@@ -28,10 +22,7 @@ import urllib.request
 
 import config
 
-# Certains fournisseurs placent leur API derriere Cloudflare, qui rejette
-# l'User-Agent par defaut d'urllib ("Python-urllib/x") avec une erreur 403
-# (code Cloudflare 1010, "banned based on your signature"). On envoie donc
-# un User-Agent explicite pour que la requete passe le pare-feu.
+
 USER_AGENT = 'Mozilla/5.0 (compatible; chatbot-ia/1.0; +https://github.com/MED063)'
 
 
@@ -155,7 +146,7 @@ def self_test() -> int:
         print("(401 = cle invalide ; 404/400 model = changer LLM_MODEL ; "
               "429 = quota/rate limit)")
         return 1
-    except Exception as exc:  # noqa: BLE001 - diagnostic
+    except Exception as exc:  
         print(f"\n=> Echec : {type(exc).__name__}: {exc}")
         print("(souvent : pas de reseau, ou endpoint LLM_API_BASE incorrect)")
         return 1
