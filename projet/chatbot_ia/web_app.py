@@ -1,22 +1,14 @@
 """Interface web Flask pour le ChatBot IA (domaine sante).
-
-Expose la meme logique que l'interface CLI (`ui.py`) via une petite
-application web : une page de discussion, un point d'entree `/ask` qui
-renvoie la reponse du bot en JSON, et `/feedback` pour enregistrer la
-note de l'utilisateur (1-5), avec re-entrainement automatique tous les
+Expose la meme logique que l'interface CLI (`ui.py`) via une petite aplication web : une page de discussion, un point d'entree `/ask` qui
+renvoie la reponse du bot en JSON, et `/feedback` pour enregistrer la note de l'utilisateur (1-5), avec re-entrainement automatique tous les
 `FEEDBACK_RETRAIN_EVERY` retours — exactement comme la boucle CLI.
-
-Deux points d'entree `/llm/status` et `/llm/toggle` permettent de consulter
-et de basculer depuis l'interface la reformulation optionnelle par un LLM
-(voir llm_engine.py).
 
 Lancement :
     pip install -r requirements.txt
     python web_app.py
 puis ouvrir http://127.0.0.1:5000
 
-Le bot est instancie une seule fois au demarrage (chargement du graphe,
-entrainement TF-IDF + Naive Bayes) et partage entre les requetes.
+Le bot est instancie une seule fois au demarrage (chargement du graphe, entrainement TF-IDF + Naive Bayes) et partage entre les requetes.
 """
 import os
 
@@ -66,10 +58,8 @@ def llm_toggle():
 
 
 def _subgraph(entities: list, max_per_entity: int = 8) -> dict:
-    """Construit le sous-graphe autour des entites detectees : chaque entite
-    (noeud central) avec ses relations sortantes (get_neighbors) et entrantes
-    (get_predecessors), typees et ponderees. Sert a visualiser dans
-    l'interface le pilier "recherche sur graphe"."""
+    """Construit le sous-graphe autour des entites detectees : chaque entite (noeud central) avec ses relations sortantes (get_neighbors)
+      et entrantes (get_predecessors), typees et ponderees. Sert a visualiser dans l'interface le pilier "recherche sur graphe"."""
     nodes, edges, seen = {}, [], set()
 
     def add_node(cid, center=False):
@@ -104,9 +94,9 @@ def ask():
     question = (data.get('question') or '').strip()
     if not question:
         return jsonify({'error': 'question vide'}), 400
-    # On expose aussi l'intention detectee et les entites extraites (pilier
-    # "reconnaissance") ainsi que le sous-graphe explore (pilier "recherche"),
-    # pour les rendre visibles dans l'interface.
+    """ On expose aussi l'intention detectee et les entites extraites (pilier "reconnaissance") ainsi que
+      le sous-graphe explore (pilier "recherche"), pour les rendre visibles dans l'interface.
+    """
     tokens = bot.nlp.preprocess(question)
     nb_fallback = bot.learner.predict_intent if bot._nb_ready else None
     intent = bot.nlp.classify_intent(tokens, nb_fallback=nb_fallback)
