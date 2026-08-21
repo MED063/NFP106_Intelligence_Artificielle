@@ -231,10 +231,24 @@
       if (voiceSel) voiceSel.addEventListener('change', () => { chosenVoice = frVoices[voiceSel.value] || chosenVoice; });
     }
 
+    // Normalise le texte medical pour une meilleure prononciation.
+    function speechText(t) {
+      return t
+        .replace(/\bmmHg\b/g, 'millimètres de mercure')
+        .replace(/\bg\/L\b/gi, 'grammes par litre')
+        .replace(/\bkg\/m²/gi, 'kilogrammes par mètre carré')
+        .replace(/\bkg\b/g, 'kilogrammes')
+        .replace(/%/g, ' pour cent')
+        .replace(/\bAVC\b/g, 'A.V.C.')
+        .replace(/\bIMC\b/g, 'I.M.C.')
+        .replace(/\bHTA\b/g, 'H.T.A.')
+        .replace(/\bHDL\b/g, 'H.D.L.')
+        .replace(/\bLDL\b/g, 'L.D.L.');
+    }
     function speak(text) {
       if (!speechOn) return;
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      const u = new SpeechSynthesisUtterance(speechText(text));
       u.lang = 'fr-FR'; u.rate = 0.98; u.pitch = 1;
       if (chosenVoice) u.voice = chosenVoice;
       speechSynthesis.speak(u);
