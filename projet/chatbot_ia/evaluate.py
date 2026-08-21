@@ -1,4 +1,4 @@
-"""Rapport d'evaluation du ChatBot IA (cf. sujet, section "Documentation").
+"""Rapport d'evaluation du ChatBot IA.
 
 Mesure les 5 metriques demandees :
 1. Precision des reponses (cible >= 70%)
@@ -7,8 +7,7 @@ Mesure les 5 metriques demandees :
 4. Noeuds explores BFS vs A* (cible A* < BFS)
 5. Amelioration par feedback apres 3 cycles (cible >= +5%)
 
-Utilise les qa_pairs.json (62 questions) comme jeu de test, ainsi que les
-paires de benchmark_search.py pour la comparaison des algorithmes de
+Utilise les qa_pairs.json (62 questions) comme jeu de test, ainsi que les paires de benchmark_search.py pour la comparaison des algorithmes de
 recherche.
 
 Usage : python evaluate.py
@@ -25,8 +24,7 @@ from benchmark_search import PAIRS
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data') + os.sep
 
-# Intentions "de controle" : leur reponse est un message fixe qui ne vient
-# pas des qa_pairs, on ne peut donc pas comparer le texte mot pour mot.
+# Intentions "de controle" : leur reponse est un message fixe qui ne vient  pas des qa_pairs, on ne peut donc pas comparer le texte mot pour mot.
 CONTROL_INTENTS = {'SALUTATION', 'QUITTER'}
 
 
@@ -89,14 +87,12 @@ def evaluate_search(bot: ChatBot, pairs: list) -> dict:
     }
 
 
-# Jeu de DEMONSTRATION du feedback : des reformulations "utilisateur"
-# (questions futures, jamais vues telles quelles a l'entrainement) de sujets
-# connus. Certaines sont initialement mal routees (intention mal detectee ou
-# entite non reconnue) : c'est precisement sur ce type de cas que le feedback
-# doit faire progresser le systeme. On mesure le gain sur ce jeu plutot que
-# sur les 79 qa_pairs, car ces dernieres sont deja repondues a 100 % (aucune
-# marge de progression mesurable). 'attendu' est un extrait de la bonne
-# reponse, servant a la fois d'oracle et a retrouver la reponse a enseigner.
+""" Jeu de DEMONSTRATION du feedback : des reformulations "utilisateur"  (questions futures, jamais vues telles quelles a l'entrainement)
+ de sujets connus. Certaines sont initialement mal routees (intention mal detectee ou 
+ entite non reconnue) : c'est precisement sur ce type de cas que le feedback doit faire progresser le systeme. 
+ On mesure le gain sur ce jeu plutot que sur les 79 qa_pairs, car ces dernieres sont deja repondues a 100 %
+ 'attendu' est un extrait de la bonne reponse, servant a la fois d'oracle et a retrouver la reponse a enseigner.
+"""
 FEEDBACK_DEMO = [
     {"question": "C'est quoi le diabète exactement ?", "attendu": "diabète est une maladie chronique"},
     {"question": "Peux-tu m'expliquer l'hypertension ?", "attendu": "hypertension artérielle"},
@@ -123,14 +119,12 @@ def _demo_precision(bot: ChatBot, demo: list) -> tuple:
 
 
 def evaluate_feedback_gain(bot: ChatBot, cycles: int = 3, demo: list = None) -> dict:
-    """Mesure le gain de precision apres N cycles de feedback utilisateur, sur
-    le jeu de demonstration FEEDBACK_DEMO.
+    """Mesure le gain de precision apres N cycles de feedback utilisateur, sur le jeu de demonstration FEEDBACK_DEMO.
 
-    A chaque cycle, on simule un utilisateur : si la reponse rendue est bonne
-    on la renforce (note 5) ; si elle est mauvaise on la penalise (note 1) et
-    on enseigne la bonne reponse (note 5), comme prevu par le sujet
-    ("penalise et propose une meilleure reponse"). retrain() est ensuite
-    appele. Le feedback ajuste directement le classement des reponses futures
+    A chaque cycle, on simule un utilisateur : si la reponse rendue est bonne on la renforce (note 5) ; 
+    si elle est mauvaise on la penalise (note 1) et on enseigne la bonne reponse (note 5), comme prevu par le sujet
+    ("penalise et propose une meilleure reponse"). retrain() est ensuite appele. 
+    Le feedback ajuste directement le classement des reponses futures
     (LearningEngine.feedback_score)."""
     demo = demo if demo is not None else FEEDBACK_DEMO
 
@@ -166,8 +160,7 @@ def main():
     intents = evaluate_intents(bot, qa_pairs)
     search = evaluate_search(bot, PAIRS)
 
-    # Le feedback modifie l'etat du bot (feedback_log, poids du graphe) : on
-    # le mesure en dernier pour ne pas fausser les metriques precedentes.
+    # Le feedback modifie l'etat du bot (feedback_log, poids du graphe) : on le mesure en dernier pour ne pas fausser les metriques precedentes.
     feedback = evaluate_feedback_gain(bot)
 
     print("=== Rapport d'evaluation - ChatBot IA (domaine sante) ===\n")
