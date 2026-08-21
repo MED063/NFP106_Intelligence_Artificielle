@@ -1,3 +1,7 @@
+"""
+Benchmark pour évaluer les performances des algorithmes de recherche
+"""
+
 import os
 import sys
 
