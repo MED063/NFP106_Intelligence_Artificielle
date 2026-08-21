@@ -217,11 +217,18 @@
       const centerIds = new Set(centers.map(n => n.id));
       // Disposition bipartite : entrant (causes/facteurs/associations amont) a
       // gauche, sortant (consequences, traitements, prevention) a droite.
-      const left = [], right = [], lSeen = new Set(), rSeen = new Set();
+      // Chaque concept est place d'un SEUL cote (la droite prime pour un concept
+      // a la fois consequence et cause, ex : hypertension <-> AVC), ce qui evite
+      // de le dessiner deux fois.
+      const sideOf = {};
       graph.edges.forEach(e => {
-        if (centerIds.has(e.dst) && !centerIds.has(e.src) && !lSeen.has(e.src)) { lSeen.add(e.src); left.push(e.src); }
-        else if (centerIds.has(e.src) && !centerIds.has(e.dst) && !rSeen.has(e.dst)) { rSeen.add(e.dst); right.push(e.dst); }
+        if (centerIds.has(e.src) && !centerIds.has(e.dst) && !(e.dst in sideOf)) sideOf[e.dst] = 'R';
       });
+      graph.edges.forEach(e => {
+        if (centerIds.has(e.dst) && !centerIds.has(e.src) && !(e.src in sideOf)) sideOf[e.src] = 'L';
+      });
+      const left = Object.keys(sideOf).filter(id => sideOf[id] === 'L');
+      const right = Object.keys(sideOf).filter(id => sideOf[id] === 'R');
       const lIndex = {}, rIndex = {};
       left.forEach((id, i) => lIndex[id] = i);
       right.forEach((id, i) => rIndex[id] = i);
@@ -253,36 +260,37 @@
       const usedTypes = [...new Set(graph.edges.map(e => e.type || 'autre'))];
       usedTypes.forEach(t => {
         const m = svgNode('marker', { id: 'arrow-' + t, viewBox: '0 0 10 10', refX: '8', refY: '5',
-          markerWidth: '6.5', markerHeight: '6.5', orient: 'auto-start-reverse' });
+          markerUnits: 'userSpaceOnUse', markerWidth: '11', markerHeight: '11', orient: 'auto-start-reverse' });
         m.appendChild(svgNode('path', { d: 'M0,0 L10,5 L0,10 z', fill: relColor(t) }));
         defs.appendChild(m);
       });
       svg.appendChild(defs);
 
-      // Aretes : depart/arrivee sur le bord de la carte centrale, y reparti
-      // selon l'index du noeud lateral (evite l'empilement des fleches).
+      // Aretes : rattachees au bord de la carte du cote du noeud, avec un y
+      // reparti selon l'index du noeud (evite l'empilement des fleches) et un
+      // ecart net avec la carte (la tete de fleche ne mord plus dessus).
+      const GAP = 8;
       graph.edges.forEach(e => {
-        const inbound = centerIds.has(e.dst) && !centerIds.has(e.src);
-        const outbound = centerIds.has(e.src) && !centerIds.has(e.dst);
-        if (!inbound && !outbound) return;
-        const side = inbound ? pos[e.src] : pos[e.dst]; if (!side) return;
-        const P = inbound ? pill[e.dst] : pill[e.src]; if (!P) return;
-        const idx = inbound ? lIndex[e.src] : rIndex[e.dst];
-        const cnt = inbound ? left.length : right.length;
-        const slotY = P.y + (idx - (cnt - 1) / 2) * ((P.h - 16) / Math.max(cnt, 1));
-
-        let x1, y1, x2, y2;
-        if (inbound) {                       // noeud gauche -> carte (fleche sur la carte)
-          x1 = side.x + 18; y1 = side.y;
-          x2 = P.x - P.w / 2 - 2; y2 = clamp(slotY, P.y - P.h / 2 + 6, P.y + P.h / 2 - 6);
-        } else {                             // carte -> noeud droit (fleche sur le noeud)
-          x1 = P.x + P.w / 2 + 2; y1 = clamp(slotY, P.y - P.h / 2 + 6, P.y + P.h / 2 - 6);
-          x2 = side.x - 20; y2 = side.y;
-        }
-        const mx = (x1 + x2) / 2;
+        const srcIsCenter = centerIds.has(e.src), dstIsCenter = centerIds.has(e.dst);
+        if (srcIsCenter === dstIsCenter) return;
+        const other = srcIsCenter ? e.dst : e.src;
+        const s = sideOf[other]; if (!s) return;
+        const node = pos[other]; if (!node) return;
+        const P = pill[srcIsCenter ? e.src : e.dst]; if (!P) return;
+        const idx = (s === 'R' ? rIndex : lIndex)[other];
+        const cnt = (s === 'R' ? right.length : left.length);
+        let slotY = P.y + (idx - (cnt - 1) / 2) * ((P.h - 20) / Math.max(cnt, 1));
+        slotY += dstIsCenter ? -3 : 3;                 // separe les liens bidirectionnels
+        slotY = clamp(slotY, P.y - P.h / 2 + 9, P.y + P.h / 2 - 9);
+        const cardEdgeX = s === 'R' ? P.x + P.w / 2 : P.x - P.w / 2;
+        const centerPt = { x: cardEdgeX + (s === 'R' ? GAP : -GAP), y: slotY };
+        const nodePt = { x: node.x + (s === 'R' ? -18 : 18), y: node.y };
+        const src = dstIsCenter ? nodePt : centerPt;
+        const dst = dstIsCenter ? centerPt : nodePt;
+        const mx = (src.x + dst.x) / 2;
         const path = svgNode('path', {
-          d: `M ${x1},${y1} C ${mx},${y1} ${mx},${y2} ${x2},${y2}`,
-          fill: 'none', stroke: relColor(e.type), 'stroke-width': String(1 + e.weight * 2),
+          d: `M ${src.x},${src.y} C ${mx},${src.y} ${mx},${dst.y} ${dst.x},${dst.y}`,
+          fill: 'none', stroke: relColor(e.type), 'stroke-width': String(1 + e.weight * 1.6),
           opacity: '0.9', 'marker-end': 'url(#arrow-' + (e.type || 'autre') + ')'
         });
         const title = document.createElementNS(SVGNS, 'title');
@@ -292,11 +300,11 @@
       });
 
       // Noeuds lateraux (cercle + libelle a l'exterieur).
-      const addSide = (id, x) => {
+      const addSide = (id) => {
         const p = pos[id]; if (!p) return;
         const g = svgNode('g', { class: 'gnode', transform: `translate(${p.x},${p.y})`, tabindex: '0' });
         g.appendChild(svgNode('circle', { r: '15' }));
-        const onLeft = x < cx;
+        const onLeft = sideOf[id] === 'L';
         const t = svgNode('text', { 'text-anchor': onLeft ? 'end' : 'start', x: onLeft ? -22 : 22, dy: '0.32em' });
         t.textContent = pretty(id);
         g.appendChild(t);
@@ -305,8 +313,8 @@
         g.addEventListener('keydown', ev => { if (ev.key === 'Enter') ask(q); });
         svg.appendChild(g);
       };
-      left.forEach(id => addSide(id, leftX));
-      right.forEach(id => addSide(id, rightX));
+      left.forEach(addSide);
+      right.forEach(addSide);
 
       // Carte(s) centrale(s).
       centers.forEach(n => {
