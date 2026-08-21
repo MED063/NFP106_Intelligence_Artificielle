@@ -67,16 +67,13 @@ def test_get_predecessors_filtered_by_type():
     kb = KnowledgeBase()
     kb.add_relation("obesite", "hypertension", 0.75, rel_type="cause_de")
     kb.add_relation("cholesterol", "hypertension", 0.6, rel_type="cause_de")
-    # AVC est un facteur de risque mutuel (comorbidite), pas une cause : ilne doit pas remonter comme predecesseur causal de l'hypertension.
     kb.add_relation("avc", "hypertension", 0.85, rel_type="associe_a")
     causal = kb.get_predecessors("hypertension", types={"cause_de"})
     assert causal == {"obesite": 0.75, "cholesterol": 0.6}
-    # Sans filtre, toutes les relations entrantes sont retournees.
     assert set(kb.get_predecessors("hypertension")) == {"obesite", "cholesterol", "avc"}
 
 
 def test_get_predecessors_untyped_edges_are_kept_when_filtering():
-    # une arete sans type reste retenue meme quand un filtre de types est applique .
     kb = KnowledgeBase()
     kb.add_relation("obesite", "hypertension", 0.75)
     assert kb.get_predecessors("hypertension", types={"cause_de"}) == {"obesite": 0.75}
