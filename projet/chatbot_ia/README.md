@@ -1,6 +1,6 @@
 # ChatBot IA : Assistant Santé
 
-Projet Master 1 Intelligence Artificielle - NFP106 - Domaine : **Santé**
+Projet du Master 1 TRIED - UE : Intelligence Artificielle - Code UE : NFP106 - Domaine : **Santé**
 
 ## Description
 
