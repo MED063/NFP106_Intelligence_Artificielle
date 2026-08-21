@@ -155,6 +155,10 @@ def evaluate_feedback_gain(bot: ChatBot, cycles: int = 3, demo: list = None) -> 
 
 
 def main():
+    # Les cinq metriques evaluent le coeur maison, qui est deterministe. On
+    # desactive la reformulation LLM : sinon elle reecrirait les reponses et la
+    # comparaison mot a mot avec la reference n'aurait plus de sens (cf. README).
+    config.USE_LLM = False
     bot = ChatBot(data_dir=DATA_DIR)
     qa_pairs = bot.kb.qa_pairs
 
