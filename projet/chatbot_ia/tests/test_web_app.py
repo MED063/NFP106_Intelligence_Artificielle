@@ -1,3 +1,7 @@
+"""
+tests Unitaires pour le web_app Flask
+"""
+
 import os
 import sys
 
@@ -5,15 +9,14 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-flask = pytest.importorskip("flask")  # l'interface web est optionnelle
+flask = pytest.importorskip("flask")  
 
 import web_app
 
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    # Rediriger le log de feedback vers un fichier temporaire pour ne pas
-    # polluer data/feedback_log.json pendant les tests.
+    # Rediriger le log de feedback vers un fichier temporaire pour ne pas  polluer data/feedback_log.json pendant les tests.
     monkeypatch.setattr(web_app, 'FEEDBACK_LOG', str(tmp_path / 'fb.json'))
     monkeypatch.setattr(web_app, '_feedback_count', 0)
     web_app.app.config['TESTING'] = True

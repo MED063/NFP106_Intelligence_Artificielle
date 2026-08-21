@@ -1,3 +1,7 @@
+"""
+tests Unitaires pour la classe ChatBot .
+"""
+
 import os
 import sys
 import pytest
@@ -37,8 +41,7 @@ def test_chatbot_unknown_question_returns_fallback(bot):
 
 
 def test_chatbot_answers_glycemie_question(bot):
-    # Regression : "glycemie" n'etait pas un concept du graphe, la question
-    # ne trouvait donc aucune entite malgre sa presence dans qa_pairs.
+    # Regression : "glycemie" n'etait pas un concept du graphe, la question ne trouvait donc aucune entite malgre sa presence dans qa_pairs.
     response = bot.answer("c'est quoi la glycémie ?")
     assert 'glyc' in response.lower()
 
@@ -57,16 +60,14 @@ def test_chatbot_answers_enriched_topics(bot):
 
 
 def test_chatbot_causes_obesite_not_confused_with_diabete(bot):
-    # Regression : "diabete -> obesite" (comorbidite, associe_a) ne doit pas
-    # faire remonter la Q/A des causes du diabete pour cette question.
+    # Regression : "diabete -> obesite" (comorbidite, associe_a) ne doit pas  faire remonter la Q/A des causes du diabete pour cette question.
     response = bot.answer("Quelles sont les causes de l'obésité ?")
     assert 'obésité résulte' in response.lower() or "l'obésité" in response.lower()
     assert 'diabète de type 2 est principalement' not in response.lower()
 
 
 def test_feedback_improves_future_answer(bot):
-    # Une reformulation inedite mal routee : le feedback (penalisation de la
-    # mauvaise reponse + enseignement de la bonne) doit corriger la reponse.
+    # Une reformulation inedite mal routee : le feedback (penalisation de la mauvaise reponse + enseignement de la bonne) doit corriger la reponse.
     question = "Qu'est-ce qui provoque un AVC ?"
     before = bot.answer(question)
     good = next(qa['answer'] for qa in bot.kb.qa_pairs
@@ -78,7 +79,6 @@ def test_feedback_improves_future_answer(bot):
 
 
 def test_chatbot_naive_bayes_is_trained(bot):
-    # V2 de classify_intent : Naive Bayes entraine sur les intentions
-    # etiquetees des qa_pairs (cf. sujet section 4.2).
+    # V2 de classify_intent : Naive Bayes entraine sur les intentions  etiquetees des qa_pairs 
     assert bot._nb_ready is True
     assert bot.learner._nb_classes

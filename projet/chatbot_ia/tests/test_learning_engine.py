@@ -1,3 +1,6 @@
+"""
+tests Unitaires pour la classe LearningEngine ."""
+
 import sys
 import os
 import pytest

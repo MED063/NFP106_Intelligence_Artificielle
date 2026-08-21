@@ -1,3 +1,7 @@
+"""
+tests Unitaires pour la classe SearchEngine .
+"""
+
 import sys
 import os
 import pytest
@@ -125,8 +129,7 @@ def test_find_best_answer_intent_match_ranks_first():
 
 def make_causal_kb():
     kb = KnowledgeBase()
-    # obesite est une cause (predecesseur) de l'hypertension ; avc en est
-    # une consequence (successeur), pas une cause.
+    # obesite est une cause (predecesseur) de l'hypertension, avc en est une consequence (successeur).
     kb.add_relation("obesite", "hypertension", 0.9)
     kb.add_relation("hypertension", "avc", 0.9)
     kb.qa_pairs = [
