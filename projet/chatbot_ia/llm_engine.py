@@ -23,6 +23,7 @@ import urllib.request
 import config
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 USER_AGENT = 'Mozilla/5.0 (compatible; chatbot-ia/1.0; +https://github.com/MED063)'
 
 
@@ -152,6 +153,7 @@ def self_test() -> int:
         return 1
 
 
+# ###############################################
 if __name__ == '__main__':
     import sys
     sys.exit(self_test())
