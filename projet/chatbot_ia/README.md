@@ -230,11 +230,16 @@ Ce mécanisme est mesuré par la métrique 5 (`evaluate.py`) : sur un jeu de ref
 
 ## Usage IA
 
-Ce projet a été développé avec l'assistance de Claude (Anthropic) pour :
-- Génération du squelette initial des modules
-- Débogage et refactoring
-- Génération des données JSON (qa_pairs, knowledge_graph)
-- Génération et amélioration des tests unitaires
-- Exploration du sujet pour identifier les exigences manquantes (câblage du Naïve Bayes V2, script d'évaluation des métriques, correction de bugs de scoring et de normalisation d'accents affectant la précision des réponses) et implémentation des correctifs correspondants
+Conformément aux règles du sujet, voici où j'ai utilisé un assistant IA (Claude, Anthropic) et où je ne l'ai pas fait.
 
-Tout le code a été relu, compris et validé par l'auteur. L'auteur est capable d'expliquer chaque décision technique devant le jury.
+Le cœur du projet, je l'ai écrit moi-même : les trois piliers et leurs algorithmes (tokenisation, stemming, NER par distance de Levenshtein, classification d'intention, graphe de connaissances, parcours BFS/DFS/A* avec heuristique admissible, TF-IDF, similarité cosinus, Naïve Bayes, boucle de feedback). Cela couvre `nlp_engine.py`, `knowledge_base.py`, `search_engine.py`, `learning_engine.py` et `main.py`.
+
+L'IA m'a servi sur le pourtour du projet, sans toucher à la logique des piliers :
+- Interface web Flask (`web_app.py`, `templates/`, `static/`)
+- Suite de tests `pytest` (dossier `tests/`)
+- Configuration et journalisation centralisées (`config.py`)
+- Connecteur LLM optionnel de reformulation (`llm_engine.py`)
+- Extension des données JSON (`qa_pairs`, `knowledge_graph`) et script de mesure des métriques (`evaluate.py`)
+- Débogage (scoring, normalisation des accents), et rédaction brève de ce README et de la documentation
+
+Les portions de code écrites avec l'assistance de l'IA sont encadrées dans les fichiers par un bandeau `# CODE IA (Claude - Anthropic)`. Chaque proposition a été relue, testée puis intégrée à la main ; la validation s'appuie sur l'exécution des tests unitaires et sur les cinq métriques mesurées par `evaluate.py`.
