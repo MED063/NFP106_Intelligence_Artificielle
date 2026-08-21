@@ -1,3 +1,8 @@
+"""
+ce fichier contient la classe LearningEngine, qui implemente le TF-IDF pour le classement des reponses candidates,
+ un classifieur Naive Bayes pour l'intention, et la gestion du feedback utilisateur.
+"""
+
 import math
 import json
 from collections import defaultdict
@@ -12,13 +17,10 @@ class LearningEngine:
         self._nb_prior = {}
         self._nb_likelihood = {}
         self._nb_classes = []
-        # Tokenizer applique aux reponses candidates dans rank_answers.
-        # Par defaut un simple split (retro-compatible) ; en pratique on y
-        # injecte NLPEngine.preprocess pour que les candidats soient
-        # normalises (accents, ponctuation, stemming) exactement comme le
-        # vocabulaire TF-IDF construit par build_tfidf, sans quoi des
-        # reponses correctes sont mal classees a cause d'un simple accent
-        # ou d'une parenthese collee au mot.
+        """ Tokenizer applique aux reponses candidates dans rank_answers.Par defaut un simple split (retro-compatible) ; en pratique on y
+         injecte NLPEngine.preprocess pour que les candidats soient normalises (accents, ponctuation, stemming) exactement comme le
+         vocabulaire TF-IDF construit par build_tfidf.
+        """
         self._tokenize_candidate = tokenizer or (lambda text: text.lower().split())
 
     def build_tfidf(self, documents: list) -> None:
@@ -124,21 +126,13 @@ class LearningEngine:
     FEEDBACK_GAIN = 3.0
 
     def record_feedback(self, question: str, answer: str, score: int) -> None:
-        """Enregistre le retour utilisateur (1-5).
-        score >= 4 : renforce l'association ; score <= 2 : pénalise.
+        """Enregistre le retour utilisateur (1-5) : score >= 4 : renforce l'association ; score <= 2 : pénalise.
         """
         self.feedback_log.append({'question': question, 'answer': answer, 'score': score})
 
     def feedback_score(self, question: str, candidate_answer: str) -> float:
         """Ajustement de pertinence issu du feedback pour une reponse
-        candidate face a une question donnee. Conformement au sujet, une
-        note >= 4 renforce l'association question/reponse et une note <= 2
-        la penalise. La contribution de chaque retour est (note - 3), agregee
-        sur les questions quasi identiques (Jaccard des tokens >= 0.8) et
-        ponderee par FEEDBACK_GAIN.
-
-        Neutre (0.0) tant qu'aucun feedback pertinent n'existe : le
-        comportement par defaut du ChatBot est donc strictement inchange, et
+        candidate face a une question donnee. Neutre (0.0) tant qu'aucun feedback pertinent n'existe : le comportement par defaut du ChatBot est donc strictement inchange, et
         le feedback ne fait qu'ameliorer le classement des reponses futures."""
         if not self.feedback_log:
             return 0.0
