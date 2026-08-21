@@ -1,3 +1,7 @@
+"""ce fichier contient le coeur du ChatBot : KnowledgeBase, NLPEngine, SearchEngine, LearningEngine et LLMEngine.
+Le fichier main.py assemble ces composants et fournit l'interface utilisateur (CLI ou web).
+"""
+
 import os
 import sys
 
@@ -18,8 +22,7 @@ class ChatBot:
         self.search = SearchEngine(self.kb)
         self.learner = LearningEngine(tokenizer=self.nlp.preprocess)
         self.logger = config.get_logger()
-        # LLM optionnel : desactive par defaut (config.USE_LLM=False), le
-        # coeur maison reste autonome. Voir llm_engine.py.
+        # LLM optionnel : desactive par defaut (config.USE_LLM=False), le coeur maison reste autonome. Voir llm_engine.py.
         self.llm = LLMEngine(logger=self.logger)
         self._load_data(data_dir)
         self.logger.info(
@@ -42,9 +45,9 @@ class ChatBot:
         if documents:
             self.learner.build_tfidf(documents)
 
-        # V2 de classify_intent : Naive Bayes entraine sur les intentions
-        # etiquetees des qa_pairs, utilise comme filet de securite quand
-        # aucune regle (V1) ne s'applique.
+        """ V2 de classify_intent : Naive Bayes entraine sur les intentions etiquetees des qa_pairs, utilise comme filet de securite quand
+        aucune regle (V1) ne s'applique.
+        """
         labeled = [
             (self.nlp.preprocess(qa['question']), qa['intent'])
             for qa in self.kb.qa_pairs
@@ -72,31 +75,26 @@ class ChatBot:
             return 'Au revoir !'
 
         entities = self.nlp.extract_entities(tokens, self.kb)
-        # On recupere un large ensemble de candidats (pas seulement le top-5)
-        # afin que le feedback puisse promouvoir une bonne reponse initialement
-        # mal classee. Sans feedback, c'est toujours le meilleur score de
-        # graphe qui l'emporte : le comportement par defaut est inchange.
+        # On recupere un large ensemble de candidats afin que le feedback puisse promouvoir une bonne reponse initialement mal classee
         candidates = self.search.find_best_answer(entities, intent, top_k=25)
         if not candidates:
             self.logger.warning('Aucune reponse trouvee (entites=%s)', entities)
-            # Filet de secours LLM optionnel (desactive par defaut).
+            # Filet de secours LLM optionnel .
             if self.llm.is_available():
                 reply = self.llm.answer_fallback(user_input)
                 if reply:
                     return reply
             return "Je n'ai pas trouvé de réponse à votre question."
 
-        # Le score du graphe (chevauchement d'entites + intention) fait
-        # foi, ajuste par le feedback utilisateur (renforcement des bonnes
-        # associations question/reponse, penalisation des mauvaises). Sans
-        # aucun feedback l'ajustement est nul : l'ordre reste inchange.
+        """ Le score du graphe (chevauchement d'entites + intention) fait foi, ajuste par le feedback utilisateur (renforcement des bonnes
+        associations question/reponse, penalisation des mauvaises).
+        """
         candidates = sorted(
             ((score + self.learner.feedback_score(user_input, answer), answer)
              for score, answer in candidates),
             key=lambda x: x[0], reverse=True)
 
-        # Le TF-IDF ne sert qu'a departager les reponses ex-aequo (ex : deux
-        # Q/A partageant exactement les memes concepts).
+        # Le TF-IDF ne sert qu'a departager les reponses ex-aequo (ex : deux Q/A partageant exactement les memes concepts).
         top_score = candidates[0][0]
         tied = [answer for score, answer in candidates if score == top_score]
         if len(tied) == 1:
@@ -105,9 +103,7 @@ class ChatBot:
             ranked = self.learner.rank_answers(tokens, tied)
             answer = ranked[0] if ranked else tied[0]
 
-        # Reformulation LLM optionnelle (RAG) : le LLM n'a le droit que de
-        # reformuler la reponse maison, sans rien y ajouter. En cas d'echec
-        # ou si desactive, on renvoie la reponse brute inchangee.
+        # Reformulation LLM optionnelle (RAG) : le LLM n'a le droit que de reformuler la reponse maison, sans rien y ajouter.
         if self.llm.is_available():
             reply = self.llm.reformulate(user_input, answer)
             if reply:
