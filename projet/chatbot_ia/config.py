@@ -24,6 +24,7 @@ LEVENSHTEIN_MAX_DISTANCE = 1
 LOG_FILE = os.path.join(BASE_DIR, 'chatbot.log')
 LOG_LEVEL = 'INFO'
 
+# ######## CODE IA (Claude - Anthropic) #########
 """ LLM optionnel (reformulation RAG) 
  Desactive par defaut : le systeme fonctionne entierement sans LLM (le coeur maison reste autonome). Active, le LLM ne fait que REFORMULER en
  langage naturel la reponse deja trouvee par le moteur maison (approche RAG : il ne doit rien inventer), et sert de filet de secours quand aucune
@@ -51,3 +52,4 @@ def get_logger(name: str = 'chatbot') -> logging.Logger:
         logger.addHandler(handler)
         logger.propagate = False
     return logger
+# ###############################################
