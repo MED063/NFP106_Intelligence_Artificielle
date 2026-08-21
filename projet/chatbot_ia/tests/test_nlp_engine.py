@@ -10,6 +10,7 @@ from nlp_engine import NLPEngine
 from knowledge_base import KnowledgeBase
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_tokenize():
     nlp = NLPEngine()
     tokens = nlp.tokenize("Bonjour, comment ça va ?")
@@ -81,3 +82,4 @@ def test_extract_entities():
     entities = nlp.extract_entities(["python", "graphe", "blabla"], kb)
     assert "python" in entities
     assert "graphe" in entities
+# ###############################################

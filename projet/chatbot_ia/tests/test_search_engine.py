@@ -19,6 +19,7 @@ def make_kb():
     return kb
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_bfs_direct():
     kb = make_kb()
     se = SearchEngine(kb)
@@ -172,3 +173,4 @@ def test_find_best_answer_causes_ignores_associative_relations():
     se = SearchEngine(make_comorbidity_kb())
     candidates = se.find_best_answer(["hypertension"], "CAUSES")
     assert candidates[0][1] == "Causes hypertension : obesite, cholesterol."
+# ###############################################

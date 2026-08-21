@@ -14,6 +14,7 @@ flask = pytest.importorskip("flask")
 import web_app
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 @pytest.fixture
 def client(tmp_path, monkeypatch):
     # Rediriger le log de feedback vers un fichier temporaire pour ne pas  polluer data/feedback_log.json pendant les tests.
@@ -90,3 +91,4 @@ def test_llm_toggle_unavailable_without_key(client, monkeypatch):
     resp = client.post('/llm/toggle', json={'enabled': True})
     assert resp.status_code == 200
     assert resp.get_json()['available'] is False
+# ###############################################

@@ -10,6 +10,7 @@ from learning_engine import LearningEngine
 from knowledge_base import KnowledgeBase
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_feedback_score_neutral_without_feedback():
     le = LearningEngine(tokenizer=lambda t: t.lower().split())
     assert le.feedback_score('une question', 'une reponse') == 0.0
@@ -160,3 +161,4 @@ def test_retrain_penalizes_bad_feedback():
     le.record_feedback('python ?', 'python programmation langage.', 1)
     le.retrain(kb)
     assert kb.graph['python']['programmation'] < 0.5
+# ###############################################

@@ -11,6 +11,7 @@ import config
 from llm_engine import LLMEngine
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_disabled_by_default(monkeypatch):
     # Par defaut le LLM est desactive : aucune tentative d'appel.
     monkeypatch.setattr(config, 'USE_LLM', False)
@@ -69,3 +70,4 @@ def test_chatbot_reformulates_when_llm_enabled(monkeypatch):
     bot = ChatBot()
     monkeypatch.setattr(bot.llm, '_chat', lambda messages: 'REFORMULATION LLM')
     assert bot.answer("Qu'est-ce que le diabète ?") == 'REFORMULATION LLM'
+# ###############################################

@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from knowledge_base import KnowledgeBase
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_add_concept():
     kb = KnowledgeBase()
     kb.add_concept("python")
@@ -103,3 +104,4 @@ def test_load_from_json(tmp_path):
     kb.load_from_json(str(path))
     assert "python" in kb.graph
     assert "java" in kb.graph["python"]
+# ###############################################

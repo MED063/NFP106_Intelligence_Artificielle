@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import config
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def test_config_exposes_paths():
     assert config.DATA_DIR.endswith(os.sep)
     assert config.KNOWLEDGE_GRAPH.endswith('knowledge_graph.json')
@@ -25,3 +26,4 @@ def test_get_logger_is_idempotent():
     # Un second appel ne doit pas rajouter de handler en double.
     assert len(logger2.handlers) == n
     assert n >= 1
+# ###############################################

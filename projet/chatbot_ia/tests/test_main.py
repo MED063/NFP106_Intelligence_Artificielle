@@ -12,6 +12,7 @@ from main import ChatBot
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data') + os.sep
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 @pytest.fixture
 def bot():
     return ChatBot(data_dir=DATA_DIR)
@@ -82,3 +83,4 @@ def test_chatbot_naive_bayes_is_trained(bot):
     # V2 de classify_intent : Naive Bayes entraine sur les intentions  etiquetees des qa_pairs 
     assert bot._nb_ready is True
     assert bot.learner._nb_classes
+# ###############################################
