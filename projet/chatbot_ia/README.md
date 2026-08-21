@@ -96,9 +96,11 @@ chatbot_ia/
 ├── config.py            # Configuration centralisée (chemins, paramètres, logs, LLM)
 ├── llm_engine.py        # Reformulation LLM optionnelle (RAG, API compatible OpenAI)
 ├── ui.py                # Interface CLI
-├── web_app.py           # Interface web Flask (/, /ask, /feedback)
+├── web_app.py           # Interface web Flask (/, /ask, /feedback, /llm, statut)
 ├── templates/
-│   └── index.html       # Page de discussion (interface web)
+│   └── index.html       # Page de discussion (markup de l'interface web)
+├── static/
+│   └── style.css        # Feuille de style de l'interface web
 ├── nlp_engine.py        # Tokenisation, stemming, NER, classification d'intention
 ├── knowledge_base.py    # Graphe de connaissances orienté pondéré (relations typées)
 ├── search_engine.py     # BFS / DFS / A* + comparaison (nœuds explorés, temps)
