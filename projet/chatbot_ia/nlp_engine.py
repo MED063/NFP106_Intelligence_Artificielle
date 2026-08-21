@@ -1,3 +1,7 @@
+"""
+ce fichier se concentre sur le moteur NLP (Natural Language Processing) du ChatBot, qui comprend la tokenisation, 
+la suppression des stopwords, le stemming, l'extraction d'entités et la classification d'intention.
+"""
 import re
 import unicodedata
 from collections import defaultdict
@@ -20,8 +24,7 @@ class NLPEngine:
         self.stemmer = None
 
     def _strip_accents(self, text: str) -> str:
-        """Normalise les accents/ligatures francais (obesite == obésité,
-        coeur == cœur) afin que le matching avec les concepts du graphe
+        """Normalise les accents/ligatures francais (obesite == obésité, coeur == cœur) afin que le matching avec les concepts du graphe
         (ecrits sans accent) fonctionne sans distance de Levenshtein."""
         text = text.replace('œ', 'oe').replace('æ', 'ae')
         text = unicodedata.normalize('NFKD', text)
@@ -60,10 +63,8 @@ class NLPEngine:
         return tokens
 
     def classify_intent(self, tokens: list, nb_fallback=None) -> str:
-        """Classifie l'intention par regles (V1) puis, si aucune regle
-        specifique ne s'applique, delegue a un classifieur Naive Bayes
-        entraine sur des exemples etiquetes (V2), si fourni via
-        `nb_fallback` (ex : LearningEngine.predict_intent)."""
+        """Classifie l'intention par regles (V1) puis, si aucune regle specifique ne s'applique, delegue a un classifieur Naive Bayes
+        entraine sur des exemples etiquetes (V2), si fourni via `nb_fallback`"""
         words = set(tokens)
 
         def has_root(roots):
