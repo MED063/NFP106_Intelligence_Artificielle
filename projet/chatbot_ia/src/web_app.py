@@ -22,7 +22,9 @@ FEEDBACK_LOG = config.FEEDBACK_LOG
 FEEDBACK_RETRAIN_EVERY = config.FEEDBACK_RETRAIN_EVERY
 
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder=os.path.join(config.PROJECT_ROOT, 'templates'),
+            static_folder=os.path.join(config.PROJECT_ROOT, 'static'))
 bot = ChatBot(data_dir=DATA_DIR)
 _feedback_count = 0
 

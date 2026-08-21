@@ -18,11 +18,12 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import config
 from main import ChatBot
 from benchmark_search import PAIRS
 
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data') + os.sep
+DATA_DIR = config.DATA_DIR
 
 # Intentions "de controle" : leur reponse est un message fixe qui ne vient  pas des qa_pairs, on ne peut donc pas comparer le texte mot pour mot.
 CONTROL_INTENTS = {'SALUTATION', 'QUITTER'}

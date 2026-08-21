@@ -7,6 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import config
 from knowledge_base import KnowledgeBase
 from search_engine import SearchEngine
 
@@ -28,7 +29,7 @@ PAIRS = [
 
 # ######## CODE IA (Claude - Anthropic) #########
 def main():
-    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    data_dir = config.DATA_DIR
     kb = KnowledgeBase()
     kb.load_from_json(os.path.join(data_dir, 'knowledge_graph.json'))
     se = SearchEngine(kb)

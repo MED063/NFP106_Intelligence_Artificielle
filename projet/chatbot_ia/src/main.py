@@ -112,7 +112,6 @@ class ChatBot:
 
 
 if __name__ == '__main__':
-    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-    bot = ChatBot(data_dir=data_dir + os.sep)
+    bot = ChatBot()
     from ui import run_cli
     run_cli(bot)

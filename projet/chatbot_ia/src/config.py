@@ -7,9 +7,10 @@ import logging
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)  # racine du projet (parent de src/)
 
 #  Chemins de donnees 
-DATA_DIR = os.path.join(BASE_DIR, 'data') + os.sep
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data') + os.sep
 KNOWLEDGE_GRAPH = os.path.join(DATA_DIR, 'knowledge_graph.json')
 QA_PAIRS = os.path.join(DATA_DIR, 'qa_pairs.json')
 FEEDBACK_LOG = os.path.join(DATA_DIR, 'feedback_log.json')
@@ -21,7 +22,7 @@ FEEDBACK_RETRAIN_EVERY = 3
 LEVENSHTEIN_MAX_DISTANCE = 1
 
 #  Journalisation 
-LOG_FILE = os.path.join(BASE_DIR, 'chatbot.log')
+LOG_FILE = os.path.join(PROJECT_ROOT, 'chatbot.log')
 LOG_LEVEL = 'INFO'
 
 # ######## CODE IA (Claude - Anthropic) #########
