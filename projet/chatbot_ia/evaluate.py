@@ -28,6 +28,7 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data') + os
 CONTROL_INTENTS = {'SALUTATION', 'QUITTER'}
 
 
+# ######## CODE IA (Claude - Anthropic) #########
 def _is_correct(bot: ChatBot, qa: dict) -> tuple:
     """Retourne (reponse_correcte: bool, temps: float)."""
     t0 = time.perf_counter()
@@ -180,5 +181,6 @@ def main():
           f"[jeu de reformulations inedites]")
 
 
+# ###############################################
 if __name__ == '__main__':
     main()
